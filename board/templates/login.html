@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Вход на сайт</h1>
+
+    {% if form.errors %}
+        <div class="error">
+            Неверный логин или пароль
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+            <label>Логин</label>
+            <input type="text" name="username" required>
+        </div>
+
+        <div class="field">
+            <label>Пароль</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn">Войти</button>
+    </form>
+
+    <a href="/" class="back">← На главную</a>
+</div>
+
+</body>
+</html>
