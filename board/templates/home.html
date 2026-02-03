@@ -3,30 +3,37 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Бесплатная доска объявлений 52P.ru</title>
+    <title>Доска объявлений</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<div class="container">
-    <h1>Бесплатная доска объявлений 52P.ru</h1>
+<header class="header">
+    <div class="logo">Доска объявлений</div>
 
-    {% if user.is_authenticated %}
-        <p class="welcome">Здравствуйте, {{ user.username }} 👋</p>
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="link-btn">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'signup' %}">Регистрация</a>
+        {% endif %}
+    </nav>
+</header>
 
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn">Выйти</button>
-        </form>
+<main class="hero">
+    <h1>Размещайте объявления бесплатно</h1>
+    <p>Без посредников. Просто. Быстро.</p>
 
-    {% else %}
-        <p align="center">Размещайте объявления бесплатно</p>
-        <a href="{% url 'login' %}" class="btn">Войти</a>
-        <a href="{% url 'signup' %}">Зарегистрироваться</a>
-
-    {% endif %}
-</div>
+    <a href="#" class="main-btn">Разместить объявление</a>
+</main>
 
 </body>
 </html>
+
 
