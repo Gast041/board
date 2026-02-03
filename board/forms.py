@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class SignupForm(UserCreationForm):
     username = forms.CharField(
         label="Логин",
-        help_text="До 150 символов. Буквы и цифры без пробелов."
+        help_text="До 150 символов. Буквы и цифры без пробелов!"
     )
 
     password1 = forms.CharField(
