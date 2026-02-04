@@ -24,7 +24,7 @@ body {
     align-items: center;
     padding: 16px 24px;
     background: #ffffff;         /* светлый красноватый фон */
-    border-bottom: 2px solid #ebc3c3; /* верхняя линия */
+    border-bottom: 2px solid #ffeded; /* верхняя линия */
 }
 
 /* Ссылки в шапке */
