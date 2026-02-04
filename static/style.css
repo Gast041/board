@@ -1,103 +1,65 @@
-/* =====================================================
-   ОБЩИЕ СТИЛИ ДЛЯ ВСЕГО САЙТА
-   ===================================================== */
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #fbeaea; /* бледно-красный фон */
-    color: #000; /* основной текст чёрный */
-}
-
-h1, h2, h3 {
     color: #000;
-    margin-bottom: 10px;
+    background: #f7f7f7;
 }
 
-a {
-    color: #c62828; /* красные ссылки */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.header a {
+    margin-left: 12px;
     text-decoration: none;
+    color: #000;
+    font-weight: 500;
 }
 
-a:hover {
-    text-decoration: underline;
+.logo {
+    font-weight: bold;
+    font-size: 18px;
 }
 
-/* =====================================================
-   ВЕРХНЯЯ ПОЛОСА (ШАПКА)
-   ===================================================== */
-
-.top-line {
-    height: 4px;
-    background: #c62828;
-}
-
-/* =====================================================
-   КНОПКИ (ОБЩИЕ)
-   ===================================================== */
-
-button,
-.btn {
-    background: #c62828;
-    color: #fff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-button:hover,
-.btn:hover {
-    background: #b71c1c;
-}
-
-/* =====================================================
-   КОНТЕЙНЕРЫ (ЦЕНТРОВКА КОНТЕНТА)
-   ===================================================== */
-
-.container {
-    max-width: 600px;
-    margin: 120px auto;
+.hero {
+    max-width: 700px;
+    margin: 80px auto;
     padding: 0 20px;
     text-align: center;
 }
 
-/* =====================================================
-   ФОРМЫ (ЛОГИН, РЕГИСТРАЦИЯ)
-   ===================================================== */
-
-form {
-    margin-top: 20px;
-}
-
-label {
-    display: block;
-    margin: 12px 0 4px;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.error {
-    color: #b71c1c;
+.hero h1 {
+    font-size: 32px;
     margin-bottom: 10px;
 }
 
-/* =====================================================
-   ГЛАВНАЯ СТРАНИЦА
-   ===================================================== */
-
-.home-actions {
-    margin-top: 30px;
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #333;
 }
 
-.home-actions a {
+.main-btn {
     display: inline-block;
-    margin: 0 8px;
+    padding: 14px 24px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
 }
