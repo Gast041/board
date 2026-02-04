@@ -5,35 +5,31 @@
     <meta charset="UTF-8">
     <title>Доска объявлений</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<header class="header">
-    <div class="logo">Доска объявлений</div>
+<div class="home">
+    <h1>Бесплатная доска объявлений</h1>
 
-    <nav>
-        {% if user.is_authenticated %}
-            <span>{{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="link-btn">Выйти</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Вход</a>
-            <a href="{% url 'signup' %}">Регистрация</a>
-        {% endif %}
-    </nav>
-</header>
+    {% if user.is_authenticated %}
+        <p>Здравствуйте, {{ user.username }}</p>
 
-<main class="hero">
-    <h1>Размещайте объявления бесплатно</h1>
-    <p>Без посредников. Просто. Быстро.</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Выйти</button>
+        </form>
+    {% else %}
+        <p>Размещайте и находите объявления без лишних сложностей</p>
 
-    <a href="#" class="main-btn">Разместить объявление</a>
-</main>
+        <div class="actions">
+            <a href="{% url 'login' %}" class="primary">Войти</a>
+            <a href="{% url 'signup' %}" class="secondary">Регистрация</a>
+        </div>
+    {% endif %}
+</div>
 
 </body>
 </html>
+
 
 

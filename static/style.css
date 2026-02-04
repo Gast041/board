@@ -1,66 +1,86 @@
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+/* ===== БАЗА (для всех страниц) ===== */
 
 body {
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
     color: #000;
-    background: #f7f7f7;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-}
-
-.header a {
-    margin-left: 12px;
+a {
+    color: #c44;
     text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2, h3 {
     color: #000;
-    font-weight: 500;
 }
 
-.logo {
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.hero {
-    max-width: 700px;
-    margin: 80px auto;
-    padding: 0 20px;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 18px;
-    margin-bottom: 30px;
-    color: #333;
-}
-
-.main-btn {
-    display: inline-block;
-    padding: 14px 24px;
-    background: #000;
+button {
+    background: #c44;
     color: #fff;
-    text-decoration: none;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #a33;
+}
+
+/* ===== ОБЩИЕ КОНТЕЙНЕРЫ ===== */
+
+.container {
+    max-width: 420px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 30px;
     border-radius: 6px;
 }
 
-.link-btn {
-    background: none;
-    border: none;
-    color: #000;
-    cursor: pointer;
+/* ===== ФОРМЫ (login / signup) ===== */
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+}
+
+.error {
+    color: #c44;
+    margin-bottom: 15px;
+}
+
+/* ===== ГЛАВНАЯ СТРАНИЦА ===== */
+
+.home {
+    max-width: 520px;
+    margin: 25vh auto;
+    text-align: center;
+}
+
+.home p {
+    margin: 15px 0 25px;
+}
+
+.home .actions a {
+    display: inline-block;
+    margin: 0 8px;
+    padding: 10px 18px;
+    border-radius: 4px;
+}
+
+.home .primary {
+    background: #c44;
+    color: #fff;
+}
+
+.home .secondary {
+    border: 1px solid #c44;
 }
 
