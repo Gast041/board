@@ -51,12 +51,19 @@ body {
    ГЛАВНЫЙ БЛОК (HERO)
    ========================= */
 
+
 .hero {
     max-width: 700px;
     margin: 80px auto;
-    padding: 0 20px;
+    padding: 40px 30px;
+
+    background: #ffffff;        /* БЕЛЫЙ БЛОК */
+    border-radius: 12px;        /* скругление */
+    box-shadow: 0 0 0 4px #ffffff; /* белая рамка как на рисунке */
+
     text-align: center;
 }
+
 
 /* Заголовок */
 .hero h1 {
