@@ -5,36 +5,48 @@
     <meta charset="UTF-8">
     <title>Вход</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<div class="container">
-    <h1>Вход на сайт</h1>
+<!-- ШАПКА КАК НА ГЛАВНОЙ -->
+<header class="header">
+    <div class="logo">Доска объявлений</div>
 
-    {% if form.errors %}
-        <div class="error">
-            Неверный логин или пароль
+    <nav>
+        <a href="/">Главная</a>
+        <a href="{% url 'signup' %}">Регистрация</a>
+    </nav>
+</header>
+
+<!-- СТРАНИЦА ВХОДА -->
+<main class="login-page">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+
+            <h1>Вход</h1>
+
+            {% if form.errors %}
+                <div class="auth-error">
+                    Неверный логин или пароль
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit">Войти</button>
+            </form>
+
+            <div class="auth-links">
+                <a href="{% url 'signup' %}">Нет аккаунта? Регистрация</a>
+            </div>
+
         </div>
-    {% endif %}
-
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="field">
-            <label>Логин</label>
-            <input type="text" name="username" required>
-        </div>
-
-        <div class="field">
-            <label>Пароль</label>
-            <input type="password" name="password" required>
-        </div>
-
-        <button type="submit" class="btn">Войти</button>
-    </form>
-
-    <a href="/" class="back">← На главную</a>
-</div>
+    </div>
+</main>
 
 </body>
 </html>
+

@@ -182,3 +182,50 @@ body {
 .auth-links a:hover {
     text-decoration: underline;
 }
+
+/* ===========================
+   СТРАНИЦА ВХОДА (LOGIN)
+   =========================== */
+
+/* Чтобы страница входа выглядела как главная */
+.login-page {
+    min-height: calc(100vh - 70px); /* высота экрана минус шапка */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Немного приподнимаем белый блок */
+.login-page .auth-wrapper {
+    margin-top: 40px;
+}
+
+/* Кнопка входа — как основная */
+.auth-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+
+    background: #c62828;     /* красная */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.auth-card button:hover {
+    background: #b71c1c;
+}
+
+/* Ошибка логина */
+.auth-error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
