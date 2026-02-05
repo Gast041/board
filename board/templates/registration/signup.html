@@ -3,19 +3,34 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация</title>
+    <title>Вход</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div class="container">
-    <h1>Регистрация</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
-    </form>
-    <a href="{% url 'login' %}">← Войти</a>
-</div>
+
+<header class="header">
+    <div class="logo">Доска объявлений</div>
+</header>
+
+<main class="auth-wrapper">
+    <div class="auth-card">
+        <h1>Вход</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="main-btn">Войти</button>
+        </form>
+
+        <p class="auth-links">
+            Нет аккаунта?
+            <a href="{% url 'signup' %}">Регистрация</a>
+        </p>
+    </div>
+</main>
+
 </body>
 </html>
 

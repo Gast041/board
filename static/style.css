@@ -113,3 +113,63 @@ body {
 .link-btn:hover {
     text-decoration: underline;
 }
+/* ===========================
+   АВТОРИЗАЦИЯ / ВХОД / РЕГИСТРАЦИЯ
+   =========================== */
+
+/* Обёртка — центрирование блока */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 60px;
+    padding: 20px;
+}
+
+/* Белый блок формы */
+.auth-card {
+    background: #fff;
+    max-width: 420px;
+    width: 100%;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+/* Заголовок */
+.auth-card h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #000;
+}
+
+/* Django form */
+.auth-card form p {
+    margin-bottom: 14px;
+}
+
+/* Поля ввода */
+.auth-card input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Ссылки под формой */
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Красные ссылки */
+.auth-links a {
+    color: #c62828;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
