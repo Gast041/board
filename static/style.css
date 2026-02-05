@@ -1,5 +1,5 @@
 /* =========================
-   ОБЩИЕ НАСТРОЙКИ
+   ОБЩИЕ НАСТРОЙКИ САЙТА
    ========================= */
 
 * {
@@ -9,13 +9,13 @@
 
 body {
     margin: 0;
-    color: #000;                 /* весь текст чёрный */
-    background: #f7f7f7;         /* бледно-красный фон */
+    color: #000;                 /* ВЕСЬ ТЕКСТ ЧЁРНЫЙ */
+    background: #ffeded;         /* БЛЕДНО-РОЗОВЫЙ ФОН САЙТА */
 }
 
 
 /* =========================
-   ШАПКА САЙТА
+   ШАПКА САЙТА (HEADER)
    ========================= */
 
 .header {
@@ -23,15 +23,16 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    background: #ffffff;         /* светлый красноватый фон */
-    border-bottom: 2px solid #ffeded; /* верхняя линия */
+
+    background: #ffffff;         /* БЕЛАЯ ШАПКА */
+    border-bottom: 2px solid #ffeded; /* ТОНКАЯ ЛИНИЯ СВЕРХУ */
 }
 
 /* Ссылки в шапке */
 .header a {
     margin-left: 12px;
     text-decoration: none;
-    color: #c62828;              /* ссылки красные */
+    color: #c62828;              /* КРАСНЫЕ ССЫЛКИ */
     font-weight: 500;
 }
 
@@ -43,40 +44,40 @@ body {
 .logo {
     font-weight: bold;
     font-size: 18px;
-    color: #000;                 /* логотип чёрный */
+    color: #000;                 /* ЛОГОТИП ЧЁРНЫЙ */
 }
 
 
 /* =========================
-   ГЛАВНЫЙ БЛОК (HERO)
+   ГЛАВНАЯ СТРАНИЦА (HERO)
    ========================= */
-
 
 .hero {
     max-width: 1024px;
-    margin: 30px auto;
+    margin: 40px auto;
     padding: 40px 30px;
 
-    background: #ffffff;        /* БЕЛЫЙ БЛОК */
-    border-radius: 6px;        /* скругление */
-    box-shadow: 0 0 0 4px #ffffff; /* белая рамка как на рисунке */
+    background: #ffffff;         /* БЕЛЫЙ ЦЕНТРАЛЬНЫЙ БЛОК */
+    border-radius: 6px;
+
+    /* Белая "рамка", как на рисунке */
+    box-shadow: 0 0 0 6px #ffffff;
 
     text-align: center;
 }
-
 
 /* Заголовок */
 .hero h1 {
     font-size: 32px;
     margin-bottom: 10px;
-    color: #000;                 /* заголовок чёрный */
+    color: #000;                 /* ЧЁРНЫЙ ЗАГОЛОВОК */
 }
 
-/* Описание */
+/* Описание под заголовком */
 .hero p {
     font-size: 18px;
     margin-bottom: 30px;
-    color: #000;                 /* текст чёрный */
+    color: #000;                 /* ЧЁРНЫЙ ТЕКСТ */
 }
 
 
@@ -87,25 +88,28 @@ body {
 .main-btn {
     display: inline-block;
     padding: 14px 24px;
-    background: #c62828;         /* красная кнопка */
-    color: #fff;                 /* белый текст */
+
+    background: #c62828;         /* КРАСНАЯ КНОПКА */
+    color: #ffffff;              /* БЕЛЫЙ ТЕКСТ */
+
     text-decoration: none;
     border-radius: 6px;
 }
 
 .main-btn:hover {
-    background: #b71c1c;
+    background: #b71c1c;         /* ТЕМНЕЕ ПРИ НАВЕДЕНИИ */
 }
 
 
 /* =========================
-   КНОПКА "ВЫЙТИ"
+   КНОПКА "ВЫЙТИ" (КАК ССЫЛКА)
    ========================= */
 
 .link-btn {
     background: none;
     border: none;
-    color: #c62828;              /* красная, как ссылка */
+
+    color: #c62828;              /* КРАСНАЯ */
     cursor: pointer;
     font-weight: 500;
 }
@@ -113,36 +117,40 @@ body {
 .link-btn:hover {
     text-decoration: underline;
 }
+
+
 /* ===========================
    АВТОРИЗАЦИЯ / ВХОД / РЕГИСТРАЦИЯ
    =========================== */
 
-/* Обёртка — центрирование блока */
+/* Обёртка — центрирование формы */
 .auth-wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+
     margin-top: 60px;
     padding: 20px;
 }
 
 /* Белый блок формы */
 .auth-card {
-    background: #fff;
+    background: #ffffff;
     max-width: 420px;
     width: 100%;
+
     padding: 30px;
     border-radius: 8px;
 }
 
-/* Заголовок */
+/* Заголовок формы */
 .auth-card h1 {
     margin-bottom: 20px;
     text-align: center;
     color: #000;
 }
 
-/* Django form */
+/* Отступы между полями Django */
 .auth-card form p {
     margin-bottom: 14px;
 }
@@ -152,20 +160,21 @@ body {
     width: 100%;
     padding: 10px;
     margin-top: 4px;
+
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-/* Ссылки под формой */
+/* Блок ссылок под формой */
 .auth-links {
     margin-top: 20px;
     text-align: center;
     font-size: 14px;
 }
 
-/* Красные ссылки */
+/* Ссылки в формах */
 .auth-links a {
-    color: #c62828;
+    color: #c62828;              /* КРАСНЫЕ ССЫЛКИ */
     text-decoration: none;
     font-weight: 500;
 }
