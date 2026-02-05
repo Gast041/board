@@ -21,12 +21,12 @@
             {% csrf_token %}
             {{ form.as_p }}
 
-            <button type="submit" class="main-btn">Войти</button>
+            <button type="submit" class="main-btn">Регистрация</button>
         </form>
 
         <p class="auth-links">
-            Нет аккаунта?
-            <a href="{% url 'signup' %}">Регистрация</a>
+            Есть акаунт?
+             <a href="{% url 'login' %}">Вход</a>
         </p>
     </div>
 </main>
