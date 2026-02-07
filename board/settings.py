@@ -1,126 +1,139 @@
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# =========================
+# БАЗОВЫЕ ПУТИ ПРОЕКТА
+# =========================
+# BASE_DIR — корень проекта (где лежит manage.py)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# =========================
+# БЕЗОПАСНОСТЬ И РЕЖИМ РАБОТЫ
+# =========================
+# Секретный ключ проекта (никому не показывать в продакшене)
 SECRET_KEY = "django-insecure-y^!fx8_e_#-319x2w084hb9=@plgtiw_9r87$^)b&r3p%cfy3a"
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG=True — режим разработки (в продакшене должен быть False)
 DEBUG = True
 
-ALLOWED_HOSTS = ['52p.pythonanywhere.com']
+# Какие домены имеют право открывать сайт (на PythonAnywhere — твой домен)
+ALLOWED_HOSTS = ["52p.pythonanywhere.com"]
 
 
-# Application definition
-
+# =========================
+# ПРИЛОЖЕНИЯ (APPS)
+# =========================
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    'board'
-    "ads",
+    # --- встроенные приложения Django ---
+    "django.contrib.admin",          # админка
+    "django.contrib.auth",           # пользователи/логин/пароли
+    "django.contrib.contenttypes",   # служебное (типы моделей)
+    "django.contrib.sessions",       # сессии (логин держится)
+    "django.contrib.messages",       # сообщения (messages framework)
+    "django.contrib.staticfiles",    # статические файлы (CSS/JS)
+
+    # --- твои приложения проекта ---
+    "ads",                           # приложение объявлений
+    # ВАЖНО: 'board' сюда НЕ добавляем — это пакет проекта, а не app
 ]
 
+
+# =========================
+# MIDDLEWARE (ПРОСЛОЙКИ)
+# =========================
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",            # базовая безопасность
+    "django.contrib.sessions.middleware.SessionMiddleware",     # сессии
+    "django.middleware.common.CommonMiddleware",                # общие настройки
+    "django.middleware.csrf.CsrfViewMiddleware",                # защита CSRF (формы)
+    "django.contrib.auth.middleware.AuthenticationMiddleware",  # авторизация
+    "django.contrib.messages.middleware.MessageMiddleware",     # сообщения
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",   # защита от iframe атак
 ]
 
-ROOT_URLCONF = "board.urls"
 
+# =========================
+# URLS / WSGI
+# =========================
+ROOT_URLCONF = "board.urls"          # главный файл маршрутов urls.py
+WSGI_APPLICATION = "board.wsgi.application"  # вход для сервера (PythonAnywhere)
+
+
+# =========================
+# ШАБЛОНЫ (HTML)
+# =========================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'board' / 'templates'],
-        "APP_DIRS": True,
+        # Здесь Django ищет шаблоны (ты используешь board/templates)
+        "DIRS": [BASE_DIR / "board" / "templates"],
+        "APP_DIRS": True,  # искать templates внутри приложений (ads/templates и т.д.)
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",     # debug в шаблоне
+                "django.template.context_processors.request",   # request в шаблоне
+                "django.contrib.auth.context_processors.auth",  # user в шаблоне
+                "django.contrib.messages.context_processors.messages",  # messages
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "board.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# =========================
+# БАЗА ДАННЫХ
+# =========================
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
+        "ENGINE": "django.db.backends.sqlite3",   # пока sqlite (норм для обучения)
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
+# =========================
+# ПРОВЕРКА ПАРОЛЕЙ
+# =========================
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+# =========================
+# ЯЗЫК И ВРЕМЯ
+# =========================
+LANGUAGE_CODE = "ru"   # язык интерфейса Django
+TIME_ZONE = "UTC"      # можно позже поменять на "Europe/Moscow"
 
-LANGUAGE_CODE = "ru"
+USE_I18N = True        # интернационализация
+USE_TZ = True          # хранить даты в UTC
 
-TIME_ZONE = "UTC"
+
+# =========================
+# СТАТИКА И МЕДИА (PythonAnywhere)
+# =========================
+# STATIC_URL — URL для статики (как в браузере)
+STATIC_URL = "/static/"
+
+# STATIC_ROOT — куда собирать статику на сервере (collectstatic)
+STATIC_ROOT = "/home/52p/board/static"
+
+# MEDIA — куда загружать файлы (картинки объявлений и т.д.)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/home/52p/board/media"
 
 
-USE_I18N = True
+# =========================
+# ПЕРЕХОДЫ ПОСЛЕ ВХОДА/ВЫХОДА
+# =========================
+LOGIN_REDIRECT_URL = "/"   # куда перекинуть после логина
+LOGOUT_REDIRECT_URL = "/"  # куда перекинуть после логаута
 
-USE_L10N = True
 
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# default static files settings for PythonAnywhere.
-# see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = '/home/52p/board/media'
-MEDIA_URL = '/media/'
-STATIC_ROOT = '/home/52p/board/static'
-STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
-
+# =========================
+# ПРОЧЕЕ
+# =========================
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"  # тип PK по умолчанию
