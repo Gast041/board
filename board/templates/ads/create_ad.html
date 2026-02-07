@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Разместить объявление</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<!-- =========================
+     ШАПКА САЙТА
+     ========================= -->
+<div class="header">
+    <div class="logo">
+        52P
+    </div>
+
+    <div>
+        <a href="/">Главная</a>
+        <a href="/ads/">Объявления</a>
+        <a href="/profile/">Профиль</a>
+    </div>
+</div>
+
+<!-- =========================
+     ФОРМА РАЗМЕЩЕНИЯ
+     ========================= -->
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <h1>Разместить объявление</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <p>
+                <label>Название</label>
+                <input type="text" name="title" required>
+            </p>
+
+            <p>
+                <label>Описание</label>
+                <input type="text" name="description" required>
+            </p>
+
+            <p>
+                <label>Цена</label>
+                <input type="number" name="price" required>
+            </p>
+
+            <button type="submit" class="main-btn">
+                Опубликовать
+            </button>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>
