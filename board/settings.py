@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",    # статические файлы (CSS/JS)
 
     # --- твои приложения проекта ---
+    "board",
     "board.ads",  # приложение объявлений
     # ВАЖНО: 'board' сюда НЕ добавляем — это пакет проекта, а не app
 ]
