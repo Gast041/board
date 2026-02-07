@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import home_view, signup_view
-from . import views
+from .templates.ads.views import home_view, signup_view
+from .templates.ads import views
 
 urlpatterns = [
     path("", home_view, name="home"),
