@@ -1,22 +1,45 @@
+# =========================
+# ИМПОРТЫ DJANGO
+# =========================
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
-# Главные вьюхи сайта (главная страница, регистрация)
+
+# =========================
+# ВЬЮХИ ОСНОВНОГО САЙТА
+# (главная + регистрация)
+# =========================
+# Эти вьюхи относятся НЕ к объявлениям,
+# а к самому сайту в целом
 from board.views import home_view, signup_view
 
-# Вьюхи приложения объявлений
-from board.ads.views import create_ad
 
+# =========================
+# ГЛАВНЫЕ URL МАРШРУТЫ САЙТА
+# =========================
 urlpatterns = [
 
-    # Главная страница сайта
+    # -------------------------
+    # ГЛАВНАЯ СТРАНИЦА
+    # /
+    # -------------------------
     path("", home_view, name="home"),
 
-    # Админка Django
+
+    # -------------------------
+    # АДМИНКА DJANGO
+    # /admin/
+    # -------------------------
     path("admin/", admin.site.urls),
 
-    # Вход пользователя
+
+    # -------------------------
+    # АВТОРИЗАЦИЯ
+    # -------------------------
+
+    # Страница входа
+    # /login/
     path(
         "login/",
         auth_views.LoginView.as_view(template_name="login.html"),
@@ -24,15 +47,28 @@ urlpatterns = [
     ),
 
     # Выход пользователя
+    # /logout/
     path(
         "logout/",
         auth_views.LogoutView.as_view(),
         name="logout"
     ),
 
-    # Регистрация пользователя
+    # Регистрация
+    # /signup/
     path("signup/", signup_view, name="signup"),
 
-    # Создание объявления (только для авторизованных)
-    path("ads/create/", create_ad, name="create_ad"),
+
+    # -------------------------
+    # ОБЪЯВЛЕНИЯ (ADS)
+    # -------------------------
+    # ВСЕ URL, начинающиеся с /ads/
+    # Django будет искать в файле:
+    # board/ads/urls.py
+    #
+    # Примеры:
+    # /ads/          → список объявлений
+    # /ads/create/   → создать объявление
+    #
+    path("ads/", include("board.ads.urls")),
 ]

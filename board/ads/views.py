@@ -20,6 +20,9 @@ from .models import Ad
 # =========================
 # СОЗДАНИЕ ОБЪЯВЛЕНИЯ
 # =========================
+def ads_list(request):
+    ads = Ad.objects.order_by("-id")  # новые сверху
+    return render(request, "ads/list.html", {"ads": ads})
 
 @login_required
 def create_ad(request):
