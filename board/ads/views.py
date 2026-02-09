@@ -93,3 +93,7 @@ def signup_view(request):
         "registration/signup.html",
         {"form": form}
     )
+def ad_detail(request, ad_id):
+    return render(request, "ads/ad_detail.html", {
+        "ad_id": ad_id
+    })

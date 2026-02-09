@@ -72,3 +72,6 @@ urlpatterns = [
     #
     path("ads/", include("board.ads.urls")),
 ]
+
+path("ads/<int:ad_id>/", ad_detail, name="ad_detail"),
+
