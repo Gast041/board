@@ -1,21 +1,64 @@
 # board/views.py
+# Вьюхи "верхнего уровня" проекта (не связанные с объявлениями)
 
+# =========================
+# ИМПОРТЫ
+# =========================
+
+# render — рендерит HTML-шаблон
+# redirect — делает перенаправление на другой URL
 from django.shortcuts import render, redirect
+
+# Кастомная форма регистрации (ты её создал сам)
 from .forms import SignupForm
 
+
+# =========================
+# ГЛАВНАЯ СТРАНИЦА
+# =========================
 def home_view(request):
-    # Показывает главную страницу (home.html)
+    """
+    Главная страница сайта
+    URL: /
+    Шаблон: home.html
+    """
+
+    # Просто показываем шаблон главной страницы
     return render(request, "home.html")
 
-def signup_view(request):
-    # Если нажали кнопку "Зарегистрироваться"
-    if request.method == "POST":
-        form = SignupForm(request.POST)   # Берём данные из формы
-        if form.is_valid():               # Проверяем валидность
-            form.save()                   # Создаём пользователя
-            return redirect("login")      # После регистрации — на страницу входа
-    else:
-        form = SignupForm()               # Пустая форма при открытии страницы
 
-    # Рендерим шаблон регистрации и передаём туда форму
-    return render(request, "registration/signup.html", {"form": form})
+# =========================
+# РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
+# =========================
+def signup_view(request):
+    """
+    Страница регистрации пользователя
+    URL: /signup/
+    Шаблон: registration/signup.html
+    """
+
+    # Если пользователь отправил форму (нажал кнопку)
+    if request.method == "POST":
+
+        # Создаём форму и заполняем её данными из POST-запроса
+        form = SignupForm(request.POST)
+
+        # Проверяем, что все поля заполнены корректно
+        if form.is_valid():
+
+            # Сохраняем пользователя в базе данных
+            form.save()
+
+            # После успешной регистрации отправляем на страницу входа
+            return redirect("login")
+
+    else:
+        # Если просто зашли на страницу — создаём пустую форму
+        form = SignupForm()
+
+    # Показываем страницу регистрации и передаём форму в шаблон
+    return render(
+        request,
+        "registration/signup.html",
+        {"form": form}
+    )

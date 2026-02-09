@@ -2,98 +2,90 @@
 # ИМПОРТЫ
 # =========================
 
-# render — отрисовывает HTML-шаблон
-# redirect — делает перенаправление на другой URL
+# render — отрисовка HTML-шаблонов
+# redirect — перенаправление на другой URL
 from django.shortcuts import render, redirect
 
-# Декоратор: запрещает доступ неавторизованным пользователям
+# login_required — запрещает доступ неавторизованным пользователям
 from django.contrib.auth.decorators import login_required
 
-# Встроенная форма Django для регистрации пользователей
-from django.contrib.auth.forms import UserCreationForm
-
-# Модель объявления Ad
-# ВАЖНО: импорт из ТЕКУЩЕГО приложения ads
+# Модель объявления (ОБЯЗАТЕЛЬНО из текущего приложения ads)
 from .models import Ad
+
+
+# =========================
+# ЛЕНТА ОБЪЯВЛЕНИЙ
+# =========================
+def ads_list(request):
+    """
+    Страница со списком объявлений (лента)
+    URL: /ads/
+    """
+
+    # Получаем все объявления из базы данных
+    # order_by("-id") — новые объявления сверху
+    ads = Ad.objects.order_by("-id")
+
+    # Передаём список объявлений в шаблон
+    return render(
+        request,
+        "ads/list.html",
+        {
+            "ads": ads
+        }
+    )
 
 
 # =========================
 # СОЗДАНИЕ ОБЪЯВЛЕНИЯ
 # =========================
-def ads_list(request):
-    ads = Ad.objects.order_by("-id")  # новые сверху
-    return render(request, "ads/list.html", {"ads": ads})
-
 @login_required
 def create_ad(request):
     """
     Страница 'Разместить объявление'
     Пользователь ОБЯЗАН быть авторизован
+    URL: /ads/create/
     """
 
-    # Если форма отправлена (нажата кнопка)
+    # Если форма отправлена (POST-запрос)
     if request.method == "POST":
 
-        # Получаем данные из HTML-формы
-        title = request.POST.get("title")          # заголовок
-        description = request.POST.get("description")  # описание
-        price = request.POST.get("price")          # цена
+        # Забираем данные из HTML-формы
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
 
         # Создаём новое объявление в базе данных
         Ad.objects.create(
             title=title,
             description=description,
             price=price,
-            author=request.user    # автор — текущий пользователь
+            author=request.user  # автор — текущий пользователь
         )
 
-        # После создания объявления возвращаем на главную
-        return redirect("/")
+        # После создания объявления
+        # перенаправляем пользователя в ленту
+        return redirect("/ads/")
 
     # Если просто открыли страницу — показываем форму
     return render(request, "ads/create_ad.html")
 
 
 # =========================
-# ГЛАВНАЯ СТРАНИЦА
+# СТРАНИЦА ОДНОГО ОБЪЯВЛЕНИЯ
 # =========================
-
-def home_view(request):
+def ad_detail(request, ad_id):
     """
-    Главная страница сайта
-    """
-    return render(request, "home.html")
-
-
-# =========================
-# РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
-# =========================
-
-def signup_view(request):
-    """
-    Регистрация нового пользователя
+    Детальная страница одного объявления
+    URL: /ads/<id>/
     """
 
-    # Если пользователь отправил форму
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-
-        # Проверяем корректность данных
-        if form.is_valid():
-            form.save()              # создаём пользователя
-            return redirect("login") # отправляем на страницу входа
-
-    # Если просто открыли страницу регистрации
-    else:
-        form = UserCreationForm()
-
-    # Отрисовываем шаблон регистрации
+    # Пока БЕЗ базы — просто передаём id в шаблон
+    # Это безопасная заглушка
     return render(
         request,
-        "registration/signup.html",
-        {"form": form}
+        "ads/ad_detail.html",
+        {
+            "ad_id": ad_id
+        }
     )
-def ad_detail(request, ad_id):
-    return render(request, "ads/ad_detail.html", {
-        "ad_id": ad_id
-    })
