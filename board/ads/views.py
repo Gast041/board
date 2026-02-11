@@ -1,38 +1,46 @@
 # =========================
+# board/ads/views.py
+# ВЬЮХИ ПРИЛОЖЕНИЯ "ads"
+# =========================
+
+# =========================
 # ИМПОРТЫ
 # =========================
 
-# render — отрисовка HTML-шаблонов
-# redirect — перенаправление на другой URL
+# render — отрисовать HTML-шаблон и вернуть страницу пользователю
+# redirect — сделать перенаправление на другой URL (например после сохранения формы)
 from django.shortcuts import render, redirect
 
+# get_object_or_404 — достать объект из базы или вернуть 404, если не найден
+from django.shortcuts import get_object_or_404
+
 # login_required — запрещает доступ неавторизованным пользователям
+# (если не залогинен — отправит на LOGIN_URL из settings.py)
 from django.contrib.auth.decorators import login_required
 
-# Модель объявления (ОБЯЗАТЕЛЬНО из текущего приложения ads)
+# Ad — модель объявления из текущего приложения "ads"
 from .models import Ad
 
 
 # =========================
-# ЛЕНТА ОБЪЯВЛЕНИЙ
+# ЛЕНТА ОБЪЯВЛЕНИЙ (СПИСОК)
 # =========================
 def ads_list(request):
     """
-    Страница со списком объявлений (лента)
+    Лента объявлений.
     URL: /ads/
+    Шаблон: templates/ads/list.html
     """
 
-    # Получаем все объявления из базы данных
-    # order_by("-id") — новые объявления сверху
+    # Берём все объявления из базы данных
+    # order_by("-id") — сортировка: новые сверху (по убыванию id)
     ads = Ad.objects.order_by("-id")
 
-    # Передаём список объявлений в шаблон
+    # Рендерим шаблон и передаём в него список объявлений
     return render(
-        request,
-        "ads/list.html",
-        {
-            "ads": ads
-        }
+        request,                  # текущий запрос
+        "ads/list.html",          # путь к шаблону
+        {"ads": ads}              # данные, доступные в шаблоне
     )
 
 
@@ -42,32 +50,33 @@ def ads_list(request):
 @login_required
 def create_ad(request):
     """
-    Страница 'Разместить объявление'
-    Пользователь ОБЯЗАН быть авторизован
+    Создание объявления.
     URL: /ads/create/
+    Шаблон: templates/ads/create_ad.html
+    Доступ: только авторизованным
     """
 
-    # Если форма отправлена (POST-запрос)
+    # Если пользователь отправил форму (POST)
     if request.method == "POST":
 
-        # Забираем данные из HTML-формы
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        price = request.POST.get("price")
+        # Берём значения из формы (input name="title" и т.д.)
+        title = request.POST.get("title", "").strip()
+        description = request.POST.get("description", "").strip()
+        price = request.POST.get("price", "").strip()
 
-        # Создаём новое объявление в базе данных
-        Ad.objects.create(
+        # Создаём запись в базе данных
+        ad = Ad.objects.create(
             title=title,
             description=description,
-            price=price,
-            author=request.user  # автор — текущий пользователь
+            price=price if price else None,   # если пусто — записываем NULL
+            author=request.user               # автор — текущий пользователь
         )
 
-        # После создания объявления
-        # перенаправляем пользователя в ленту
-        return redirect("/ads/")
+        # После создания отправляем на страницу созданного объявления
+        # (так удобнее, чем просто на ленту)
+        return redirect("ad_detail", ad_id=ad.id)
 
-    # Если просто открыли страницу — показываем форму
+    # Если запрос GET — просто показываем страницу формы
     return render(request, "ads/create_ad.html")
 
 
@@ -76,16 +85,18 @@ def create_ad(request):
 # =========================
 def ad_detail(request, ad_id):
     """
-    Детальная страница одного объявления
+    Детальная страница объявления.
     URL: /ads/<id>/
+    Шаблон: templates/ads/ad_detail.html
     """
 
-    # Пока БЕЗ базы — просто передаём id в шаблон
-    # Это безопасная заглушка
+    # Ищем объявление по id
+    # Если не найдено — Django автоматически покажет страницу 404
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    # Передаём найденное объявление в шаблон
     return render(
         request,
         "ads/ad_detail.html",
-        {
-            "ad_id": ad_id
-        }
+        {"ad": ad}
     )

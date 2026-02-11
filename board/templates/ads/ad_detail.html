@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
 
     <!-- Заголовок вкладки браузера -->
-    <!-- ad.id будет подставляться, когда подключим detail-вью -->
-    <title>Объявление</title>
+    <!-- Теперь выводим реальный заголовок объявления -->
+    <title>{{ ad.title }}</title>
 
     <!-- Общие стили сайта -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
@@ -29,28 +29,58 @@
         </a>
     </div>
 
+    <!-- Меню справа -->
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }}</span>
+
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="link-btn">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'signup' %}">Регистрация</a>
+        {% endif %}
+    </nav>
+
 </header>
+
 
 <!-- =========================
      ОСНОВНОЙ БЛОК
      ========================= -->
 <main class="hero">
 
-    <!-- Заголовок страницы -->
-    <h1>Страница объявления</h1>
+    <!-- Заголовок объявления -->
+    <h1>{{ ad.title }}</h1>
 
-    <!-- Заглушка -->
-    <p>
-        Эта страница подготовлена.<br>
-        Здесь будет отображаться одно объявление.
-    </p>
+    <!-- Цена (если указана) -->
+    {% if ad.price %}
+        <div style="margin-bottom:15px; font-size:18px;">
+            <b>Цена:</b> {{ ad.price }}
+        </div>
+    {% endif %}
 
-    <!-- Информационный блок -->
-    <div style="margin-top:20px; font-size:14px; color:#444;">
-        Детальная страница будет подключена позже.
+    <!-- Описание -->
+    <div style="margin-bottom:20px;">
+        {{ ad.description|linebreaksbr }}
+    </div>
+
+    <!-- Автор -->
+    <div style="font-size:14px; color:#444;">
+        Автор: {{ ad.author.username }}
+    </div>
+
+    <!-- Кнопка назад -->
+    <div style="margin-top:30px;">
+        <a href="/ads/" class="main-btn">
+            Назад к ленте
+        </a>
     </div>
 
 </main>
 
 </body>
 </html>
+
