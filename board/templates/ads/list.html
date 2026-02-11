@@ -73,29 +73,46 @@
         <div style="text-align:left; display:grid; gap:14px;">
 
             {% for ad in ads %}
-                <!-- Одно объявление -->
+                <!-- =========================
+                     ОДНО ОБЪЯВЛЕНИЕ
+                     ========================= -->
                 <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
 
-                    <!-- Заголовок объявления -->
+                    <!-- =========================
+                         ЗАГОЛОВОК (ССЫЛКА НА ДЕТАЛЬНУЮ СТРАНИЦУ)
+                         ========================= -->
+                    <!-- ВАЖНО:
+                         url 'ad_detail' ad.id
+                         ведёт на /ads/ID/
+                    -->
                     <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        {{ ad.title }}
+                        <a href="{% url 'ad_detail' ad.id %}"
+                           style="color:#c62828; text-decoration:none;">
+                            {{ ad.title }}
+                        </a>
                     </div>
 
-                    <!-- Цена (если есть) -->
+                    <!-- =========================
+                         ЦЕНА (если указана)
+                         ========================= -->
                     {% if ad.price %}
                         <div style="margin-bottom:6px;">
                             <b>Цена:</b> {{ ad.price }}
                         </div>
                     {% endif %}
 
-                    <!-- Описание (если есть) -->
+                    <!-- =========================
+                         КРАТКОЕ ОПИСАНИЕ
+                         ========================= -->
                     {% if ad.description %}
-                        <div style="color:#000;">
-                            {{ ad.description|linebreaksbr }}
+                        <div style="color:#000; margin-bottom:8px;">
+                            {{ ad.description|truncatechars:150 }}
                         </div>
                     {% endif %}
 
-                    <!-- Автор объявления -->
+                    <!-- =========================
+                         АВТОР
+                         ========================= -->
                     <div style="margin-top:10px; font-size:13px; color:#444;">
                         Автор: {{ ad.author.username }}
                     </div>
