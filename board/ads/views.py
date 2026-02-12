@@ -18,6 +18,9 @@ from django.shortcuts import get_object_or_404
 # (если не залогинен — отправит на LOGIN_URL из settings.py)
 from django.contrib.auth.decorators import login_required
 
+# HttpResponseForbidden — ответ 403 "Запрещено" (если не автор объявления)
+from django.http import HttpResponseForbidden
+
 # Ad — модель объявления из текущего приложения "ads"
 from .models import Ad
 
@@ -66,14 +69,13 @@ def create_ad(request):
 
         # Создаём запись в базе данных
         ad = Ad.objects.create(
-            title=title,
-            description=description,
-            price=price if price else None,   # если пусто — записываем NULL
-            author=request.user               # автор — текущий пользователь
+            title=title,                           # заголовок
+            description=description,               # описание
+            price=price if price else None,        # если пусто — записываем NULL
+            author=request.user                    # автор — текущий пользователь
         )
 
         # После создания отправляем на страницу созданного объявления
-        # (так удобнее, чем просто на ленту)
         return redirect("ad_detail", ad_id=ad.id)
 
     # Если запрос GET — просто показываем страницу формы
@@ -100,3 +102,38 @@ def ad_detail(request, ad_id):
         "ads/ad_detail.html",
         {"ad": ad}
     )
+
+
+# =========================
+# УДАЛЕНИЕ ОБЪЯВЛЕНИЯ (ТОЛЬКО АВТОР)
+# =========================
+@login_required
+def delete_ad(request, ad_id):
+    """
+    Удаление объявления.
+    URL: /ads/<id>/delete/
+    Доступ: только авторизованным и только автору объявления
+
+    Логика:
+    1) Находим объявление
+    2) Проверяем, что текущий пользователь — автор
+    3) Удаляем ТОЛЬКО по POST (это важно для безопасности)
+    4) После удаления кидаем в ленту /ads/
+    """
+
+    # 1) Достаём объявление или 404
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    # 2) Проверяем автора
+    if ad.author != request.user:
+        # 403 — запрещено
+        return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
+
+    # 3) Удаляем только если нажали кнопку (POST)
+    if request.method == "POST":
+        ad.delete()
+        # 4) После удаления — в ленту
+        return redirect("ads_list")
+
+    # Если кто-то открыл URL удаления через GET — просто кидаем на страницу объявления
+    return redirect("ad_detail", ad_id=ad.id)
