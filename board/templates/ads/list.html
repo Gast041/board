@@ -5,13 +5,13 @@
     <!-- Кодировка -->
     <meta charset="UTF-8">
 
-    <!-- Заголовок вкладки браузера -->
+    <!-- Заголовок вкладки -->
     <title>Лента объявлений</title>
 
-    <!-- Подключаем общий CSS сайта -->
+    <!-- Общие стили сайта -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 
-    <!-- Адаптивность для телефонов -->
+    <!-- Адаптивность -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
@@ -19,28 +19,29 @@
 <!-- =========================
      ШАПКА САЙТА
      ========================= -->
-<header class="header header-bar">
+<header class="header">
 
-    <!-- ЛЕВАЯ ЧАСТЬ — ЛОГО -->
+    <!-- ЛЕВАЯ ЧАСТЬ: логотип -->
     <div class="logo">
-        <a href="/" class="logo-link">
-            52prime.ru
-        </a>
+        <a href="/" class="logo-link">52prime.ru</a>
     </div>
 
-    <!-- ЦЕНТР — ПОИСК (УЖЕ РАБОТАЕТ ЧЕРЕЗ ?q=) -->
-    <div class="header-center">
+    <!-- ЦЕНТР: поиск (логика уже в views: /ads/?q=...) -->
+    <div class="header-search">
+        <!-- ВАЖНО: action ведём на текущую страницу ленты -->
         <form method="get" action="{% url 'ads_list' %}" class="search-form">
 
-            <!-- value="{{ q }}" — чтобы текст сохранялся после поиска -->
+            <!-- Поле поиска -->
+            <!-- value="{{ q }}" — чтобы введённый текст сохранялся после поиска -->
             <input
                 type="text"
                 name="q"
+                value="{{ q|default:'' }}"
                 placeholder="Поиск объявлений..."
-                value="{{ q }}"
                 class="search-input"
             >
 
+            <!-- Кнопка поиска -->
             <button type="submit" class="search-btn">
                 Найти
             </button>
@@ -48,26 +49,31 @@
         </form>
     </div>
 
-    <!-- ПРАВАЯ ЧАСТЬ — МЕНЮ -->
-    <nav class="header-right">
+    <!-- ПРАВАЯ ЧАСТЬ: меню -->
+    <nav class="header-nav">
 
         {% if user.is_authenticated %}
 
-            <!-- Кнопка создания объявления -->
+            <!-- Кнопка создания объявления (в стиле сайта, НЕ зелёная) -->
             <a class="main-btn" href="{% url 'create_ad' %}">
                 + Объявление
             </a>
 
-            <span class="user-name">{{ user.username }}</span>
+            <!-- Имя пользователя -->
+            <span class="header-user">{{ user.username }}</span>
 
-            <form method="post" action="{% url 'logout' %}" class="inline-form">
+            <!-- Выход (POST) -->
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
-                <button class="link-btn">Выйти</button>
+                <button class="link-btn" type="submit">Выйти</button>
             </form>
 
         {% else %}
+
+            <!-- Если не вошёл -->
             <a href="{% url 'login' %}">Вход</a>
             <a href="{% url 'signup' %}">Регистрация</a>
+
         {% endif %}
 
     </nav>
@@ -80,16 +86,18 @@
      ========================= -->
 <main class="hero">
 
-    <!-- Заголовок страницы -->
     <h1>Лента объявлений</h1>
     <p>Новые объявления сверху</p>
 
+    <!-- Если сейчас включён поиск — покажем строку "Поиск: ..." -->
     {% if q %}
-        <!-- Подсказка: что сейчас ищем -->
-        <p class="search-hint">
-            Поиск: <b>{{ q }}</b>
-            <a href="{% url 'ads_list' %}" class="search-reset">сбросить</a>
-        </p>
+        <div style="margin: 10px 0 20px; font-size: 14px;">
+            <b>Поиск:</b> {{ q }}
+            •
+            <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
+                сбросить
+            </a>
+        </div>
     {% endif %}
 
     <!-- =========================
@@ -97,38 +105,31 @@
          ========================= -->
     {% if ads %}
 
-        <!-- Контейнер списка -->
-        <div class="ads-grid">
+        <div style="text-align:left; display:grid; gap:14px;">
 
             {% for ad in ads %}
-                <!-- =========================
-                     ОДНО ОБЪЯВЛЕНИЕ
-                     ========================= -->
-                <div class="ad-card">
+                <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
 
-                    <!-- Заголовок — ссылка на детальную -->
-                    <div class="ad-title">
+                    <!-- Заголовок как ссылка на детальную страницу -->
+                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
                         <a href="{% url 'ad_detail' ad.id %}" class="ad-title-link">
                             {{ ad.title }}
                         </a>
                     </div>
 
-                    <!-- Цена -->
                     {% if ad.price %}
-                        <div class="ad-price">
+                        <div style="margin-bottom:6px;">
                             <b>Цена:</b> {{ ad.price }}
                         </div>
                     {% endif %}
 
-                    <!-- Краткое описание -->
                     {% if ad.description %}
-                        <div class="ad-desc">
+                        <div style="color:#000; margin-bottom:8px;">
                             {{ ad.description|truncatechars:150 }}
                         </div>
                     {% endif %}
 
-                    <!-- Автор -->
-                    <div class="ad-author">
+                    <div style="margin-top:10px; font-size:13px; color:#444;">
                         Автор: {{ ad.author.username }}
                     </div>
 

@@ -378,3 +378,70 @@ body {
     font-size: 13px;
     color: #444;
 }
+/* =========================
+   ШАПКА: ПОИСК + МЕНЮ (ЛЕНТА)
+   ========================= */
+
+.logo-link {
+    text-decoration: none;
+    color: #c62828; /* как фирменный красный */
+}
+
+.header-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-form {
+    width: min(640px, 100%);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-btn {
+    padding: 10px 16px;
+    border: none;
+    background: #c62828;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background: #b71c1c;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-user {
+    color: #000;
+    font-weight: 500;
+}
+
+/* Заголовок объявления как ссылка */
+.ad-title-link {
+    color: #c62828;
+    text-decoration: none;
+}
+
+.ad-title-link:hover {
+    text-decoration: underline;
+}
+
+/* ВАЖНО: чтобы текст на кнопке main-btn был белый (если вдруг где-то перекрасился) */
+.main-btn {
+    color: #fff;
+}
