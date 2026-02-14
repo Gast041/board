@@ -235,7 +235,7 @@ body {
 .main-btn {
     background: #c62828;      /* красный фон */
     color: #ffffff !important; /* БЕЛЫЙ текст */
-    padding: 8px 16px;
+    padding: 6px 6px;
     border-radius: 6px;
     text-decoration: none;
     display: inline-block;
