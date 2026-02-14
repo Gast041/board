@@ -248,3 +248,133 @@ body {
     background: #a61e1e;
 }
 
+/* =========================
+   ШАПКА: СЕТКА (ЛОГО / ПОИСК / МЕНЮ)
+   ========================= */
+.header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 20px;
+}
+
+/* Логотип-ссылка (чёрный текст как ты хотел) */
+.logo-link {
+    text-decoration: none;
+    color: #000;
+}
+
+/* Центр шапки */
+.header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Правая часть меню */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Чтобы form в меню не ломал строку */
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+/* =========================
+   ПОИСК
+   ========================= */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(700px, 100%);
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-btn {
+    padding: 8px 14px;
+    border: none;
+    background: #c62828;
+    color: #fff; /* ✅ белый текст на кнопке */
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: #b71c1c;
+}
+
+/* Подсказка поиска */
+.search-hint {
+    margin-top: 10px;
+    color: #444;
+}
+
+.search-reset {
+    margin-left: 10px;
+    color: #c62828;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.search-reset:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   ЛЕНТА ОБЪЯВЛЕНИЙ
+   ========================= */
+.ads-grid {
+    text-align: left;
+    display: grid;
+    gap: 14px;
+}
+
+.ad-card {
+    border: 1px solid #ffeded;
+    padding: 14px;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.ad-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.ad-title-link {
+    color: #c62828;
+    text-decoration: none;
+}
+
+.ad-title-link:hover {
+    text-decoration: underline;
+}
+
+.ad-price {
+    margin-bottom: 6px;
+}
+
+.ad-desc {
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.ad-author {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #444;
+}
