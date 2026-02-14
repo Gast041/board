@@ -230,18 +230,21 @@ body {
     text-align: center;
 }
 /* =========================
-   ОПАСНАЯ КНОПКА (удаление)
+   ОСНОВНАЯ КНОПКА (главная кнопка сайта)
    ========================= */
-.danger-btn {
-    background: #c62828;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
+.main-btn {
+    background: #c62828;      /* красный фон */
+    color: #ffffff !important; /* БЕЛЫЙ текст */
+    padding: 8px 16px;
     border-radius: 6px;
-    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
     font-weight: 500;
+    transition: 0.2s;
 }
 
-.danger-btn:hover {
-    background: #b71c1c;
+/* Эффект наведения */
+.main-btn:hover {
+    background: #a61e1e;
 }
+
