@@ -137,3 +137,35 @@ def delete_ad(request, ad_id):
 
     # Если кто-то открыл URL удаления через GET — просто кидаем на страницу объявления
     return redirect("ad_detail", ad_id=ad.id)
+# =========================
+# РЕДАКТИРОВАНИЕ ОБЪЯВЛЕНИЯ (ТОЛЬКО АВТОР)
+# =========================
+@login_required
+def edit_ad(request, ad_id):
+    """
+    Редактирование объявления.
+    URL: /ads/<id>/edit/
+    Доступ: только авторизованным и только автору объявления
+    """
+
+    # 1) Достаём объявление или 404
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    # 2) Проверяем, что текущий пользователь — автор
+    if ad.author != request.user:
+        return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
+
+    # 3) Если отправили форму — сохраняем
+    if request.method == "POST":
+        # ВАЖНО: используем Django Form, а не request.POST руками
+        from .forms import AdForm
+        form = AdForm(request.POST, instance=ad)
+        if form.is_valid():
+            form.save()
+            return redirect("ad_detail", ad_id=ad.id)
+    else:
+        # 4) Если просто открыли страницу — показываем форму с текущими данными
+        from .forms import AdForm
+        form = AdForm(instance=ad)
+
+    return render(request, "ads/edit_ad.html", {"form": form, "ad": ad})

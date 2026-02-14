@@ -35,7 +35,6 @@
         {% if user.is_authenticated %}
             <span>{{ user.username }}</span>
 
-            <!-- Кнопка выхода -->
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button class="link-btn">Выйти</button>
@@ -82,19 +81,30 @@
 
 
     <!-- =========================
-         УДАЛЕНИЕ ОБЪЯВЛЕНИЯ
+         КНОПКИ АВТОРА
          ========================= -->
-    <!-- КНОПКА ПОКАЗЫВАЕТСЯ ТОЛЬКО АВТОРУ -->
+    <!-- Показываются только автору -->
     {% if user.is_authenticated and user == ad.author %}
         <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
 
-            <!-- ВАЖНО: удаление ТОЛЬКО POST -->
+            <!-- =========================
+                 КНОПКА РЕДАКТИРОВАНИЯ
+                 ========================= -->
+            <!-- Ведёт на: /ads/<id>/edit/ -->
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
+                Редактировать
+            </a>
+
+
+            <!-- =========================
+                 КНОПКА УДАЛЕНИЯ
+                 ========================= -->
+            <!-- Удаление только через POST -->
             <form method="post"
                   action="{% url 'delete_ad' ad.id %}"
                   onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
                 {% csrf_token %}
 
-                <!-- Кнопка в стиле сайта -->
                 <button type="submit" class="danger-btn">
                     Удалить объявление
                 </button>

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать: {{ ad.title }}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <a href="/" style="text-decoration:none;color:#000;">Доска объявлений</a>
+    </div>
+
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="link-btn">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'signup' %}">Регистрация</a>
+        {% endif %}
+    </nav>
+</header>
+
+<main class="hero" style="text-align:left; max-width:720px;">
+    <h1 style="text-align:center;">Редактировать объявление</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+            <button type="submit" class="main-btn" style="border:none; cursor:pointer;">
+                Сохранить
+            </button>
+
+            <a class="link-btn" href="{% url 'ad_detail' ad.id %}" style="text-decoration:none;">
+                Отмена
+            </a>
+        </div>
+    </form>
+</main>
+
+</body>
+</html>
