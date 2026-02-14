@@ -65,9 +65,15 @@
     {% endif %}
 
     <!-- Описание -->
-    <div style="margin-bottom:20px;">
-        {{ ad.description|linebreaksbr }}
-    </div>
+    {% if ad.description %}
+        <div style="margin-bottom:20px;">
+            {{ ad.description|linebreaksbr }}
+        </div>
+    {% else %}
+        <div style="margin-bottom:20px; color:#444;">
+            Описание не указано.
+        </div>
+    {% endif %}
 
     <!-- Автор -->
     <div style="font-size:14px; color:#444;">
@@ -80,24 +86,16 @@
          ========================= -->
     <!-- КНОПКА ПОКАЗЫВАЕТСЯ ТОЛЬКО АВТОРУ -->
     {% if user.is_authenticated and user == ad.author %}
-        <div style="margin-top:30px;">
+        <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
 
-            <!-- ВАЖНО:
-                 Удаление должно быть POST-запросом
-                 чтобы нельзя было удалить по простой ссылке
-            -->
-            <form method="post" action="{% url 'delete_ad' ad.id %}">
+            <!-- ВАЖНО: удаление ТОЛЬКО POST -->
+            <form method="post"
+                  action="{% url 'delete_ad' ad.id %}"
+                  onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
                 {% csrf_token %}
 
-                <button type="submit"
-                        style="
-                            background:#c62828;
-                            color:white;
-                            border:none;
-                            padding:10px 16px;
-                            border-radius:6px;
-                            cursor:pointer;
-                        ">
+                <!-- Кнопка в стиле сайта -->
+                <button type="submit" class="danger-btn">
                     Удалить объявление
                 </button>
             </form>
@@ -110,7 +108,7 @@
          КНОПКА НАЗАД
          ========================= -->
     <div style="margin-top:30px;">
-        <a href="/ads/" class="main-btn">
+        <a href="{% url 'ads_list' %}" class="main-btn">
             Назад к ленте
         </a>
     </div>

@@ -229,3 +229,19 @@ body {
     font-size: 14px;
     text-align: center;
 }
+/* =========================
+   ОПАСНАЯ КНОПКА (удаление)
+   ========================= */
+.danger-btn {
+    background: #c62828;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.danger-btn:hover {
+    background: #b71c1c;
+}
