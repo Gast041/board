@@ -3,3 +3,4 @@ git pull
 
 cd /home/52p/board
 git pull
+reload web app
