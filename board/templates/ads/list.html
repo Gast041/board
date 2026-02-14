@@ -61,14 +61,7 @@
         {% if user.is_authenticated %}
 
             <!-- Кнопка создания объявления -->
-            <a href="{% url 'create_ad' %}"
-               style="
-                    background:#c62828
-                    color:white;
-                    padding:8px 12px;
-                    border-radius:6px;
-                    text-decoration:none;
-               ">
+            <a class="main-btn" href="{% url 'create_ad' %}">
                 + Объявление
             </a>
 
