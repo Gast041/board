@@ -19,34 +19,75 @@
 <!-- =========================
      ШАПКА САЙТА
      ========================= -->
-<header class="header">
+<header class="header" style="display:flex; align-items:center; justify-content:space-between; padding:10px 20px;">
 
-    <!-- Логотип + ссылка на главную -->
+    <!-- ЛЕВАЯ ЧАСТЬ — ЛОГО -->
     <div class="logo">
         <a href="/" style="text-decoration:none;color:#000;">
             Доска объявлений
         </a>
     </div>
 
-    <!-- Навигация справа -->
-    <nav>
+    <!-- ЦЕНТР — ПОИСК (пока без логики) -->
+    <div style="flex:1; text-align:center;">
+        <form method="get" action="#" style="display:inline-block; width:60%;">
+            <input type="text"
+                   name="q"
+                   placeholder="Поиск объявлений..."
+                   style="
+                        width:70%;
+                        padding:8px 12px;
+                        border-radius:6px;
+                        border:1px solid #ccc;
+                   ">
+
+            <button type="submit"
+                    style="
+                        padding:8px 14px;
+                        border:none;
+                        background:#c62828;
+                        color:white;
+                        border-radius:6px;
+                        cursor:pointer;
+                   ">
+                Найти
+            </button>
+        </form>
+    </div>
+
+    <!-- ПРАВАЯ ЧАСТЬ — МЕНЮ -->
+    <nav style="display:flex; align-items:center; gap:14px;">
+
         {% if user.is_authenticated %}
-            <!-- Если пользователь вошёл -->
+
+            <!-- Кнопка создания объявления -->
+            <a href="{% url 'create_ad' %}"
+               style="
+                    background:#2e7d32;
+                    color:white;
+                    padding:8px 12px;
+                    border-radius:6px;
+                    text-decoration:none;
+               ">
+                + Объявление
+            </a>
+
             <span>{{ user.username }}</span>
 
-            <!-- Кнопка выхода -->
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button class="link-btn">Выйти</button>
             </form>
+
         {% else %}
-            <!-- Если пользователь НЕ вошёл -->
             <a href="{% url 'login' %}">Вход</a>
             <a href="{% url 'signup' %}">Регистрация</a>
         {% endif %}
+
     </nav>
 
 </header>
+
 
 <!-- =========================
      ОСНОВНОЙ КОНТЕНТ
