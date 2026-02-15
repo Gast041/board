@@ -1,62 +1,66 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Разместить объявление</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
-<body>
 
-<!-- =========================
-     ШАПКА САЙТА
-     ========================= -->
-<div class="header">
-    <div class="logo">
-        52P
+{# =========================
+   ads/create_ad.html
+   Страница создания объявления
+   ========================= #}
+
+{% block title %}Создать объявление{% endblock %}
+
+{% block content %}
+<main class="hero">
+
+    <!-- Заголовок страницы -->
+    <h1>Разместить объявление</h1>
+
+    <!-- Ссылка назад к ленте -->
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'ads_list' %}" 
+           style="color:#c62828; text-decoration:none;">
+            ← Вернуться к ленте объявлений
+        </a>
     </div>
 
-    <div>
-        <a href="/">Главная</a>
-        <a href="/ads/">Объявления</a>
-        <a href="{% url 'profile' %}">{{ user.username }}</a>
+    <!-- =========================
+         ФОРМА СОЗДАНИЯ
+         ========================= -->
+    <form method="post" style="max-width:500px; margin:0 auto; text-align:left;">
+        {% csrf_token %}
 
-    </div>
-</div>
+        <!-- Заголовок -->
+        <div style="margin-bottom:14px;">
+            <label>Заголовок</label><br>
+            <input type="text"
+                   name="title"
+                   required
+                   style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
+        </div>
 
-<!-- =========================
-     ФОРМА РАЗМЕЩЕНИЯ
-     ========================= -->
-<div class="auth-wrapper">
-    <div class="auth-card">
+        <!-- Описание -->
+        <div style="margin-bottom:14px;">
+            <label>Описание</label><br>
+            <textarea name="description"
+                      rows="5"
+                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;"></textarea>
+        </div>
 
-        <h1>Разместить объявление</h1>
+        <!-- Цена -->
+        <div style="margin-bottom:20px;">
+            <label>Цена</label><br>
+            <input type="number"
+                   step="0.01"
+                   name="price"
+                   style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
+        </div>
 
-        <form method="post">
-            {% csrf_token %}
+        <!-- Кнопка -->
+        <button type="submit" class="main-btn">
+            Опубликовать
+        </button>
 
-            <p>
-                <label>Название</label>
-                <input type="text" name="title" required>
-            </p>
+    </form>
 
-            <p>
-                <label>Описание</label>
-                <input type="text" name="description" required>
-            </p>
+</main>
+{% endblock %}
 
-            <p>
-                <label>Цена</label>
-                <input type="number" name="price" required>
-            </p>
-
-            <button type="submit" class="main-btn">
-                Опубликовать
-            </button>
-        </form>
-
-    </div>
-</div>
-
-</body>
-</html>
