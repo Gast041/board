@@ -1,0 +1,89 @@
+/* =========================
+   base.css — только шапка/меню
+   ========================= */
+
+/* Липкая шапка сверху */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    padding: 10px 20px;
+
+    background: #ffffff;
+    border-bottom: 2px solid #ffeded;
+}
+
+/* Логотип */
+.logo-link {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Центральная зона поиска */
+.header-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Форма поиска */
+.search-form {
+    width: 60%;
+    display: flex;
+    gap: 10px;
+}
+
+/* Поле поиска */
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+/* Кнопка Найти */
+.search-btn {
+    padding: 8px 14px;
+    border: none;
+    background: #c62828;
+    color: #fff;               /* белый текст на кнопке */
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background: #b71c1c;
+}
+
+/* Меню справа */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Имя пользователя (ссылка в профиль) */
+.header-user {
+    color: #c62828;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.header-user:hover {
+    text-decoration: underline;
+}
+
+/* Форма выхода без лишних отступов */
+.logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}

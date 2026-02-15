@@ -1,0 +1,94 @@
+{% load static %}
+<!-- =========================
+     base.html — общий каркас для всех страниц (кроме home.html)
+     Здесь: <head>, подключение CSS, и общая шапка
+     ========================= -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Кодировка -->
+    <meta charset="UTF-8">
+
+    <!-- Адаптивность -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Заголовок вкладки (каждая страница подставит свой) -->
+    <title>{% block title %}52prime.ru{% endblock %}</title>
+
+    <!-- Общие стили сайта (весь дизайн: фон, hero, кнопки и т.д.) -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <!-- Стили только для шапки/меню (липкая шапка + поиск) -->
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+</head>
+
+<body>
+
+<!-- =========================
+     ШАПКА САЙТА (общая)
+     ========================= -->
+<header class="header">
+
+    <!-- ЛЕВАЯ ЧАСТЬ: логотип -->
+    <div class="logo">
+        <a href="/" class="logo-link">52prime.ru</a>
+    </div>
+
+    <!-- ЦЕНТР: поиск
+         Поиск пока работает для ленты /ads/ (views уже умеет ?q=...)
+         В других разделах позже можно сделать отдельную страницу поиска.
+    -->
+    <div class="header-search">
+        <form method="get" action="{% url 'ads_list' %}" class="search-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ q|default:'' }}"
+                placeholder="Поиск объявлений..."
+                class="search-input"
+            >
+            <button type="submit" class="search-btn">Найти</button>
+        </form>
+    </div>
+
+    <!-- ПРАВАЯ ЧАСТЬ: меню -->
+    <nav class="header-nav">
+
+        {% if user.is_authenticated %}
+
+            <!-- + Объявление -->
+            <a class="main-btn" href="{% url 'create_ad' %}">
+                + Объявление
+            </a>
+
+            <!-- Имя пользователя ведёт в профиль -->
+            <a href="{% url 'profile' %}" class="header-user">
+                {{ user.username }}
+            </a>
+
+            <!-- Выход (POST) -->
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button class="link-btn" type="submit">Выйти</button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'signup' %}">Регистрация</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<!-- =========================
+     КОНТЕНТ СТРАНИЦЫ
+     Тут каждая страница рисует своё
+     ========================= -->
+{% block content %}{% endblock %}
+
+</body>
+</html>
