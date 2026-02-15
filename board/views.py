@@ -62,3 +62,28 @@ def signup_view(request):
         "registration/signup.html",
         {"form": form}
     )
+# =========================
+# ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+# =========================
+
+from django.contrib.auth.decorators import login_required  # доступ только после входа
+from board.ads.models import Ad  # объявления (чтобы показать "мои объявления")
+
+
+@login_required
+def profile_view(request):
+    """
+    Профиль пользователя.
+    URL: /profile/
+    Показывает имя пользователя и его объявления.
+    """
+
+    # Берём объявления, созданные текущим пользователем (новые сверху)
+    my_ads = Ad.objects.filter(author=request.user).order_by("-id")
+
+    # Отдаём HTML-шаблон и данные в него
+    return render(
+        request,                  # текущий запрос
+        "profile.html",           # шаблон
+        {"my_ads": my_ads}        # данные для шаблона
+    )

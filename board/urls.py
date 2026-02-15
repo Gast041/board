@@ -4,6 +4,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from board.views import home_view, signup_view, profile_view  # + profile_view
 
 
 # =========================
@@ -13,6 +14,12 @@ from django.contrib.auth import views as auth_views
 # Эти вьюхи относятся НЕ к объявлениям,
 # а к самому сайту в целом
 from board.views import home_view, signup_view
+
+
+# Профиль пользователя
+# /profile/
+path("profile/", profile_view, name="profile"),
+
 
 
 # =========================

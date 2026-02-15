@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <a href="/" style="text-decoration:none;color:#000;">52prime.ru</a>
+    </div>
+
+    <nav>
+        <a href="{% url 'ads_list' %}">Лента</a>
+        <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+
+        <span>{{ user.username }}</span>
+
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button class="link-btn">Выйти</button>
+        </form>
+    </nav>
+</header>
+
+<main class="hero" style="text-align:left;">
+    <h1 style="text-align:center;">Профиль</h1>
+
+    <p><b>Пользователь:</b> {{ user.username }}</p>
+
+    <h2 style="margin-top:24px;">Мои объявления</h2>
+
+    {% if my_ads %}
+        <div style="display:grid; gap:14px;">
+            {% for ad in my_ads %}
+                <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
+                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
+                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                            {{ ad.title }}
+                        </a>
+                    </div>
+
+                    {% if ad.price %}
+                        <div><b>Цена:</b> {{ ad.price }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>У тебя пока нет объявлений.</p>
+    {% endif %}
+</main>
+
+</body>
+</html>
