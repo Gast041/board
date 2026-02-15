@@ -19,7 +19,8 @@
     <div>
         <a href="/">Главная</a>
         <a href="/ads/">Объявления</a>
-        <a href="/profile/">Профиль</a>
+        <a href="{% url 'profile' %}">{{ user.username }}</a>
+
     </div>
 </div>
 
