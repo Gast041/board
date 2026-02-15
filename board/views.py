@@ -1,16 +1,26 @@
+# =========================
 # board/views.py
-# Вьюхи "верхнего уровня" проекта (не связанные с объявлениями)
+# Вьюхи "верхнего уровня" проекта
+# (главная, регистрация, профиль)
+# =========================
+
 
 # =========================
 # ИМПОРТЫ
 # =========================
 
 # render — рендерит HTML-шаблон
-# redirect — делает перенаправление на другой URL
+# redirect — делает перенаправление
 from django.shortcuts import render, redirect
 
-# Кастомная форма регистрации (ты её создал сам)
+# login_required — запрещает доступ неавторизованным
+from django.contrib.auth.decorators import login_required
+
+# Кастомная форма регистрации
 from .forms import SignupForm
+
+# Модель объявлений (чтобы показать "мои объявления" в профиле)
+from board.ads.models import Ad
 
 
 # =========================
@@ -23,7 +33,6 @@ def home_view(request):
     Шаблон: home.html
     """
 
-    # Просто показываем шаблон главной страницы
     return render(request, "home.html")
 
 
@@ -32,58 +41,53 @@ def home_view(request):
 # =========================
 def signup_view(request):
     """
-    Страница регистрации пользователя
+    Страница регистрации
     URL: /signup/
     Шаблон: registration/signup.html
     """
 
-    # Если пользователь отправил форму (нажал кнопку)
+    # Если форма отправлена
     if request.method == "POST":
 
-        # Создаём форму и заполняем её данными из POST-запроса
         form = SignupForm(request.POST)
 
-        # Проверяем, что все поля заполнены корректно
+        # Проверяем корректность данных
         if form.is_valid():
-
-            # Сохраняем пользователя в базе данных
-            form.save()
-
-            # После успешной регистрации отправляем на страницу входа
+            form.save()          # создаём пользователя
             return redirect("login")
 
     else:
-        # Если просто зашли на страницу — создаём пустую форму
+        # Если просто открыли страницу
         form = SignupForm()
 
-    # Показываем страницу регистрации и передаём форму в шаблон
     return render(
         request,
         "registration/signup.html",
         {"form": form}
     )
+
+
 # =========================
 # ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
 # =========================
-
-from django.contrib.auth.decorators import login_required  # доступ только после входа
-from board.ads.models import Ad  # объявления (чтобы показать "мои объявления")
-
-
 @login_required
 def profile_view(request):
     """
-    Профиль пользователя.
+    Профиль пользователя
     URL: /profile/
-    Показывает имя пользователя и его объявления.
+    Показывает список его объявлений
     """
 
-    # Берём объявления, созданные текущим пользователем (новые сверху)
-    my_ads = Ad.objects.filter(author=request.user).order_by("-id")
+    # Берём только объявления текущего пользователя
+    my_ads = Ad.objects.filter(
+        author=request.user
+    ).order_by("-id")
 
-    # Отдаём HTML-шаблон и данные в него
     return render(
-        request,                  # текущий запрос
-        "profile.html",           # шаблон
-        {"my_ads": my_ads}        # данные для шаблона
+        request,
+        "profile.html",
+        {
+            "my_ads": my_ads
+        }
     )
+

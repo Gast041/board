@@ -2,57 +2,134 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- =========================
+         НАСТРОЙКИ СТРАНИЦЫ
+         ========================= -->
     <meta charset="UTF-8">
     <title>Профиль</title>
+
+    <!-- Общие стили сайта -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
+<!-- =========================
+     ШАПКА
+     ========================= -->
 <header class="header">
+
+    <!-- ЛОГО -->
     <div class="logo">
-        <a href="/" style="text-decoration:none;color:#000;">52prime.ru</a>
+        <a href="{% url 'ads_list' %}" style="text-decoration:none;color:#000;">
+            52prime.ru
+        </a>
     </div>
 
+    <!-- МЕНЮ -->
     <nav>
+
+        <!-- Ссылка на ленту -->
         <a href="{% url 'ads_list' %}">Лента</a>
-        <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
 
-        <span>{{ user.username }}</span>
+        <!-- Создать объявление -->
+        <a class="main-btn" href="{% url 'create_ad' %}">
+            + Объявление
+        </a>
 
+        <!-- Имя пользователя -->
+        <span>
+            <a href="{% url 'profile' %}" style="text-decoration:none;color:#000;">
+                {{ user.username }}
+            </a>
+        </span>
+
+        <!-- Выход -->
         <form method="post" action="{% url 'logout' %}" style="display:inline;">
             {% csrf_token %}
             <button class="link-btn">Выйти</button>
         </form>
+
     </nav>
+
 </header>
 
+
+<!-- =========================
+     ОСНОВНОЙ БЛОК
+     ========================= -->
 <main class="hero" style="text-align:left;">
+
+    <!-- Заголовок -->
     <h1 style="text-align:center;">Профиль</h1>
 
+    <!-- Информация о пользователе -->
     <p><b>Пользователь:</b> {{ user.username }}</p>
 
-    <h2 style="margin-top:24px;">Мои объявления</h2>
+    <h2 style="margin-top:30px;">Мои объявления</h2>
 
+
+    <!-- =========================
+         СПИСОК МОИХ ОБЪЯВЛЕНИЙ
+         ========================= -->
     {% if my_ads %}
+
         <div style="display:grid; gap:14px;">
+
             {% for ad in my_ads %}
+
                 <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
+
+                    <!-- Заголовок -->
                     <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                        <a href="{% url 'ad_detail' ad.id %}"
+                           style="color:#c62828; text-decoration:none;">
                             {{ ad.title }}
                         </a>
                     </div>
 
+                    <!-- Цена -->
                     {% if ad.price %}
-                        <div><b>Цена:</b> {{ ad.price }}</div>
+                        <div style="margin-bottom:6px;">
+                            <b>Цена:</b> {{ ad.price }}
+                        </div>
                     {% endif %}
+
+                    <!-- КНОПКИ УПРАВЛЕНИЯ -->
+                    <div style="margin-top:10px; display:flex; gap:10px;">
+
+                        <!-- Редактировать -->
+                        <a href="{% url 'edit_ad' ad.id %}"
+                           class="main-btn"
+                           style="padding:6px 10px; font-size:14px;">
+                            Редактировать
+                        </a>
+
+                        <!-- Удалить -->
+                        <form method="post"
+                              action="{% url 'delete_ad' ad.id %}"
+                              onsubmit="return confirm('Удалить объявление?');">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="danger-btn"
+                                    style="padding:6px 10px; font-size:14px;">
+                                Удалить
+                            </button>
+                        </form>
+
+                    </div>
+
                 </div>
+
             {% endfor %}
+
         </div>
+
     {% else %}
         <p>У тебя пока нет объявлений.</p>
     {% endif %}
+
 </main>
 
 </body>
