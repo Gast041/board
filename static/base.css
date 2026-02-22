@@ -1,99 +1,85 @@
 /* =========================
-   base.css — стили фиксированной шапки
+   base.css
+   Фиксированная шапка + поиск + меню
    ========================= */
 
 .site-header {
-    position: sticky;       /* фиксируется при прокрутке */
-    top: 0;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    padding: 10px 20px;
-    background: #fdeaea;    /* тот же нежно-розовый */
-    border-bottom: 1px solid #f5c9c9;
+  gap: 16px;
+  padding: 10px 20px;
+
+  background: #fff;
+  border-bottom: 1px solid #ffeded;
+  z-index: 999;
 }
 
-/* Левая часть */
-.site-header__logo {
-    min-width: 140px;
-}
-.logo-link {
-    font-weight: 700;
-    text-decoration: none;
-    color: #000;
+/* отступ под fixed header */
+.header-spacer {
+  height: 62px; /* под высоту шапки */
 }
 
-/* Центр — поиск */
-.site-header__search {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+.site-logo .logo-link {
+  font-weight: 700;
+  text-decoration: none;
+  color: #111;
+}
+
+/* центр поиска */
+.site-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .search-form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: min(680px, 100%);
+  width: min(700px, 100%);
+  display: flex;
+  gap: 10px;
 }
 
 .search-input {
-    flex: 1;
-    padding: 9px 12px;
-    border-radius: 8px;
-    border: 1px solid #d7d7d7;
-    outline: none;
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 .search-btn {
-    padding: 9px 16px;
-    border: 0;
-    border-radius: 8px;
-    background: #c62828;
-    color: #fff;
-    cursor: pointer;
+  padding: 8px 14px;
+  border: none;
+  background: #c62828;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* Правая часть — меню */
-.site-header__nav {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    white-space: nowrap;
+/* правое меню */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
 }
 
 .nav-link {
-    text-decoration: none;
-    color: #7a0033;
-    font-weight: 600;
+  text-decoration: none;
+  color: #c62828;
+  font-weight: 600;
 }
 
-.nav-link:hover {
-    text-decoration: underline;
+.nav-form {
+  display: inline;
 }
 
-.nav-user {
-    color: #000;
-}
-
-/* Контент ниже шапки */
-.site-content {
-    /* если у тебя sticky — обычно не нужно, но оставим небольшой отступ */
-    padding-top: 10px;
-}
-
-/* Сделаем danger-btn реально красной (у тебя на скрине была серой) */
-.danger-btn {
-    background: #c62828;
-    color: #fff;
-    border: 0;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.danger-btn:hover {
-    filter: brightness(0.95);
+/* фикс: чтобы у кнопки "+ Объявление" был БЕЛЫЙ текст */
+.main-btn {
+  color: #fff !important;
 }

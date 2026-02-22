@@ -1,27 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
 
-{# =========================
-   ads/list.html — лента объявлений
-   Здесь ТОЛЬКО контент (без <html>, <head>, шапки)
-   ========================= #}
+<!-- =========================
+     ads/list.html
+     Лента объявлений + поиск
+     ========================= -->
 
 {% block title %}Лента объявлений{% endblock %}
 
 {% block content %}
-<main class="hero">
+<div class="hero">
 
     <h1>Лента объявлений</h1>
     <p>Новые объявления сверху</p>
 
-    <!-- Если сейчас включён поиск — покажем строку "Поиск: ..." -->
     {% if q %}
         <div style="margin: 10px 0 20px; font-size: 14px;">
-            <b>Поиск:</b> {{ q }}
-            •
-            <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
-                сбросить
-            </a>
+            <b>Поиск:</b> {{ q }} •
+            <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">сбросить</a>
         </div>
     {% endif %}
 
@@ -29,18 +25,14 @@
         <div style="text-align:left; display:grid; gap:14px;">
             {% for ad in ads %}
                 <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
-
                     <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        <a href="{% url 'ad_detail' ad.id %}"
-                           style="color:#c62828; text-decoration:none;">
+                        <a href="{% url 'ad_detail' ad.id %}" class="ad-title-link" style="color:#c62828; text-decoration:none;">
                             {{ ad.title }}
                         </a>
                     </div>
 
                     {% if ad.price %}
-                        <div style="margin-bottom:6px;">
-                            <b>Цена:</b> {{ ad.price }}
-                        </div>
+                        <div style="margin-bottom:6px;"><b>Цена:</b> {{ ad.price }}</div>
                     {% endif %}
 
                     {% if ad.description %}
@@ -59,5 +51,5 @@
         <p>Пока объявлений нет. Будь первым 🙂</p>
     {% endif %}
 
-</main>
+</div>
 {% endblock %}

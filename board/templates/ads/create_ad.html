@@ -1,70 +1,41 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Создать объявление{% endblock %}
-{% block content %}
 
-
-{# =========================
-   ads/create_ad.html
-   Страница создания объявления
-   ========================= #}
+<!-- =========================
+     ads/create_ad.html
+     Создание объявления
+     ========================= -->
 
 {% block title %}Создать объявление{% endblock %}
 
 {% block content %}
-<main class="hero">
-
-    <!-- Заголовок страницы -->
+<div class="hero">
     <h1>Разместить объявление</h1>
 
-    <!-- Ссылка назад к ленте -->
-    <div style="margin-bottom:20px;">
-        <a href="{% url 'ads_list' %}" 
-           style="color:#c62828; text-decoration:none;">
+    <div style="margin: 10px 0 20px;">
+        <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
             ← Вернуться к ленте объявлений
         </a>
     </div>
 
-    <!-- =========================
-         ФОРМА СОЗДАНИЯ
-         ========================= -->
-    <form method="post" style="max-width:500px; margin:0 auto; text-align:left;">
+    <form method="post" style="max-width: 600px; margin: 0 auto; text-align:left;">
         {% csrf_token %}
 
-        <!-- Заголовок -->
-        <div style="margin-bottom:14px;">
-            <label>Заголовок</label><br>
-            <input type="text"
-                   name="title"
-                   required
-                   style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
-        </div>
+        <label style="display:block; margin-bottom:6px;"><b>Заголовок</b></label>
+        <input type="text" name="title" required
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:14px;">
 
-        <!-- Описание -->
-        <div style="margin-bottom:14px;">
-            <label>Описание</label><br>
-            <textarea name="description"
-                      rows="5"
-                      style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;"></textarea>
-        </div>
+        <label style="display:block; margin-bottom:6px;"><b>Описание</b></label>
+        <textarea name="description" rows="5"
+                  style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:14px;"></textarea>
 
-        <!-- Цена -->
-        <div style="margin-bottom:20px;">
-            <label>Цена</label><br>
-            <input type="number"
-                   step="0.01"
-                   name="price"
-                   style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;">
-        </div>
+        <label style="display:block; margin-bottom:6px;"><b>Цена</b></label>
+        <input type="number" step="0.01" name="price"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:18px;">
 
-        <!-- Кнопка -->
-        <button type="submit" class="main-btn">
-            Опубликовать
-        </button>
-
+        <button type="submit" class="main-btn">Опубликовать</button>
     </form>
-
-</main>
+</div>
 {% endblock %}
 
 

@@ -1,29 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-    {{ ad.title }}
-{% endblock %}
-
-{% block content %}
 <!-- =========================
-     ads/ad_detail.html — детальная страница объявления
-     Шапка берётся из base.html
+     ads/ad_detail.html
+     Детальная страница объявления
      ========================= -->
 
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block content %}
 <div class="hero">
 
-    <!-- Заголовок объявления -->
     <h1>{{ ad.title }}</h1>
 
-    <!-- Цена -->
     {% if ad.price %}
         <div style="margin-bottom:15px; font-size:18px;">
             <b>Цена:</b> {{ ad.price }}
         </div>
     {% endif %}
 
-    <!-- Описание -->
     {% if ad.description %}
         <div style="margin-bottom:20px;">
             {{ ad.description|linebreaksbr }}
@@ -34,36 +29,26 @@
         </div>
     {% endif %}
 
-    <!-- Автор -->
     <div style="font-size:14px; color:#444;">
         Автор: {{ ad.author.username }}
     </div>
 
-    <!-- Кнопки автора -->
     {% if user.is_authenticated and user == ad.author %}
         <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
-                Редактировать
-            </a>
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">Редактировать</a>
 
             <form method="post"
                   action="{% url 'delete_ad' ad.id %}"
                   onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
                 {% csrf_token %}
-                <button type="submit" class="danger-btn">
-                    Удалить объявление
-                </button>
+                <button type="submit" class="danger-btn">Удалить объявление</button>
             </form>
         </div>
     {% endif %}
 
-    <!-- Назад -->
     <div style="margin-top:30px;">
-        <a href="{% url 'ads_list' %}" class="main-btn">
-            Назад к ленте
-        </a>
+        <a href="{% url 'ads_list' %}" class="main-btn">Назад к ленте</a>
     </div>
 
 </div>
 {% endblock %}
-
