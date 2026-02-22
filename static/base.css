@@ -1,120 +1,99 @@
 /* =========================
-   BASE HEADER STYLES
-   Файл: static/base.css
+   base.css — стили фиксированной шапки
    ========================= */
 
-/* Фиксируем шапку сверху */
 .site-header {
-  position: sticky;   /* sticky лучше для начала, чем fixed */
-  top: 0;
-  z-index: 1000;
+    position: sticky;       /* фиксируется при прокрутке */
+    top: 0;
+    z-index: 1000;
 
-  display: flex;
-  align-items: center;
-  gap: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 
-  padding: 10px 20px;
-  background: #fff;
-  border-bottom: 1px solid #ffe3e3;
+    padding: 10px 20px;
+    background: #fdeaea;    /* тот же нежно-розовый */
+    border-bottom: 1px solid #f5c9c9;
 }
 
-/* Чтобы контент не "лип" к шапке */
-.page-content {
-  padding-top: 20px;
+/* Левая часть */
+.site-header__logo {
+    min-width: 140px;
+}
+.logo-link {
+    font-weight: 700;
+    text-decoration: none;
+    color: #000;
 }
 
-/* Лого */
-.site-logo {
-  font-weight: 700;
-  font-size: 18px;
-  color: #c62828;
-  text-decoration: none;
+/* Центр — поиск */
+.site-header__search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
-/* Центр */
-.site-header__center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(680px, 100%);
 }
 
-.site-search {
-  width: min(720px, 100%);
-  display: flex;
-  gap: 10px;
-  align-items: center;
+.search-input {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #d7d7d7;
+    outline: none;
 }
 
-.site-search__input {
-  flex: 1;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  outline: none;
+.search-btn {
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: #c62828;
+    color: #fff;
+    cursor: pointer;
 }
 
-.site-search__input:focus {
-  border-color: #c62828;
+/* Правая часть — меню */
+.site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
 }
 
-/* Кнопка поиска */
-.site-search__btn {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  background: #c62828;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* Правое меню */
-.site-header__right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* Ссылки меню — убираем "фиолетовый" */
 .nav-link {
-  color: #222;
-  text-decoration: none;
-  font-weight: 600;
+    text-decoration: none;
+    color: #7a0033;
+    font-weight: 600;
 }
 
 .nav-link:hover {
-  color: #c62828;
+    text-decoration: underline;
 }
 
 .nav-user {
-  font-weight: 700;
+    color: #000;
 }
 
-/* Общие кнопки */
-.btn {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 8px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
+/* Контент ниже шапки */
+.site-content {
+    /* если у тебя sticky — обычно не нужно, но оставим небольшой отступ */
+    padding-top: 10px;
 }
 
-/* Главная кнопка (красная) */
-.btn-main {
-  background: #c62828;
-  color: #fff;
+/* Сделаем danger-btn реально красной (у тебя на скрине была серой) */
+.danger-btn {
+    background: #c62828;
+    color: #fff;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
 }
-
-/* “Ссылка-кнопка” (Выйти) */
-.btn-link {
-  background: transparent;
-  color: #c62828;
-  padding: 0;
-}
-
-/* Для form в одну линию */
-.inline-form {
-  display: inline;
-  margin: 0;
+.danger-btn:hover {
+    filter: brightness(0.95);
 }

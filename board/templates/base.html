@@ -3,27 +3,21 @@
 <html lang="ru">
 <head>
     <!-- =========================
-         BASE TEMPLATE (общая основа)
-         Файл: board/templates/base.html
+         base.html — общий шаблон для страниц (кроме главной)
+         Здесь подключаем ВСЕ общие стили и общую шапку
          ========================= -->
 
-    <!-- Кодировка -->
     <meta charset="UTF-8">
-
-    <!-- Заголовок вкладки (можно переопределять в страницах) -->
-    <title>{% block title %}52prime.ru{% endblock %}</title>
-
-    <!-- Общие стили сайта (твои текущие) -->
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-
-    <!-- Стили для общей шапки/меню -->
-    <link rel="stylesheet" href="{% static 'base.css' %}">
-
-    <!-- Адаптивность -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Доп. стили конкретной страницы (если надо) -->
-    {% block extra_css %}{% endblock %}
+    <!-- Заголовок вкладки можно переопределять в дочерних шаблонах -->
+    <title>{% block title %}52prime.ru{% endblock %}</title>
+
+    <!-- Твои текущие стили сайта -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <!-- Стили для шапки/меню -->
+    <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
 
@@ -31,51 +25,51 @@
      ФИКСИРОВАННАЯ ШАПКА
      ========================= -->
 <header class="site-header">
-    <!-- Левая часть: логотип -->
-    <div class="site-header__left">
-        <a href="/" class="site-logo">52prime.ru</a>
+    <!-- Лого слева -->
+    <div class="site-header__logo">
+        <a href="{% url 'ads_list' %}" class="logo-link">52prime.ru</a>
     </div>
 
-    <!-- Центр: поиск (всегда ведёт на ленту /ads/) -->
-    <div class="site-header__center">
-        <form method="get" action="{% url 'ads_list' %}" class="site-search">
+    <!-- Поиск по центру (работает только на /ads/, на остальных просто отправит на /ads/) -->
+    <div class="site-header__search">
+        <form method="get" action="{% url 'ads_list' %}" class="search-form">
             <input
                 type="text"
                 name="q"
                 value="{{ q|default:'' }}"
                 placeholder="Поиск объявлений..."
-                class="site-search__input"
+                class="search-input"
             >
-            <button type="submit" class="site-search__btn">Найти</button>
+            <button type="submit" class="search-btn">Найти</button>
         </form>
     </div>
 
-    <!-- Правая часть: меню -->
-    <nav class="site-header__right">
-        <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
-
+    <!-- Меню справа -->
+    <nav class="site-header__nav">
         {% if user.is_authenticated %}
-            <a href="{% url 'create_ad' %}" class="btn btn-main">+ Объявление</a>
+            <!-- Ссылка на ленту (удобно, когда ты не на /ads/) -->
+            <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
-            <!-- Имя пользователя ведёт в профиль -->
-            <a href="{% url 'profile' %}" class="nav-link nav-user">{{ user.username }}</a>
+            <!-- Кнопка создать -->
+            <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
 
-            <!-- Выход через POST -->
-            <form method="post" action="{% url 'logout' %}" class="inline-form">
+            <!-- Имя → профиль -->
+            <a class="nav-link nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
+
+            <!-- Выход POST -->
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-link">Выйти</button>
+                <button class="link-btn" type="submit">Выйти</button>
             </form>
         {% else %}
-            <a href="{% url 'login' %}" class="nav-link">Вход</a>
-            <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
+            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+            <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
         {% endif %}
     </nav>
 </header>
 
-<!-- =========================
-     ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ
-     ========================= -->
-<main class="page-content">
+<!-- Чтобы контент не уезжал под fixed-шапку -->
+<main class="site-content">
     {% block content %}{% endblock %}
 </main>
 

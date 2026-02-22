@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block title %}
-    {{ ad.title }} — 52prime.ru
+    {{ ad.title }}
 {% endblock %}
 
 {% block content %}
 <!-- =========================
-     AD DETAIL
-     Файл: board/templates/ads/ad_detail.html
+     ads/ad_detail.html — детальная страница объявления
+     Шапка берётся из base.html
      ========================= -->
 
 <div class="hero">
@@ -39,33 +39,27 @@
         Автор: {{ ad.author.username }}
     </div>
 
-    <!-- =========================
-         КНОПКИ АВТОРА
-         ========================= -->
+    <!-- Кнопки автора -->
     {% if user.is_authenticated and user == ad.author %}
         <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-
-            <!-- Редактировать -->
-            <a href="{% url 'edit_ad' ad.id %}" class="btn btn-main">
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
                 Редактировать
             </a>
 
-            <!-- Удалить (POST) -->
             <form method="post"
                   action="{% url 'delete_ad' ad.id %}"
                   onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">
-                    Удалить
+                <button type="submit" class="danger-btn">
+                    Удалить объявление
                 </button>
             </form>
-
         </div>
     {% endif %}
 
     <!-- Назад -->
     <div style="margin-top:30px;">
-        <a href="{% url 'ads_list' %}" class="btn btn-main">
+        <a href="{% url 'ads_list' %}" class="main-btn">
             Назад к ленте
         </a>
     </div>
