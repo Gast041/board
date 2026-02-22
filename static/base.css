@@ -1,47 +1,120 @@
 /* =========================
-   base.css — только шапка + общие “обвязочные” стили
+   BASE HEADER STYLES
+   Файл: static/base.css
    ========================= */
 
+/* Фиксируем шапку сверху */
 .site-header {
-    position: sticky;   /* липкая шапка */
-    top: 0;
-    z-index: 1000;
-    background: #fff;
-    border-bottom: 2px solid #ffeded;
+  position: sticky;   /* sticky лучше для начала, чем fixed */
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 10px 20px;
+  background: #fff;
+  border-bottom: 1px solid #ffe3e3;
 }
 
-.header-bar {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px 20px;
+/* Чтобы контент не "лип" к шапке */
+.page-content {
+  padding-top: 20px;
 }
 
-.header-left { min-width: 140px; }
-.header-center { flex: 1; display: flex; justify-content: center; }
-.header-right { display: flex; align-items: center; gap: 14px; }
+/* Лого */
+.site-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: #c62828;
+  text-decoration: none;
+}
 
+/* Центр */
+.site-header__center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.site-search {
+  width: min(720px, 100%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.site-search__input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.site-search__input:focus {
+  border-color: #c62828;
+}
+
+/* Кнопка поиска */
+.site-search__btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #c62828;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Правое меню */
+.site-header__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Ссылки меню — убираем "фиолетовый" */
 .nav-link {
-    text-decoration: none;
-    color: #c62828;
-    font-weight: 500;
+  color: #222;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.nav-link:hover { text-decoration: underline; }
-
-.page-wrap {
-    /* чтобы контент не прилипал к шапке */
-    padding-top: 10px;
+.nav-link:hover {
+  color: #c62828;
 }
 
-/* Красная опасная кнопка (Удалить) */
-.danger-btn {
-    background: #c62828;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
+.nav-user {
+  font-weight: 700;
 }
 
-.danger-btn:hover { background: #b71c1c; }
+/* Общие кнопки */
+.btn {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* Главная кнопка (красная) */
+.btn-main {
+  background: #c62828;
+  color: #fff;
+}
+
+/* “Ссылка-кнопка” (Выйти) */
+.btn-link {
+  background: transparent;
+  color: #c62828;
+  padding: 0;
+}
+
+/* Для form в одну линию */
+.inline-form {
+  display: inline;
+  margin: 0;
+}
