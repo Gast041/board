@@ -1,74 +1,22 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <!-- =========================
-         СЛУЖЕБНЫЕ НАСТРОЙКИ СТРАНИЦЫ
-         ========================= -->
 
-    <!-- Кодировка (чтобы русский текст отображался нормально) -->
-    <meta charset="UTF-8">
+{% block title %}{{ ad.title }}{% endblock %}
 
-    <!-- Заголовок вкладки браузера (название объявления) -->
-    <title>{{ ad.title }}</title>
-
-    <!-- Подключение общего CSS (твой основной файл со стилями) -->
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-
-    <!-- Адаптивность для телефонов -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-
-<!-- =========================
-     ШАПКА САЙТА
-     ========================= -->
-<header class="header">
-
-    <!-- Логотип + ссылка на главную страницу -->
-    <div class="logo">
-        <a href="/" style="text-decoration:none;color:#000;">
-            Доска объявлений
-        </a>
-    </div>
-
-    <!-- Меню справа -->
-    <nav>
-        {% if user.is_authenticated %}
-            <!-- Имя пользователя (пока просто текст, позже сделаем ссылкой на профиль) -->
-            <span>{{ user.username }}</span>
-
-            <!-- Выход (ВАЖНО: logout у тебя через POST, поэтому form) -->
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button class="link-btn" type="submit">Выйти</button>
-            </form>
-        {% else %}
-            <!-- Если не авторизован -->
-            <a href="{% url 'login' %}">Вход</a>
-            <a href="{% url 'signup' %}">Регистрация</a>
-        {% endif %}
-    </nav>
-
-</header>
-
-
-<!-- =========================
-     ОСНОВНОЙ КОНТЕНТ
-     ========================= -->
-<main class="hero">
+{% block content %}
+<div class="hero">
 
     <!-- Заголовок объявления -->
     <h1>{{ ad.title }}</h1>
 
-    <!-- Цена (показываем только если указана) -->
+    <!-- Цена -->
     {% if ad.price %}
         <div style="margin-bottom:15px; font-size:18px;">
             <b>Цена:</b> {{ ad.price }}
         </div>
     {% endif %}
 
-    <!-- Описание (если нет — выводим заглушку) -->
+    <!-- Описание -->
     {% if ad.description %}
         <div style="margin-bottom:20px;">
             {{ ad.description|linebreaksbr }}
@@ -79,51 +27,30 @@
         </div>
     {% endif %}
 
-    <!-- Автор объявления -->
+    <!-- Автор -->
     <div style="font-size:14px; color:#444;">
         Автор: {{ ad.author.username }}
     </div>
 
-
-    <!-- =========================
-         КНОПКИ ДЛЯ АВТОРА
-         ========================= -->
-    <!-- Показываем кнопки ТОЛЬКО если пользователь вошёл и он автор -->
+    <!-- Кнопки автора -->
     {% if user.is_authenticated and user == ad.author %}
         <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">Редактировать</a>
 
-            <!-- Редактирование (GET) -->
-            <!-- Ведёт на /ads/<id>/edit/ -->
-            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
-                Редактировать
-            </a>
-
-            <!-- Удаление (ТОЛЬКО POST) -->
             <form method="post"
                   action="{% url 'delete_ad' ad.id %}"
                   onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
                 {% csrf_token %}
-                <button type="submit" class="danger-btn">
-                    Удалить объявление
-                </button>
+                <button type="submit" class="danger-btn">Удалить объявление</button>
             </form>
-
         </div>
     {% endif %}
 
-
-    <!-- =========================
-         КНОПКА НАЗАД
-         ========================= -->
+    <!-- Назад -->
     <div style="margin-top:30px;">
-        <a href="{% url 'ads_list' %}" class="main-btn">
-            Назад к ленте
-        </a>
+        <a href="{% url 'ads_list' %}" class="main-btn">Назад к ленте</a>
     </div>
 
-</main>
-
-</body>
-</html>
-
+</div>
+{% endblock %}
 

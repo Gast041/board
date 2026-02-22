@@ -1,94 +1,83 @@
 {% load static %}
-<!-- =========================
-     base.html — общий каркас для всех страниц (кроме home.html)
-     Здесь: <head>, подключение CSS, и общая шапка
-     ========================= -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Кодировка -->
+    <!-- =========================
+         BASE: общая голова для страниц
+         (все страницы кроме home.html будут extends base.html)
+         ========================= -->
     <meta charset="UTF-8">
-
-    <!-- Адаптивность -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Заголовок вкладки (каждая страница подставит свой) -->
     <title>{% block title %}52prime.ru{% endblock %}</title>
 
-    <!-- Общие стили сайта (весь дизайн: фон, hero, кнопки и т.д.) -->
+    <!-- Общий стиль сайта -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 
-    <!-- Стили только для шапки/меню (липкая шапка + поиск) -->
+    <!-- Стиль шапки (sticky header) -->
     <link rel="stylesheet" href="{% static 'base.css' %}">
-</head>
 
+    {% block extra_css %}{% endblock %}
+</head>
 <body>
 
 <!-- =========================
-     ШАПКА САЙТА (общая)
+     ОБЩАЯ ШАПКА (липкая)
      ========================= -->
-<header class="header">
+<header class="site-header">
+    <div class="header-bar">
 
-    <!-- ЛЕВАЯ ЧАСТЬ: логотип -->
-    <div class="logo">
-        <a href="/" class="logo-link">52prime.ru</a>
+        <!-- ЛЕВО: Логотип -->
+        <div class="header-left">
+            <a href="/" class="logo-link">52prime.ru</a>
+        </div>
+
+        <!-- ЦЕНТР: поиск показываем только на страницах /ads/... -->
+        <div class="header-center">
+            {% if request.path|slice:":5" == "/ads/" %}
+                <form method="get" action="{% url 'ads_list' %}" class="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ q|default:'' }}"
+                        placeholder="Поиск объявлений..."
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- ПРАВО: меню -->
+        <div class="header-right">
+
+            <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+
+            {% if user.is_authenticated %}
+                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+
+                <!-- имя ведёт в профиль -->
+                <a class="nav-link" href="{% url 'profile' %}">{{ user.username }}</a>
+
+                <form method="post" action="{% url 'logout' %}" class="inline-form">
+                    {% csrf_token %}
+                    <button class="link-btn" type="submit">Выйти</button>
+                </form>
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+            {% endif %}
+        </div>
+
     </div>
-
-    <!-- ЦЕНТР: поиск
-         Поиск пока работает для ленты /ads/ (views уже умеет ?q=...)
-         В других разделах позже можно сделать отдельную страницу поиска.
-    -->
-    <div class="header-search">
-        <form method="get" action="{% url 'ads_list' %}" class="search-form">
-            <input
-                type="text"
-                name="q"
-                value="{{ q|default:'' }}"
-                placeholder="Поиск объявлений..."
-                class="search-input"
-            >
-            <button type="submit" class="search-btn">Найти</button>
-        </form>
-    </div>
-
-    <!-- ПРАВАЯ ЧАСТЬ: меню -->
-    <nav class="header-nav">
-
-        {% if user.is_authenticated %}
-
-            <!-- + Объявление -->
-            <a class="main-btn" href="{% url 'create_ad' %}">
-                + Объявление
-            </a>
-
-            <!-- Имя пользователя ведёт в профиль -->
-            <a href="{% url 'profile' %}" class="header-user">
-                {{ user.username }}
-            </a>
-
-            <!-- Выход (POST) -->
-            <form method="post" action="{% url 'logout' %}" class="logout-form">
-                {% csrf_token %}
-                <button class="link-btn" type="submit">Выйти</button>
-            </form>
-
-        {% else %}
-
-            <a href="{% url 'login' %}">Вход</a>
-            <a href="{% url 'signup' %}">Регистрация</a>
-
-        {% endif %}
-
-    </nav>
-
 </header>
-
 
 <!-- =========================
      КОНТЕНТ СТРАНИЦЫ
-     Тут каждая страница рисует своё
      ========================= -->
-{% block content %}{% endblock %}
+<main class="page-wrap">
+    {% block content %}{% endblock %}
+</main>
 
 </body>
 </html>
