@@ -1,85 +1,93 @@
 /* =========================
-   base.css
-   Фиксированная шапка + поиск + меню
+   base.css — фиксированная шапка + поиск + меню
    ========================= */
 
 .site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
 
-  gap: 16px;
-  padding: 10px 20px;
-
-  background: #fff;
-  border-bottom: 1px solid #ffeded;
-  z-index: 999;
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #ffeded;
+    z-index: 999;
 }
 
-/* отступ под fixed header */
+/* Отступ под фиксированную шапку */
 .header-spacer {
-  height: 62px; /* под высоту шапки */
+    height: 62px;
 }
 
 .site-logo .logo-link {
-  font-weight: 700;
-  text-decoration: none;
-  color: #111;
+    font-weight: 700;
+    text-decoration: none;
+    color: #111;
 }
 
-/* центр поиска */
+/* Центр: поиск */
 .site-search {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 .search-form {
-  width: min(700px, 100%);
-  display: flex;
-  gap: 10px;
+    width: min(700px, 100%);
+    display: flex;
+    gap: 10px;
 }
 
 .search-input {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
 }
 
 .search-btn {
-  padding: 8px 14px;
-  border: none;
-  background: #c62828;
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
+    padding: 8px 14px;
+    border: none;
+    background: #c62828;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-/* правое меню */
+/* Правое меню */
 .site-nav {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
 }
 
 .nav-link {
-  text-decoration: none;
-  color: #c62828;
-  font-weight: 600;
+    text-decoration: none;
+    color: #c62828;
+    font-weight: 600;
 }
 
 .nav-form {
-  display: inline;
+    display: inline;
 }
 
-/* фикс: чтобы у кнопки "+ Объявление" был БЕЛЫЙ текст */
+/* ВАЖНО: текст на main-btn должен быть белым */
 .main-btn {
-  color: #fff !important;
+    color: #fff !important;
+}
+
+/* На всякий случай: если danger-btn не задан в style.css */
+.danger-btn {
+    background: #c62828;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
 }

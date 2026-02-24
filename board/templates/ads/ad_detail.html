@@ -1,15 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-<!-- =========================
-     ads/ad_detail.html
-     Детальная страница объявления
-     ========================= -->
-
 {% block title %}{{ ad.title }}{% endblock %}
 
 {% block content %}
-<div class="hero">
+<main class="hero">
 
     <h1>{{ ad.title }}</h1>
 
@@ -50,5 +45,5 @@
         <a href="{% url 'ads_list' %}" class="main-btn">Назад к ленте</a>
     </div>
 
-</div>
+</main>
 {% endblock %}

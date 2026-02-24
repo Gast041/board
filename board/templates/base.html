@@ -1,22 +1,24 @@
 {% load static %}
-<!-- =========================
-     base.html
-     Базовый шаблон для ВСЕХ страниц кроме главной (home.html)
-     Тут единая шапка (меню) + подключение стилей
-     ========================= -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- =========================
+         BASE.HTML — общий шаблон
+         Тут: <head>, шапка, и блоки для страниц
+         ========================= -->
+
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Заголовок вкладки (каждая страница может переопределить) -->
     <title>{% block title %}52prime.ru{% endblock %}</title>
 
     <!-- Общие стили проекта -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <!-- Стили для фиксированной шапки (меню) -->
+    <!-- Стили шапки/меню -->
     <link rel="stylesheet" href="{% static 'base.css' %}">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <!-- Доп. стили/мета для конкретных страниц -->
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -25,55 +27,55 @@
      ФИКСИРОВАННАЯ ШАПКА
      ========================= -->
 <header class="site-header">
+
     <!-- ЛОГО -->
     <div class="site-logo">
         <a href="{% url 'ads_list' %}" class="logo-link">52prime.ru</a>
     </div>
 
-    <!-- ПОИСК (пока живёт в /ads/ по ?q= ) -->
+    <!-- ПОИСК (логика уже в ads_list: /ads/?q=...) -->
     <div class="site-search">
         <form method="get" action="{% url 'ads_list' %}" class="search-form">
             <input
+                class="search-input"
                 type="text"
                 name="q"
                 value="{{ q|default:'' }}"
                 placeholder="Поиск объявлений..."
-                class="search-input"
             >
-            <button type="submit" class="search-btn">Найти</button>
+            <button class="search-btn" type="submit">Найти</button>
         </form>
     </div>
 
-    <!-- МЕНЮ СПРАВА -->
+    <!-- МЕНЮ -->
     <nav class="site-nav">
-        <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+        <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
+            <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
 
             <!-- Имя ведёт в профиль -->
-            <a href="{% url 'profile' %}" class="nav-link">{{ user.username }}</a>
+            <a class="nav-link" href="{% url 'profile' %}">{{ user.username }}</a>
 
             <form method="post" action="{% url 'logout' %}" class="nav-form">
                 {% csrf_token %}
                 <button class="link-btn" type="submit">Выйти</button>
             </form>
         {% else %}
-            <a href="{% url 'login' %}" class="nav-link">Вход</a>
-            <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
+            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+            <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
         {% endif %}
     </nav>
+
 </header>
 
-<!-- чтобы контент не уезжал под fixed-шапку -->
+<!-- Спейсер, чтобы контент не залезал под fixed header -->
 <div class="header-spacer"></div>
 
 <!-- =========================
      КОНТЕНТ СТРАНИЦЫ
      ========================= -->
-<main>
-    {% block content %}{% endblock %}
-</main>
+{% block content %}{% endblock %}
 
 </body>
 </html>
