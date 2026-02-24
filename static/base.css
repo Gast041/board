@@ -1,93 +1,88 @@
 /* =========================
-   base.css — фиксированная шапка + поиск + меню
+   ЛИПКАЯ ШАПКА
    ========================= */
 
 .site-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-
-    padding: 10px 20px;
-    background: #fff;
-    border-bottom: 1px solid #ffeded;
-    z-index: 999;
+  background: #fff;
+  border-bottom: 1px solid #ffe1e1;
 }
 
-/* Отступ под фиксированную шапку */
-.header-spacer {
-    height: 62px;
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.site-logo .logo-link {
-    font-weight: 700;
-    text-decoration: none;
-    color: #111;
+.header-logo {
+  min-width: 120px;
 }
 
-/* Центр: поиск */
-.site-search {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+.logo-link {
+  font-weight: 700;
+  text-decoration: none;
+  color: #000;
+}
+
+.header-search {
+  flex: 1;
 }
 
 .search-form {
-    width: min(700px, 100%);
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .search-input {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #d6d6d6;
+  outline: none;
 }
 
 .search-btn {
-    padding: 8px 14px;
-    border: none;
-    background: #c62828;
-    color: #fff;
-    border-radius: 6px;
-    cursor: pointer;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #c62828;
+  color: #fff;
 }
 
-/* Правое меню */
-.site-nav {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    white-space: nowrap;
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
 }
 
 .nav-link {
-    text-decoration: none;
-    color: #c62828;
-    font-weight: 600;
+  text-decoration: none;
+  color: #c62828;
+  font-weight: 600;
+}
+
+.nav-user {
+  color: #000;
+  font-weight: 700;
 }
 
 .nav-form {
-    display: inline;
+  display: inline;
 }
 
-/* ВАЖНО: текст на main-btn должен быть белым */
-.main-btn {
-    color: #fff !important;
-}
-
-/* На всякий случай: если danger-btn не задан в style.css */
-.danger-btn {
-    background: #c62828;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
+/* отступ под fixed header */
+.header-spacer {
+  height: 62px;
 }

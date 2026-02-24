@@ -1,77 +1,32 @@
 # =========================
 # board/urls.py
-# ГЛАВНЫЕ URL МАРШРУТЫ САЙТА
+# Главные маршруты проекта
 # =========================
 
-# =========================
-# ИМПОРТЫ DJANGO
-# =========================
-from django.contrib import admin                              # админка Django
-from django.urls import path, include                         # path — маршрут, include — подключение urls другого приложения
-from django.contrib.auth import views as auth_views           # готовые вьюхи Django для login/logout
+from django.contrib import admin
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
-# =========================
-# ВЬЮХИ ОСНОВНОГО САЙТА
-# =========================
-# home_view — главная
-# signup_view — регистрация
-# profile_view — профиль
+# Вьюхи верхнего уровня проекта
 from board.views import home_view, signup_view, profile_view
 
 
-# =========================
-# СПИСОК URL МАРШРУТОВ ПРОЕКТА
-# =========================
 urlpatterns = [
-
-    # -------------------------
-    # ГЛАВНАЯ СТРАНИЦА
-    # URL: /
-    # -------------------------
+    # Главная
     path("", home_view, name="home"),
 
-    # -------------------------
-    # ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
-    # URL: /profile/
-    # name="profile" нужен для {% url 'profile' %}
-    # -------------------------
-    path("profile/", profile_view, name="profile"),
-
-    # -------------------------
-    # АДМИНКА DJANGO
-    # URL: /admin/
-    # -------------------------
+    # Админка
     path("admin/", admin.site.urls),
 
-    # -------------------------
-    # АВТОРИЗАЦИЯ
-    # -------------------------
-
-    # Вход
-    # URL: /login/
-    path(
-        "login/",
-        auth_views.LoginView.as_view(template_name="login.html"),
-        name="login"
-    ),
-
-    # Выход
-    # URL: /logout/
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(),
-        name="logout"
-    ),
-
-    # Регистрация
-    # URL: /signup/
+    # Авторизация
+    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("signup/", signup_view, name="signup"),
 
-    # -------------------------
-    # ОБЪЯВЛЕНИЯ (ADS)
-    # -------------------------
-    # Всё, что начинается с /ads/ — уходит в board/ads/urls.py
+    # Профиль
+    path("profile/", profile_view, name="profile"),
+
+    # Объявления
     path("ads/", include("board.ads.urls")),
 ]
-
 
