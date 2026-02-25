@@ -1,42 +1,82 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Доска объявлений</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
 
-<header class="header">
-    <div class="logo">Доска объявлений</div>
+{% block title %}52prime.ru — Доска объявлений{% endblock %}
+{% block body_class %}home{% endblock %}
 
-    <nav>
-        {% if user.is_authenticated %}
-            <span>{{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="link-btn">Выйти</button>
+{% block content %}
+
+<!-- =========================
+     БОЛЬШАЯ ШАПКА-КАРТИНКА
+     ========================= -->
+<section class="home-hero">
+    <div class="home-hero-overlay">
+        <div class="home-hero-box">
+            <h1 class="home-hero-title">Доска объявлений</h1>
+            <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
+
+            <!-- Поиск ведём сразу на /ads/ -->
+            <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
+                <input type="text" name="q" placeholder="Поиск по объявлениям..." class="home-hero-input">
+                <button type="submit" class="home-hero-btn">Найти</button>
             </form>
-        {% else %}
-            <a href="{% url 'login' %}">Вход</a>
-            <a href="{% url 'signup' %}">Регистрация</a>
-        {% endif %}
-    </nav>
-</header>
 
-<main class="hero">
-    <h1>Размещайте объявления бесплатно!</h1>
-    <p>Без посредников. Просто. Быстро.</p>
+            <div class="home-hero-actions">
+                <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <a href="{% url 'create_ad' %}" class="main-btn">Разместить объявление</a>
+<!-- =========================
+     РУБРИКИ (пример: 3 колонки)
+     ========================= -->
+<section class="home-cats">
+    <div class="home-cats-inner">
 
+        <h2 class="home-cats-title">Каталог рубрик</h2>
 
-</main>
+        <div class="home-cats-grid">
 
-</body>
-</html>
+            <div class="cat-card">
+                <div class="cat-card-title">Продажа</div>
+                <ul class="cat-list">
+                    <li><a href="{% url 'ads_list' %}?q=телефон">Телефоны</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=ноутбук">Компьютеры</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=мебель">Мебель</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=авто">Авто</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=детское">Детское</a></li>
+                </ul>
+            </div>
+
+            <div class="cat-card">
+                <div class="cat-card-title">Аренда</div>
+                <ul class="cat-list">
+                    <li><a href="{% url 'ads_list' %}?q=квартира">Квартиры</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=комната">Комнаты</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=дом">Дома</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=офис">Офисы</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=гараж">Гаражи</a></li>
+                </ul>
+            </div>
+
+            <div class="cat-card">
+                <div class="cat-card-title">Услуги</div>
+                <ul class="cat-list">
+                    <li><a href="{% url 'ads_list' %}?q=ремонт">Ремонт</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=доставка">Доставка</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=электрик">Электрик</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=сантехник">Сантехник</a></li>
+                    <li><a href="{% url 'ads_list' %}?q=обучение">Обучение</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
 
 
 

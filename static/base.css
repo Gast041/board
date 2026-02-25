@@ -86,3 +86,152 @@
 .header-spacer {
   height: 62px;
 }
+/* =========================
+   ГЛАВНАЯ: меню НЕ липкое
+   ========================= */
+.home .site-header{
+  position: static;
+}
+
+.home .header-spacer{
+  height: 0;
+}
+
+/* =========================
+   ГЛАВНАЯ: hero-картинка
+   ========================= */
+.home-hero{
+  min-height: 420px;
+  background: #111; /* запасной цвет */
+  background-image: url("/static/hero.jpg"); /* добавь файл static/hero.jpg */
+  background-size: cover;
+  background-position: center;
+}
+
+.home-hero-overlay{
+  min-height: 420px;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.home-hero-box{
+  width: 100%;
+  max-width: 980px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 14px;
+  padding: 26px 22px;
+  border: 1px solid #ffe1e1;
+}
+
+.home-hero-title{
+  margin: 0 0 8px 0;
+  font-size: 36px;
+  color: #000;
+}
+
+.home-hero-subtitle{
+  margin: 0 0 18px 0;
+  color: #333;
+}
+
+.home-hero-search{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.home-hero-input{
+  flex: 1;
+  min-width: 220px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d6d6d6;
+  outline: none;
+}
+
+.home-hero-btn{
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #c62828;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.home-hero-actions{
+  margin-top: 14px;
+}
+
+.home-hero-link{
+  color: #c62828;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* =========================
+   ГЛАВНАЯ: рубрики
+   ========================= */
+.home-cats{
+  padding: 28px 16px 46px;
+}
+
+.home-cats-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.home-cats-title{
+  margin: 0 0 18px 0;
+  font-size: 26px;
+  color: #000;
+  text-align: center;
+}
+
+.home-cats-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cat-card{
+  background: #fff;
+  border: 1px solid #ffe1e1;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.cat-card-title{
+  font-size: 18px;
+  font-weight: 800;
+  color: #c62828;
+  margin-bottom: 10px;
+}
+
+.cat-list{
+  margin: 0;
+  padding-left: 18px;
+}
+
+.cat-list a{
+  color: #000;
+  text-decoration: none;
+}
+
+.cat-list a:hover{
+  color: #c62828;
+  text-decoration: underline;
+}
+
+/* адаптив */
+@media (max-width: 900px){
+  .home-cats-grid{
+    grid-template-columns: 1fr;
+  }
+  .home-hero-title{
+    font-size: 28px;
+  }
+}
