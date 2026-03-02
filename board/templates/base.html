@@ -17,7 +17,11 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<!-- =========================
+     BODY CLASS (чтобы можно было управлять страницами через CSS)
+     ========================= -->
+
+<body class="site {% block body_class %}{% endblock %}">
 
 <!-- =========================
      ШАПКА САЙТА (общая)
