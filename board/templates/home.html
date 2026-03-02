@@ -1,95 +1,250 @@
+{# =========================
+   HOME.HTML — ГЛАВНАЯ СТРАНИЦА
+   Файл: board/templates/home.html
+
+   ВАЖНО:
+   - Используем общий base.html
+   - На главной скрываем поиск в шапке (header_search пустой),
+     потому что поиск есть в hero-блоке
+   ========================= #}
+
 {% extends "base.html" %}
 {% load static %}
 
+{# Заголовок вкладки #}
 {% block title %}52prime.ru — Доска объявлений{% endblock %}
+
+{# Чтобы CSS знал, что это главная (home) #}
 {% block body_class %}home{% endblock %}
 
-<!-- =========================
-     ВАЖНО:
-     На главной НЕ нужен поиск в шапке.
-     Поэтому этот блок делаем пустым.
-     Меню при этом НЕ уедет влево, потому что контейнер header-search остаётся.
-     ========================= -->
+{# На главной убираем поиск в шапке (чтобы не было двух поисков) #}
 {% block header_search %}{% endblock %}
 
 {% block content %}
 
-<!-- =========================
-     HERO (картинка + большой поиск)
-     ========================= -->
+{# =========================
+   HERO-БЛОК С КАРТИНКОЙ
+   ========================= #}
 <section class="home-hero">
-    <div class="home-hero-overlay">
-        <div class="home-hero-box">
+  <div class="home-hero-overlay">
+    <div class="home-hero-box">
 
-            <h1 class="home-hero-title">Доска объявлений</h1>
-            <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
+      <h1 class="home-hero-title">Доска объявлений</h1>
+      <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
 
-            <!-- Поиск на главной (единственный) -->
-            <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Поиск по объявлениям..."
-                    class="home-hero-input"
-                >
-                <button type="submit" class="home-hero-btn">Найти</button>
-            </form>
+      {# Поиск ведёт в ленту с параметром ?q=... #}
+      <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
+        <input
+          type="text"
+          name="q"
+          placeholder="Поиск по объявлениям..."
+          class="home-hero-input"
+        >
+        <button type="submit" class="home-hero-btn">Найти</button>
+      </form>
 
-            <div class="home-hero-actions">
-                <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
-            </div>
+      <div class="home-hero-actions">
+        <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+      </div>
 
-        </div>
     </div>
+  </div>
 </section>
 
-<!-- =========================
-     КАТАЛОГ РУБРИК (пока просто дизайн)
-     ========================= -->
+{# =========================
+   КАТАЛОГ РУБРИК (9 штук)
+   ========================= #}
 <section class="home-cats">
-    <div class="home-cats-inner">
-        <h2 class="home-cats-title">Каталог рубрик</h2>
+  <div class="home-cats-inner">
+    <h2 class="home-cats-title">Каталог рубрик</h2>
 
-        <div class="home-cats-grid">
+    <div class="home-cats-grid">
 
-            <div class="cat-card">
-                <div class="cat-card-title">Продажа</div>
-                <ul class="cat-list">
-                    <li><a href="#">Телефоны</a></li>
-                    <li><a href="#">Компьютеры</a></li>
-                    <li><a href="#">Мебель</a></li>
-                    <li><a href="#">Авто</a></li>
-                    <li><a href="#">Детское</a></li>
-                </ul>
-            </div>
-
-            <div class="cat-card">
-                <div class="cat-card-title">Аренда</div>
-                <ul class="cat-list">
-                    <li><a href="#">Квартиры</a></li>
-                    <li><a href="#">Комнаты</a></li>
-                    <li><a href="#">Дома</a></li>
-                    <li><a href="#">Офисы</a></li>
-                    <li><a href="#">Гаражи</a></li>
-                </ul>
-            </div>
-
-            <div class="cat-card">
-                <div class="cat-card-title">Услуги</div>
-                <ul class="cat-list">
-                    <li><a href="#">Ремонт</a></li>
-                    <li><a href="#">Доставка</a></li>
-                    <li><a href="#">Электрик</a></li>
-                    <li><a href="#">Сантехник</a></li>
-                    <li><a href="#">Обучение</a></li>
-                </ul>
-            </div>
-
+      {# 1) Недвижимость #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Дом -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M12 3l9 8h-3v10h-5v-6H11v6H6V11H3l9-8z"/>
+            </svg>
+          </span>
+          Недвижимость
         </div>
+        <ul class="cat-list">
+          <li><a href="#">Квартиры</a></li>
+          <li><a href="#">Комнаты</a></li>
+          <li><a href="#">Дома</a></li>
+          <li><a href="#">Коммерческая недвижимость</a></li>
+          <li><a href="#">Гаражи и участки</a></li>
+        </ul>
+      </div>
+
+      {# 2) Транспорт #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Машина -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11v7h-2v-2H7v2H5v-7zm3.2-4L7.4 9h9.2l-.8-2a1 1 0 0 0-.9-.6H9.1a1 1 0 0 0-.9.6zM7 14.5A1.5 1.5 0 1 0 7 17a1.5 1.5 0 0 0 0-2.5zm10 0A1.5 1.5 0 1 0 17 17a1.5 1.5 0 0 0 0-2.5z"/>
+            </svg>
+          </span>
+          Транспорт
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Легковые автомобили</a></li>
+          <li><a href="#">Мотоциклы</a></li>
+          <li><a href="#">Грузовые авто и спецтехника</a></li>
+          <li><a href="#">Запчасти и аксессуары</a></li>
+          <li><a href="#">Водный транспорт</a></li>
+        </ul>
+      </div>
+
+      {# 3) Электроника #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Ноут -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9H4V6zm-2 11h20v2H2v-2z"/>
+            </svg>
+          </span>
+          Электроника
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Телефоны и смартфоны</a></li>
+          <li><a href="#">Компьютеры и ноутбуки</a></li>
+          <li><a href="#">ТВ и аудиотехника</a></li>
+          <li><a href="#">Бытовая техника</a></li>
+          <li><a href="#">Игровые приставки</a></li>
+        </ul>
+      </div>
+
+      {# 4) Для дома и сада #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Дом+лист -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M12 3l9 8h-3v10h-5v-6H11v6H6V11H3l9-8z"/>
+              <path d="M19.5 13c-2.5 0-4.5 2-4.5 4.5S17 22 19.5 22c1.7 0 3-1.3 3-3 0-2.5-1.5-6-3-6z"/>
+            </svg>
+          </span>
+          Для дома и сада
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Мебель</a></li>
+          <li><a href="#">Строительство и ремонт</a></li>
+          <li><a href="#">Инструменты</a></li>
+          <li><a href="#">Сад и огород</a></li>
+          <li><a href="#">Освещение и декор</a></li>
+        </ul>
+      </div>
+
+      {# 5) Личные вещи #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Футболка -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M16 4l3 2 2 3-3 2v11H6V11L3 9l2-3 3-2 2 2h6l2-2z"/>
+            </svg>
+          </span>
+          Личные вещи
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Одежда</a></li>
+          <li><a href="#">Обувь</a></li>
+          <li><a href="#">Сумки и аксессуары</a></li>
+          <li><a href="#">Спорт и отдых</a></li>
+          <li><a href="#">Хобби и творчество</a></li>
+        </ul>
+      </div>
+
+      {# 6) Животные и растения #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Лапа -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M6.5 12.5c-1.1 0-2-1.1-2-2.5S5.4 7.5 6.5 7.5s2 1.1 2 2.5-.9 2.5-2 2.5zm11 0c-1.1 0-2-1.1-2-2.5s.9-2.5 2-2.5 2 1.1 2 2.5-.9 2.5-2 2.5zM9 7c-1 0-1.8-1-1.8-2.2S8 2.6 9 2.6s1.8 1 1.8 2.2S10 7 9 7zm6 0c-1 0-1.8-1-1.8-2.2S14 2.6 15 2.6s1.8 1 1.8 2.2S16 7 15 7zM12 13c-3 0-6 2.3-6 5 0 1.6 1.3 2.4 3 2.4 1.2 0 2.3-.4 3-.9.7.5 1.8.9 3 .9 1.7 0 3-.8 3-2.4 0-2.7-3-5-6-5z"/>
+            </svg>
+          </span>
+          Животные и растения
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Собаки</a></li>
+          <li><a href="#">Кошки</a></li>
+          <li><a href="#">Другие животные</a></li>
+          <li><a href="#">Товары для животных</a></li>
+          <li><a href="#">Растения и саженцы</a></li>
+        </ul>
+      </div>
+
+      {# 7) Красота и здоровье #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Сердце -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M12 21s-7-4.5-9.5-9C.5 8.5 2.5 6 5.5 6c1.7 0 3 .9 3.8 2 0 0 1.2-2 4.2-2 3 0 5 2.5 3 6-2.5 4.5-9.5 9-9.5 9z"/>
+            </svg>
+          </span>
+          Красота и здоровье
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Косметика</a></li>
+          <li><a href="#">Парфюмерия</a></li>
+          <li><a href="#">Медицинские товары</a></li>
+          <li><a href="#">Фитнес и спортпит</a></li>
+          <li><a href="#">Оборудование для салонов</a></li>
+        </ul>
+      </div>
+
+      {# 8) Работа и бизнес #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Портфель -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M9 4h6a2 2 0 0 1 2 2v2h4v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8h4V6a2 2 0 0 1 2-2zm0 4h6V6H9v2zm-4 5h14v7H5v-7z"/>
+            </svg>
+          </span>
+          Работа и бизнес
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Вакансии</a></li>
+          <li><a href="#">Резюме</a></li>
+          <li><a href="#">Подработка</a></li>
+          <li><a href="#">Готовый бизнес</a></li>
+          <li><a href="#">Оборудование для бизнеса</a></li>
+        </ul>
+      </div>
+
+      {# 9) Услуги #}
+      <div class="cat-card">
+        <div class="cat-card-title">
+          <span class="cat-icon" aria-hidden="true">
+            <!-- Ключ -->
+            <svg viewBox="0 0 24 24" class="cat-icon-svg">
+              <path d="M14 3a7 7 0 0 0-5.2 11.6L7 16.4V19h2.6l1.2-1.2H13v-2.2l1.6-1.6A7 7 0 0 0 14 3zm0 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+            </svg>
+          </span>
+          Услуги
+        </div>
+        <ul class="cat-list">
+          <li><a href="#">Ремонт и строительство</a></li>
+          <li><a href="#">Доставка и перевозки</a></li>
+          <li><a href="#">Обучение и репетиторы</a></li>
+          <li><a href="#">Красота и уход</a></li>
+          <li><a href="#">IT и цифровые услуги</a></li>
+        </ul>
+      </div>
+
     </div>
+  </div>
 </section>
 
 {% endblock %}
-
 
 
