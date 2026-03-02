@@ -4,36 +4,50 @@
 {% block title %}52prime.ru — Доска объявлений{% endblock %}
 {% block body_class %}home{% endblock %}
 
+<!-- =========================
+     ВАЖНО:
+     На главной НЕ нужен поиск в шапке.
+     Поэтому этот блок делаем пустым.
+     Меню при этом НЕ уедет влево, потому что контейнер header-search остаётся.
+     ========================= -->
+{% block header_search %}{% endblock %}
+
 {% block content %}
 
 <!-- =========================
-     БОЛЬШАЯ ШАПКА-КАРТИНКА
+     HERO (картинка + большой поиск)
      ========================= -->
 <section class="home-hero">
     <div class="home-hero-overlay">
         <div class="home-hero-box">
+
             <h1 class="home-hero-title">Доска объявлений</h1>
             <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
 
-            <!-- Поиск ведём сразу на /ads/ -->
+            <!-- Поиск на главной (единственный) -->
             <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
-                <input type="text" name="q" placeholder="Поиск по объявлениям..." class="home-hero-input">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Поиск по объявлениям..."
+                    class="home-hero-input"
+                >
                 <button type="submit" class="home-hero-btn">Найти</button>
             </form>
 
             <div class="home-hero-actions">
                 <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
             </div>
+
         </div>
     </div>
 </section>
 
 <!-- =========================
-     РУБРИКИ (пример: 3 колонки)
+     КАТАЛОГ РУБРИК (пока просто дизайн)
      ========================= -->
 <section class="home-cats">
     <div class="home-cats-inner">
-
         <h2 class="home-cats-title">Каталог рубрик</h2>
 
         <div class="home-cats-grid">
@@ -41,38 +55,37 @@
             <div class="cat-card">
                 <div class="cat-card-title">Продажа</div>
                 <ul class="cat-list">
-                    <li><a href="{% url 'ads_list' %}?q=телефон">Телефоны</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=ноутбук">Компьютеры</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=мебель">Мебель</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=авто">Авто</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=детское">Детское</a></li>
+                    <li><a href="#">Телефоны</a></li>
+                    <li><a href="#">Компьютеры</a></li>
+                    <li><a href="#">Мебель</a></li>
+                    <li><a href="#">Авто</a></li>
+                    <li><a href="#">Детское</a></li>
                 </ul>
             </div>
 
             <div class="cat-card">
                 <div class="cat-card-title">Аренда</div>
                 <ul class="cat-list">
-                    <li><a href="{% url 'ads_list' %}?q=квартира">Квартиры</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=комната">Комнаты</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=дом">Дома</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=офис">Офисы</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=гараж">Гаражи</a></li>
+                    <li><a href="#">Квартиры</a></li>
+                    <li><a href="#">Комнаты</a></li>
+                    <li><a href="#">Дома</a></li>
+                    <li><a href="#">Офисы</a></li>
+                    <li><a href="#">Гаражи</a></li>
                 </ul>
             </div>
 
             <div class="cat-card">
                 <div class="cat-card-title">Услуги</div>
                 <ul class="cat-list">
-                    <li><a href="{% url 'ads_list' %}?q=ремонт">Ремонт</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=доставка">Доставка</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=электрик">Электрик</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=сантехник">Сантехник</a></li>
-                    <li><a href="{% url 'ads_list' %}?q=обучение">Обучение</a></li>
+                    <li><a href="#">Ремонт</a></li>
+                    <li><a href="#">Доставка</a></li>
+                    <li><a href="#">Электрик</a></li>
+                    <li><a href="#">Сантехник</a></li>
+                    <li><a href="#">Обучение</a></li>
                 </ul>
             </div>
 
         </div>
-
     </div>
 </section>
 

@@ -1,7 +1,11 @@
 /* =========================
-   ЛИПКАЯ ШАПКА
+   BASE.CSS — шапка + главная
+   Цвета: белый / красный / чёрный
    ========================= */
 
+/* =========================
+   ЛИПКАЯ ШАПКА (по умолчанию)
+   ========================= */
 .site-header {
   position: fixed;
   top: 0;
@@ -24,17 +28,18 @@
 }
 
 .header-logo {
-  min-width: 120px;
+  min-width: 140px;
 }
 
 .logo-link {
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: none;
   color: #000;
 }
 
 .header-search {
-  flex: 1;
+  flex: 1;          /* ВАЖНО: держит место, чтобы меню было справа */
+  min-width: 0;     /* чтобы input не ломал flex на узких экранах */
 }
 
 .search-form {
@@ -58,188 +63,211 @@
   cursor: pointer;
   background: #c62828;
   color: #fff;
+  font-weight: 700;
 }
 
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   white-space: nowrap;
 }
 
 .nav-link {
   text-decoration: none;
   color: #c62828;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .nav-user {
   color: #000;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .nav-form {
   display: inline;
 }
 
-/* отступ под fixed header */
+/* Отступ под fixed header */
 .header-spacer {
   height: 62px;
 }
+
 /* =========================
    ГЛАВНАЯ: меню НЕ липкое
    ========================= */
-.home .site-header{
+.home .site-header {
   position: static;
 }
 
-.home .header-spacer{
+.home .header-spacer {
   height: 0;
 }
 
 /* =========================
    ГЛАВНАЯ: hero-картинка
    ========================= */
-.home-hero{
+.home-hero {
   min-height: 420px;
-  background: #111; /* запасной цвет */
-  background-image: url("/static/hero.jpg"); /* добавь файл static/hero.jpg */
+  background: #111;
+
+  /* ФОН-КАРТИНКА
+     ВАЖНО: файл должен лежать в /static/
+     Сейчас у тебя есть hedr-imeg.jpg (по скрину).
+  */
+  background-image: url("/static/hedr-imeg.jpg");
   background-size: cover;
   background-position: center;
 }
 
-.home-hero-overlay{
+.home-hero-overlay {
   min-height: 420px;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 40px 16px;
 }
 
-.home-hero-box{
+.home-hero-box {
   width: 100%;
   max-width: 980px;
-  background: rgba(255,255,255,0.92);
+
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 14px;
   padding: 26px 22px;
+
   border: 1px solid #ffe1e1;
 }
 
-.home-hero-title{
+.home-hero-title {
   margin: 0 0 8px 0;
-  font-size: 36px;
+  font-size: 40px;
   color: #000;
 }
 
-.home-hero-subtitle{
+.home-hero-subtitle {
   margin: 0 0 18px 0;
   color: #333;
+  font-size: 18px;
 }
 
-.home-hero-search{
+.home-hero-search {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.home-hero-input{
+.home-hero-input {
   flex: 1;
   min-width: 220px;
+
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d6d6d6;
   outline: none;
 }
 
-.home-hero-btn{
+.home-hero-btn {
   padding: 10px 16px;
   border-radius: 10px;
   border: none;
+
   background: #c62828;
   color: #fff;
+
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 800;
 }
 
-.home-hero-actions{
+.home-hero-actions {
   margin-top: 14px;
 }
 
-.home-hero-link{
+.home-hero-link {
   color: #c62828;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+.home-hero-link:hover {
+  text-decoration: underline;
 }
 
 /* =========================
    ГЛАВНАЯ: рубрики
    ========================= */
-.home-cats{
+.home-cats {
   padding: 28px 16px 46px;
+  background: #ffecec; /* как у тебя на сайте */
 }
 
-.home-cats-inner{
+.home-cats-inner {
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.home-cats-title{
+.home-cats-title {
   margin: 0 0 18px 0;
-  font-size: 26px;
+  font-size: 28px;
   color: #000;
   text-align: center;
 }
 
-.home-cats-grid{
+.home-cats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
-.cat-card{
+.cat-card {
   background: #fff;
   border: 1px solid #ffe1e1;
   border-radius: 14px;
   padding: 16px;
 }
 
-.cat-card-title{
-  font-size: 18px;
-  font-weight: 800;
+.cat-card-title {
+  font-size: 20px;
+  font-weight: 900;
   color: #c62828;
   margin-bottom: 10px;
 }
 
-.cat-list{
+.cat-list {
   margin: 0;
   padding-left: 18px;
 }
 
-.cat-list a{
+.cat-list a {
   color: #000;
   text-decoration: none;
 }
 
-.cat-list a:hover{
+.cat-list a:hover {
   color: #c62828;
   text-decoration: underline;
 }
 
-/* адаптив */
-@media (max-width: 900px){
-  .home-cats-grid{
+/* =========================
+   Адаптив
+   ========================= */
+@media (max-width: 900px) {
+  .home-cats-grid {
     grid-template-columns: 1fr;
   }
-  .home-hero-title{
-    font-size: 28px;
-  }
-}
 
-/* =========================
-   ГЛАВНАЯ СТРАНИЦА: убираем поиск из верхнего меню
-   (на других страницах поиск в шапке остаётся)
-   ========================= */
-.home .header-search {
-  display: none;
+  .home-hero-title {
+    font-size: 30px;
+  }
+
+  .header-logo {
+    min-width: 110px;
+  }
+
+  .header-inner {
+    gap: 10px;
+  }
 }

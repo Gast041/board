@@ -2,29 +2,32 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- =========================
+         BASE.HTML — общий каркас сайта
+         Все страницы (кроме главной по логике поиска) наследуются отсюда
+         ========================= -->
+
     <meta charset="UTF-8">
-
-    <title>{% block title %}52prime.ru{% endblock %}</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Твои старые общие стили -->
+    <!-- Заголовок вкладки (каждая страница может переопределить) -->
+    <title>{% block title %}52prime.ru{% endblock %}</title>
+
+    <!-- Твои общие стили -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 
-    <!-- Стили для общего меню/шапки -->
+    <!-- Стили шапки/главной (base.css) -->
     <link rel="stylesheet" href="{% static 'base.css' %}">
 
+    <!-- На будущее: доп css под конкретную страницу -->
     {% block extra_css %}{% endblock %}
 </head>
 
-<!-- =========================
-     BODY CLASS (чтобы можно было управлять страницами через CSS)
-     ========================= -->
-
-<body class="site {% block body_class %}{% endblock %}">
+<!-- Класс body можно переопределять (например home) -->
+<body class="{% block body_class %}{% endblock %}">
 
 <!-- =========================
-     ШАПКА САЙТА (общая)
+     ШАПКА (одна на все страницы)
      ========================= -->
 <header class="site-header">
     <div class="header-inner">
@@ -34,30 +37,39 @@
             <a href="/" class="logo-link">52prime.ru</a>
         </div>
 
-        <!-- ПОИСК (реально работает на /ads/) -->
+        <!-- ПОИСК В ШАПКЕ
+             ВАЖНО: это отдельный блок.
+             На ГЛАВНОЙ мы его выключим (переопределим пустым),
+             но сам контейнер останется — чтобы меню НЕ уезжало влево.
+        -->
         <div class="header-search">
-            <form method="get" action="{% url 'ads_list' %}" class="search-form">
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ q|default:'' }}"
-                    placeholder="Поиск объявлений..."
-                    class="search-input"
-                >
-                <button type="submit" class="search-btn">Найти</button>
-            </form>
+            {% block header_search %}
+                <form method="get" action="{% url 'ads_list' %}" class="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ q|default:'' }}"
+                        placeholder="Поиск объявлений..."
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
+            {% endblock %}
         </div>
 
-        <!-- МЕНЮ -->
+        <!-- ПРАВОЕ МЕНЮ -->
         <nav class="header-nav">
             <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
 
             {% if user.is_authenticated %}
-                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+                <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
 
-                <!-- Имя → профиль -->
-                <a href="{% url 'profile' %}" class="nav-user">{{ user.username }}</a>
+                <!-- Имя ведёт в профиль -->
+                <a href="{% url 'profile' %}" class="nav-link nav-user">
+                    {{ user.username }}
+                </a>
 
+                <!-- Выход строго POST -->
                 <form method="post" action="{% url 'logout' %}" class="nav-form">
                     {% csrf_token %}
                     <button class="link-btn" type="submit">Выйти</button>
@@ -71,7 +83,7 @@
     </div>
 </header>
 
-<!-- Отступ под fixed-шапку (на главной отключим через CSS) -->
+<!-- Отступ под fixed header (на главной = 0, это в CSS) -->
 <div class="header-spacer"></div>
 
 <!-- =========================
