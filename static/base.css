@@ -115,7 +115,7 @@
      ВАЖНО: файл должен лежать в /static/
      Сейчас у тебя есть hedr-imeg.jpg (по скрину).
   */
-  background-image: url("/static/hedr-imeg.jpg");
+  background-image: url("/static/hero.jpg");
   background-size: cover;
   background-position: center;
 }
