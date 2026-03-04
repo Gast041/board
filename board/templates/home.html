@@ -52,7 +52,7 @@
   </div>
 </section>
 <!-- =========================
-   КАТАЛОГ РУБРИК (9 штук)
+   КАТАЛОГ РУБРИК (из БД)
    ========================= -->
 <section class="home-cats">
   <div class="home-cats-inner">
@@ -60,131 +60,30 @@
 
     <div class="home-cats-grid">
 
-      {# 1) Недвижимость #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-          🏠 Недвижимость
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Квартиры</a></li>
-          <li><a href="#">Комнаты</a></li>
-          <li><a href="#">Дома</a></li>
-          <li><a href="#">Коммерческая недвижимость</a></li>
-          <li><a href="#">Гаражи и участки</a></li>
-        </ul>
-      </div>
+      {# categories приходит из home_view #}
+      {% for c in categories %}
+        <div class="cat-card">
 
-      {# 2) Транспорт #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         🚗 Транспорт
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Легковые автомобили</a></li>
-          <li><a href="#">Мотоциклы</a></li>
-          <li><a href="#">Грузовые авто и спецтехника</a></li>
-          <li><a href="#">Запчасти и аксессуары</a></li>
-          <li><a href="#">Водный транспорт</a></li>
-        </ul>
-      </div>
+          <!-- Заголовок рубрики -->
+          <div class="cat-card-title">
+            <span class="cat-dot" aria-hidden="true"></span>
+            {{ c.name }}
+          </div>
 
-      {# 3) Электроника #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         💻 Электроника
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Телефоны и смартфоны</a></li>
-          <li><a href="#">Компьютеры и ноутбуки</a></li>
-          <li><a href="#">ТВ и аудиотехника</a></li>
-          <li><a href="#">Бытовая техника</a></li>
-          <li><a href="#">Игровые приставки</a></li>
-        </ul>
-      </div>
+          <!-- Подрубрики -->
+          <ul class="cat-list">
+            {% for child in c.children.all|slice:":5" %}
+              <li>
+                <!-- Ведём в ленту и фильтруем по подрубрике -->
+                <a href="{% url 'ads_list' %}?cat={{ child.slug }}">{{ child.name }}</a>
+              </li>
+            {% empty %}
+              <li style="color:#777;">Подрубрик пока нет</li>
+            {% endfor %}
+          </ul>
 
-      {# 4) Для дома и сада #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         🏡 Для дома и сада
         </div>
-        <ul class="cat-list">
-          <li><a href="#">Мебель</a></li>
-          <li><a href="#">Строительство и ремонт</a></li>
-          <li><a href="#">Инструменты</a></li>
-          <li><a href="#">Сад и огород</a></li>
-          <li><a href="#">Освещение и декор</a></li>
-        </ul>
-      </div>
-
-      {# 5) Личные вещи #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         👕 Личные вещи
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Одежда</a></li>
-          <li><a href="#">Обувь</a></li>
-          <li><a href="#">Сумки и аксессуары</a></li>
-          <li><a href="#">Спорт и отдых</a></li>
-          <li><a href="#">Хобби и творчество</a></li>
-        </ul>
-      </div>
-
-      {# 6) Животные и растения #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         🐶 Животные и растения
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Собаки</a></li>
-          <li><a href="#">Кошки</a></li>
-          <li><a href="#">Другие животные</a></li>
-          <li><a href="#">Товары для животных</a></li>
-          <li><a href="#">Растения и саженцы</a></li>
-        </ul>
-      </div>
-
-      {# 7) Красота и здоровье #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         💄 Красота и здоровье
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Косметика</a></li>
-          <li><a href="#">Парфюмерия</a></li>
-          <li><a href="#">Медицинские товары</a></li>
-          <li><a href="#">Фитнес и спортпит</a></li>
-          <li><a href="#">Оборудование для салонов</a></li>
-        </ul>
-      </div>
-
-      {# 8) Работа и бизнес #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         💼 Работа и бизнес
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Вакансии</a></li>
-          <li><a href="#">Резюме</a></li>
-          <li><a href="#">Подработка</a></li>
-          <li><a href="#">Готовый бизнес</a></li>
-          <li><a href="#">Оборудование для бизнеса</a></li>
-        </ul>
-      </div>
-
-      {# 9) Услуги #}
-      <div class="cat-card">
-        <div class="cat-card-title">
-         🛠 Услуги
-        </div>
-        <ul class="cat-list">
-          <li><a href="#">Ремонт и строительство</a></li>
-          <li><a href="#">Доставка и перевозки</a></li>
-          <li><a href="#">Обучение и репетиторы</a></li>
-          <li><a href="#">Красота и уход</a></li>
-          <li><a href="#">IT и цифровые услуги</a></li>
-        </ul>
-      </div>
+      {% endfor %}
 
     </div>
   </div>

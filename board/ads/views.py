@@ -7,84 +7,100 @@
 # ИМПОРТЫ
 # =========================
 
-# render — отрисовать HTML-шаблон и вернуть страницу пользователю
-# redirect — сделать перенаправление на другой URL
-from django.shortcuts import render, redirect
-
-# get_object_or_404 — достать объект из базы или вернуть 404
-from django.shortcuts import get_object_or_404
-
-# login_required — запрещает доступ неавторизованным пользователям
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
-# HttpResponseForbidden — ответ 403 "Запрещено"
 from django.http import HttpResponseForbidden
-
-# Q — нужен для правильного объединения условий поиска (OR)
 from django.db.models import Q
 
-# Ad — модель объявления
-from .models import Ad
+# Модели
+from .models import Ad, Category
+
+# Форма объявлений (теперь и create, и edit через неё)
+from .forms import AdForm
 
 
 # =========================
-# ЛЕНТА ОБЪЯВЛЕНИЙ (СПИСОК) + ПОИСК
+# ЛЕНТА ОБЪЯВЛЕНИЙ (СПИСОК) + ПОИСК + ФИЛЬТР ПО РУБРИКЕ
 # =========================
 def ads_list(request):
     """
-    Лента объявлений + поиск.
-    URL: /ads/?q=текст
+    Лента объявлений + поиск + фильтр по рубрике.
+    URL:
+      /ads/
+      /ads/?q=текст
+      /ads/?cat=slug_подрубрики
     """
 
-    # Берём текст из строки поиска
+    # -------------------------
+    # 1) Параметры из URL
+    # -------------------------
     q = request.GET.get("q", "").strip()
+    cat = request.GET.get("cat", "").strip()   # slug подрубрики
 
-    # Базовый queryset (новые сверху)
-    ads = Ad.objects.order_by("-id")
+    # -------------------------
+    # 2) Базовый queryset
+    # -------------------------
+    ads = Ad.objects.select_related("author", "category").order_by("-id")
 
-    # Если пользователь что-то ввёл — фильтруем
+    # -------------------------
+    # 3) Фильтр по категории (если передали ?cat=...)
+    # -------------------------
+    if cat:
+        ads = ads.filter(category__slug=cat)
+
+    # -------------------------
+    # 4) Поиск (если ввели текст)
+    # -------------------------
     if q:
         ads = ads.filter(
-            Q(title__icontains=q) |       # поиск в заголовке
-            Q(description__icontains=q)   # поиск в описании
+            Q(title__icontains=q) |
+            Q(description__icontains=q)
         )
 
+    # -------------------------
+    # 5) Рендер
+    # -------------------------
     return render(
         request,
         "ads/list.html",
         {
             "ads": ads,
-            "q": q,   # возвращаем текст в поле поиска
+            "q": q,
+            "cat": cat,   # пригодится подсветить выбранную рубрику/сброс
         }
     )
 
 
 # =========================
-# СОЗДАНИЕ ОБЪЯВЛЕНИЯ
+# СОЗДАНИЕ ОБЪЯВЛЕНИЯ (через AdForm)
 # =========================
 @login_required
 def create_ad(request):
     """
     Создание объявления.
     URL: /ads/create/
+
+    ВАЖНО:
+    - теперь сохраняем рубрику (category)
+    - используем одну и ту же форму, что и в edit_ad
     """
 
     if request.method == "POST":
+        form = AdForm(request.POST)
 
-        title = request.POST.get("title", "").strip()
-        description = request.POST.get("description", "").strip()
-        price = request.POST.get("price", "").strip()
+        if form.is_valid():
+            ad = form.save(commit=False)
+            ad.author = request.user
+            ad.save()
+            return redirect("ad_detail", ad_id=ad.id)
+    else:
+        form = AdForm()
 
-        ad = Ad.objects.create(
-            title=title,
-            description=description,
-            price=price if price else None,
-            author=request.user
-        )
-
-        return redirect("ad_detail", ad_id=ad.id)
-
-    return render(request, "ads/create_ad.html")
+    return render(
+        request,
+        "ads/create_ad.html",
+        {"form": form}
+    )
 
 
 # =========================
@@ -95,8 +111,7 @@ def ad_detail(request, ad_id):
     Детальная страница объявления.
     URL: /ads/<id>/
     """
-
-    ad = get_object_or_404(Ad, id=ad_id)
+    ad = get_object_or_404(Ad.objects.select_related("author", "category"), id=ad_id)
 
     return render(
         request,
@@ -114,7 +129,6 @@ def delete_ad(request, ad_id):
     Удаление объявления.
     URL: /ads/<id>/delete/
     """
-
     ad = get_object_or_404(Ad, id=ad_id)
 
     # Проверка прав
@@ -137,14 +151,11 @@ def edit_ad(request, ad_id):
     Редактирование объявления.
     URL: /ads/<id>/edit/
     """
-
     ad = get_object_or_404(Ad, id=ad_id)
 
     # Проверка прав
     if ad.author != request.user:
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
-
-    from .forms import AdForm
 
     if request.method == "POST":
         form = AdForm(request.POST, instance=ad)

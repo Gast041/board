@@ -290,3 +290,17 @@
     gap: 10px;
   }
 }
+
+/* =========================
+   HOME: маркер-иконка (красная точка)
+   Вместо эмодзи/картинок
+   ========================= */
+.cat-dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#c62828;
+  margin-right:10px;
+  transform: translateY(-1px);
+}

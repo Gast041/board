@@ -1,13 +1,14 @@
-# =========================
+
 # board/views.py
-# Вьюхи "верхнего уровня" проекта
-# (главная, регистрация, профиль)
+# =========================
+# ВЬЮХИ "верхнего уровня"
 # =========================
 
 
 # =========================
 # ИМПОРТЫ
 # =========================
+
 
 # render — рендерит HTML-шаблон
 # redirect — делает перенаправление
@@ -19,8 +20,8 @@ from django.contrib.auth.decorators import login_required
 # Кастомная форма регистрации
 from .forms import SignupForm
 
-# Модель объявлений (чтобы показать "мои объявления" в профиле)
-from board.ads.models import Ad
+# ВАЖНО: берём Category из приложения ads
+from board.ads.models import Category
 
 
 # =========================
@@ -31,9 +32,27 @@ def home_view(request):
     Главная страница сайта
     URL: /
     Шаблон: home.html
+
+    ВАЖНО:
+    - подтягиваем рубрики из БД
+    - берём только 9 верхних рубрик (parent=None)
+    - для каждой — до 5 подрубрик
     """
 
-    return render(request, "home.html")
+    # Верхние рубрики (родителя нет)
+    categories = (
+        Category.objects
+        .filter(is_active=True, parent__isnull=True)
+        .prefetch_related("children")  # подрубрики будут доступны как category.children.all()
+        .order_by("sort_order", "name")[:9]
+    )
+
+    return render(
+        request,
+        "home.html",
+        {"categories": categories}
+    )
+
 
 
 # =========================
