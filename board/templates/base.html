@@ -1,99 +1,96 @@
-{# =========================
-   base.html — БАЗОВЫЙ ШАБЛОН САЙТА
-   Файл: board/templates/base.html
+<!-- =========================
+     Файл: board/templates/base.html
+     БАЗОВЫЙ ШАБЛОН САЙТА
 
-   ЗАЧЕМ НУЖЕН:
-   - Одна шапка (меню) для всех страниц
-   - Контейнер ограничивает ширину (чтобы меню нигде не было "шире")
-   - Блок header_search можно переопределять (на главной убираем поиск)
-   ========================= #}
+     ЗАЧЕМ НУЖЕН:
+     - Одна шапка (меню) для всех страниц
+     - Один контейнер (ширина) — чтобы нигде не было “шире”
+     - Блок header_search можно переопределять:
+       на главной мы его очищаем (чтобы не было двух поисков)
+   ========================= -->
 
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- Кодировка -->
-  <meta charset="UTF-8">
+    <!-- Кодировка -->
+    <meta charset="UTF-8">
 
-  <!-- Заголовок вкладки -->
-  <title>{% block title %}52prime.ru{% endblock %}</title>
+    <!-- Заголовок вкладки -->
+    <title>{% block title %}52prime.ru{% endblock %}</title>
 
-  <!-- Адаптивность -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Адаптивность -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Общие стили сайта -->
-  <link rel="stylesheet" href="{% static 'style.css' %}">
+    <!-- Общие стили (твой старый файл) -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 
-  <!-- Стили шапки/главной (hero/каталог и т.п.) -->
-  <link rel="stylesheet" href="{% static 'base.css' %}">
+    <!-- Стили шапки + главной (наш base.css) -->
+    <link rel="stylesheet" href="{% static 'base.css' %}">
 
-  {# Доп. CSS для конкретных страниц (если понадобится) #}
-  {% block extra_css %}{% endblock %}
+    <!-- Доп. CSS для конкретной страницы (если нужно) -->
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
 
-  <!-- =========================
-       ШАПКА (общая для всех страниц)
-       ========================= -->
-  <header class="site-header">
+<!-- =========================
+     ШАПКА (общая)
+   ========================= -->
+<header class="site-header">
     <div class="header-inner">
 
-      <!-- Лого -->
-      <div class="header-logo">
-        <a href="/" class="logo-link">52prime.ru</a>
-      </div>
+        <!-- Логотип -->
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
+        </div>
 
-      <!-- Поиск в шапке (по умолчанию есть).
-           На главной мы его скрываем, переопределяя block header_search -->
-      <div class="header-search">
-        {% block header_search %}
-          <form method="get" action="{% url 'ads_list' %}" class="search-form">
-            <input
-              type="text"
-              name="q"
-              value="{{ q|default:'' }}"
-              placeholder="Поиск объявлений..."
-              class="search-input"
-            >
-            <button type="submit" class="search-btn">Найти</button>
-          </form>
-        {% endblock %}
-      </div>
+        <!-- Поиск в шапке
+             По умолчанию показываем.
+             На главной home.html делает: {% block header_search %}{% endblock %} -->
+        <div class="header-search">
+            {% block header_search %}
+                <form method="get" action="{% url 'ads_list' %}" class="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ q|default:'' }}"
+                        placeholder="Поиск объявлений..."
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
+            {% endblock %}
+        </div>
 
-      <!-- Меню справа -->
-      <nav class="header-nav">
-        <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+        <!-- Навигация -->
+        <nav class="header-nav">
+            <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
-        {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
+                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+                <a class="nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
 
-          <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
-
-          {# Имя пользователя ведёт в профиль #}
-          <a href="{% url 'profile' %}" class="nav-user">{{ user.username }}</a>
-
-          <form method="post" action="{% url 'logout' %}" class="nav-logout">
-            {% csrf_token %}
-            <button type="submit" class="link-btn">Выйти</button>
-          </form>
-
-        {% else %}
-
-          <a href="{% url 'login' %}" class="nav-link">Вход</a>
-          <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
-
-        {% endif %}
-      </nav>
+                <form method="post" action="{% url 'logout' %}" class="nav-form">
+                    {% csrf_token %}
+                    <button class="link-btn" type="submit">Выйти</button>
+                </form>
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+            {% endif %}
+        </nav>
 
     </div>
-  </header>
+</header>
 
-  <!-- =========================
-       КОНТЕНТ СТРАНИЦЫ
-       ========================= -->
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+<!-- Отступ под фиксированную шапку (на главной обнуляется через .home .header-spacer) -->
+<div class="header-spacer"></div>
+
+<!-- =========================
+     КОНТЕНТ СТРАНИЦЫ
+   ========================= -->
+{% block content %}{% endblock %}
 
 </body>
 </html>
