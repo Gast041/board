@@ -1,11 +1,11 @@
-# =========================
-   CREATE_AD.HTML — СОЗДАНИЕ ОБЪЯВЛЕНИЯ
+{# =========================
+   create_ad.html — СОЗДАНИЕ ОБЪЯВЛЕНИЯ
    Файл: board/templates/ads/create_ad.html
 
    ВАЖНО:
-   - наследуемся от base.html (меню и стиль одинаковый)
-   - форма = AdForm из views.py
-# ========================= 
+   - Шапка берётся из base.html
+   - Здесь только форма
+   ========================= #}
 
 {% extends "base.html" %}
 {% load static %}
@@ -13,69 +13,70 @@
 {% block title %}Добавить объявление — 52prime.ru{% endblock %}
 
 {% block content %}
-
 <main class="hero">
-  <div class="page-card">
 
-    <h1 class="page-title">Разместить объявление</h1>
+  <h1>Разместить объявление</h1>
 
-    <div class="page-subtitle">
-      <a href="{% url 'ads_list' %}" class="back-link">← Вернуться к ленте</a>
-    </div>
-
-    <form method="post" class="ad-form">
-      {% csrf_token %}
-
-      {# Ошибки формы (если есть) #}
-      {% if form.non_field_errors %}
-        <div class="form-errors">
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
-
-      <div class="form-grid">
-
-        <div class="form-row">
-          <label class="form-label">{{ form.title.label }}</label>
-          {{ form.title }}
-          {% if form.title.errors %}
-            <div class="field-error">{{ form.title.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">{{ form.category.label }}</label>
-          {{ form.category }}
-          {% if form.category.errors %}
-            <div class="field-error">{{ form.category.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">{{ form.description.label }}</label>
-          {{ form.description }}
-          {% if form.description.errors %}
-            <div class="field-error">{{ form.description.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">{{ form.price.label }}</label>
-          {{ form.price }}
-          {% if form.price.errors %}
-            <div class="field-error">{{ form.price.errors }}</div>
-          {% endif %}
-        </div>
-
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="main-btn">Опубликовать</button>
-      </div>
-
-    </form>
-
+  <div style="margin: 6px 0 18px;">
+    <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
+      ← Вернуться к ленте
+    </a>
   </div>
-</main>
 
+  {# =========================
+     ФОРМА
+     Вьюха create_ad должна передавать form (AdForm)
+     ========================= #}
+  <form method="post" class="ad-form" style="max-width:760px; margin:0 auto; text-align:left;">
+    {% csrf_token %}
+
+    {# Ошибки формы (если есть) #}
+    {% if form.errors %}
+      <div style="margin-bottom:12px; padding:10px; border:1px solid #ffd2d2; background:#fff5f5; border-radius:8px;">
+        <b>Проверь поля:</b>
+        {{ form.errors }}
+      </div>
+    {% endif %}
+
+    <div style="display:grid; gap:14px;">
+
+      <div>
+        <label style="display:block; font-weight:700; margin-bottom:6px;">
+          {{ form.title.label }}
+        </label>
+        {{ form.title }}
+      </div>
+
+      <div>
+        <label style="display:block; font-weight:700; margin-bottom:6px;">
+          {{ form.category.label }}
+        </label>
+        {{ form.category }}
+      </div>
+
+      <div>
+        <label style="display:block; font-weight:700; margin-bottom:6px;">
+          {{ form.description.label }}
+        </label>
+        {{ form.description }}
+      </div>
+
+      <div>
+        <label style="display:block; font-weight:700; margin-bottom:6px;">
+          {{ form.price.label }}
+        </label>
+        {{ form.price }}
+      </div>
+
+      {# Кнопка как у "Найти" и "+ Объявление" (красная, без чёрной рамки) #}
+      <div style="text-align:center; margin-top:8px;">
+        <button type="submit" class="main-btn">
+          Опубликовать
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+</main>
 {% endblock %}
