@@ -304,3 +304,84 @@
   margin-right:10px;
   transform: translateY(-1px);
 }
+
+/* =========================
+   CREATE/EDIT: карточка страницы
+   ========================= */
+.page-card{
+  max-width: 820px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #ffeded;
+  padding: 26px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.page-title{
+  margin: 0 0 6px;
+  font-size: 34px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.page-subtitle{
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.back-link{
+  color:#c62828;
+  text-decoration:none;
+  font-weight:600;
+}
+.back-link:hover{ text-decoration:underline; }
+
+/* =========================
+   Формы
+   ========================= */
+.ad-form{ margin-top: 10px; }
+
+.form-grid{
+  display: grid;
+  gap: 14px;
+}
+
+.form-row{
+  display: grid;
+  gap: 6px;
+}
+
+.form-label{
+  font-weight: 700;
+  color: #111;
+}
+
+.form-input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 16px;
+}
+
+.form-input:focus{
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198,40,40,0.12);
+}
+
+.form-actions{
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.form-errors, .field-error{
+  background: #fff5f5;
+  border: 1px solid #ffd6d6;
+  color: #a31616;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}

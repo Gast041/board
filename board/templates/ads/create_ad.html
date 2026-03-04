@@ -1,41 +1,81 @@
+# =========================
+   CREATE_AD.HTML — СОЗДАНИЕ ОБЪЯВЛЕНИЯ
+   Файл: board/templates/ads/create_ad.html
+
+   ВАЖНО:
+   - наследуемся от base.html (меню и стиль одинаковый)
+   - форма = AdForm из views.py
+# ========================= 
+
 {% extends "base.html" %}
 {% load static %}
 
-<!-- =========================
-     ads/create_ad.html
-     Создание объявления
-     ========================= -->
-
-{% block title %}Создать объявление{% endblock %}
+{% block title %}Добавить объявление — 52prime.ru{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <h1>Разместить объявление</h1>
 
-    <div style="margin: 10px 0 20px;">
-        <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
-            ← Вернуться к ленте объявлений
-        </a>
+<main class="hero">
+  <div class="page-card">
+
+    <h1 class="page-title">Разместить объявление</h1>
+
+    <div class="page-subtitle">
+      <a href="{% url 'ads_list' %}" class="back-link">← Вернуться к ленте</a>
     </div>
 
-    <form method="post" style="max-width: 600px; margin: 0 auto; text-align:left;">
-        {% csrf_token %}
+    <form method="post" class="ad-form">
+      {% csrf_token %}
 
-        <label style="display:block; margin-bottom:6px;"><b>Заголовок</b></label>
-        <input type="text" name="title" required
-               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:14px;">
+      {# Ошибки формы (если есть) #}
+      {% if form.non_field_errors %}
+        <div class="form-errors">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
 
-        <label style="display:block; margin-bottom:6px;"><b>Описание</b></label>
-        <textarea name="description" rows="5"
-                  style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:14px;"></textarea>
+      <div class="form-grid">
 
-        <label style="display:block; margin-bottom:6px;"><b>Цена</b></label>
-        <input type="number" step="0.01" name="price"
-               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:18px;">
+        <div class="form-row">
+          <label class="form-label">{{ form.title.label }}</label>
+          {{ form.title }}
+          {% if form.title.errors %}
+            <div class="field-error">{{ form.title.errors }}</div>
+          {% endif %}
+        </div>
 
+        <div class="form-row">
+          <label class="form-label">{{ form.category.label }}</label>
+          {{ form.category }}
+          {% if form.category.errors %}
+            <div class="field-error">{{ form.category.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">{{ form.description.label }}</label>
+          {{ form.description }}
+          {% if form.description.errors %}
+            <div class="field-error">{{ form.description.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">{{ form.price.label }}</label>
+          {{ form.price }}
+          {% if form.price.errors %}
+            <div class="field-error">{{ form.price.errors }}</div>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="form-actions">
         <button type="submit" class="main-btn">Опубликовать</button>
+      </div>
+
     </form>
-</div>
+
+  </div>
+</main>
+
 {% endblock %}
-
-
