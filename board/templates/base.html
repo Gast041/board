@@ -2,52 +2,37 @@
      Файл: board/templates/base.html
      БАЗОВЫЙ ШАБЛОН САЙТА
 
-     ЗАЧЕМ НУЖЕН:
-     - Одна шапка (меню) для всех страниц
-     - Один контейнер (ширина) — чтобы нигде не было “шире”
-     - Блок header_search можно переопределять:
-       на главной мы его очищаем (чтобы не было двух поисков)
+     ВАЖНО:
+     - block header_search объявлен РОВНО ОДИН РАЗ (иначе TemplateSyntaxError)
+     - На главной home.html делает: {% block header_search %}{% endblock %}
    ========================= -->
 
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Кодировка -->
     <meta charset="UTF-8">
-
-    <!-- Заголовок вкладки -->
     <title>{% block title %}52prime.ru{% endblock %}</title>
-
-    <!-- Адаптивность -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Общие стили (твой старый файл) -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
-
-    <!-- Стили шапки + главной (наш base.css) -->
     <link rel="stylesheet" href="{% static 'base.css' %}">
-
-    <!-- Доп. CSS для конкретной страницы (если нужно) -->
     {% block extra_css %}{% endblock %}
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
 
-<!-- =========================
-     ШАПКА (общая)
-   ========================= -->
 <header class="site-header">
     <div class="header-inner">
 
-        <!-- Логотип -->
         <div class="header-logo">
             <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
         </div>
 
-        <!-- Поиск в шапке
-             По умолчанию показываем.
-             На главной home.html делает: {% block header_search %}{% endblock %} -->
+        <!-- =========================
+             ПОИСК В ШАПКЕ (ОДИН БЛОК!)
+             На главной его выключаем в home.html
+           ========================= -->
         <div class="header-search">
             {% block header_search %}
                 <form method="get" action="{% url 'ads_list' %}" class="search-form">
@@ -63,7 +48,6 @@
             {% endblock %}
         </div>
 
-        <!-- Навигация -->
         <nav class="header-nav">
             <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
@@ -84,12 +68,8 @@
     </div>
 </header>
 
-<!-- Отступ под фиксированную шапку (на главной обнуляется через .home .header-spacer) -->
 <div class="header-spacer"></div>
 
-<!-- =========================
-     КОНТЕНТ СТРАНИЦЫ
-   ========================= -->
 {% block content %}{% endblock %}
 
 </body>
