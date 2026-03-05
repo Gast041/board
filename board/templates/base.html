@@ -1,47 +1,48 @@
+<!-- =========================
+     Файл: board/templates/base.html
+     БАЗОВЫЙ ШАБЛОН САЙТА
+
+     ВАЖНО:
+     - block header_search объявлен РОВНО ОДИН РАЗ (иначе TemplateSyntaxError)
+     - На главной (home.html) мы переопределяем block header_search пустым,
+       чтобы в шапке НЕ было второго поиска
+   ========================= -->
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- =========================
-         BASE.HTML — общий каркас сайта
-         Все страницы (кроме главной по логике поиска) наследуются отсюда
-         ========================= -->
-
     <meta charset="UTF-8">
+    <title>{% block title %}52prime.ru{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Заголовок вкладки (каждая страница может переопределить) -->
-    <title>{% block title %}52prime.ru{% endblock %}</title>
-
-    <!-- Твои общие стили -->
+    <!-- Общие стили (твои старые) -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 
-    <!-- Стили шапки/главной (base.css) -->
+    <!-- Стили шапки/базы (твои новые) -->
     <link rel="stylesheet" href="{% static 'base.css' %}">
 
-    <!-- На будущее: доп css под конкретную страницу -->
     {% block extra_css %}{% endblock %}
 </head>
 
-<!-- Класс body можно переопределять (например home) -->
 <body class="{% block body_class %}{% endblock %}">
 
 <!-- =========================
-     ШАПКА (одна на все страницы)
-     ========================= -->
+     ШАПКА (ОДНА НА ВСЕХ СТРАНИЦАХ)
+   ========================= -->
 <header class="site-header">
     <div class="header-inner">
 
         <!-- ЛОГО -->
         <div class="header-logo">
-            <a href="/" class="logo-link">52prime.ru</a>
+            <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
         </div>
 
-        <!-- ПОИСК В ШАПКЕ
-             ВАЖНО: это отдельный блок.
-             На ГЛАВНОЙ мы его выключим (переопределим пустым),
-             но сам контейнер останется — чтобы меню НЕ уезжало влево.
-        -->
+        <!-- =========================
+             ПОИСК В ШАПКЕ
+             ВАЖНО: блок объявлен ОДИН РАЗ
+             На главной home.html мы делаем этот блок пустым
+           ========================= -->
         <div class="header-search">
             {% block header_search %}
                 <form method="get" action="{% url 'ads_list' %}" class="search-form">
@@ -57,38 +58,33 @@
             {% endblock %}
         </div>
 
-        <!-- ПРАВОЕ МЕНЮ -->
+        <!-- МЕНЮ -->
         <nav class="header-nav">
-            <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+            <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
             {% if user.is_authenticated %}
-                <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
+                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+                <a class="nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
 
-                <!-- Имя ведёт в профиль -->
-                <a href="{% url 'profile' %}" class="nav-link nav-user">
-                    {{ user.username }}
-                </a>
-
-                <!-- Выход строго POST -->
                 <form method="post" action="{% url 'logout' %}" class="nav-form">
                     {% csrf_token %}
                     <button class="link-btn" type="submit">Выйти</button>
                 </form>
             {% else %}
-                <a href="{% url 'login' %}" class="nav-link">Вход</a>
-                <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
             {% endif %}
         </nav>
 
     </div>
 </header>
 
-<!-- Отступ под fixed header (на главной = 0, это в CSS) -->
+<!-- Отступ под фиксированную шапку (если у тебя fixed/sticky) -->
 <div class="header-spacer"></div>
 
 <!-- =========================
-     КОНТЕНТ СТРАНИЦЫ
-     ========================= -->
+     КОНТЕНТ СТРАНИЦ
+   ========================= -->
 {% block content %}{% endblock %}
 
 </body>
