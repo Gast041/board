@@ -1,19 +1,12 @@
-# =========================
-   CREATE_AD.HTML — СОЗДАНИЕ ОБЪЯВЛЕНИЯ
-   Файл: board/templates/ads/create_ad.html
-
-   ВАЖНО:
-   - наследуемся от base.html (меню и стиль одинаковый)
-   - форма = AdForm из views.py
-# ========================= 
-
 {% extends "base.html" %}
+
 {% block title %}Добавить объявление — 52prime.ru{% endblock %}
 
 {% block content %}
 <div class="container">
 
   <h1 style="text-align:center; margin: 10px 0 6px;">Разместить объявление</h1>
+
   <div style="text-align:center; margin-bottom: 16px;">
     <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none; font-weight:700;">
       ← Вернуться к ленте

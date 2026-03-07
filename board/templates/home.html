@@ -1,14 +1,8 @@
-{# =========================
-   home.html — ГЛАВНАЯ
-   - header_search отключён
-   ========================= #}
-
 {% extends "base.html" %}
 {% load static %}
 
 {% block title %}52prime.ru — Доска объявлений{% endblock %}
 {% block body_class %}home{% endblock %}
-
 {% block header_search %}{% endblock %}
 
 {% block content %}
@@ -17,7 +11,6 @@
   <div class="home-hero-overlay">
     <div class="container">
       <div class="home-hero-box">
-
         <h1 class="home-hero-title">Доска объявлений</h1>
         <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
 
@@ -27,55 +20,41 @@
             name="q"
             placeholder="Поиск по объявлениям..."
             class="home-hero-input"
-          />
+          >
           <button type="submit" class="home-hero-btn">Найти</button>
         </form>
 
         <div class="home-hero-actions">
           <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
-{# Каталог рубрик оставляй как у тебя сейчас (ты писал “оставляй всё так”) #}
-
-<!-- =========================
-   КАТАЛОГ РУБРИК (из БД)
-   ========================= -->
 <section class="home-cats">
   <div class="home-cats-inner">
     <h2 class="home-cats-title">Каталог рубрик</h2>
 
     <div class="home-cats-grid">
-
-      {# categories приходит из home_view #}
       {% for c in categories %}
         <div class="cat-card">
-
-          <!-- Заголовок рубрики -->
           <div class="cat-card-title">
             <span class="cat-dot" aria-hidden="true"></span>
             {{ c.name }}
           </div>
 
-          <!-- Подрубрики -->
           <ul class="cat-list">
             {% for child in c.children.all|slice:":5" %}
               <li>
-                <!-- Ведём в ленту и фильтруем по подрубрике -->
                 <a href="{% url 'ads_list' %}?cat={{ child.slug }}">{{ child.name }}</a>
               </li>
             {% empty %}
               <li style="color:#777;">Подрубрик пока нет</li>
             {% endfor %}
           </ul>
-
         </div>
       {% endfor %}
-
     </div>
   </div>
 </section>
