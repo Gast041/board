@@ -21,8 +21,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import SignupForm
 
 # ВАЖНО: берём Category из приложения ads
-from board.ads.models import Category
-
+from board.ads.models import Category, Ad
 
 # =========================
 # ГЛАВНАЯ СТРАНИЦА
