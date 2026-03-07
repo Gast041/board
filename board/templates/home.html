@@ -1,56 +1,47 @@
-<!-- =========================
-   HOME.HTML — ГЛАВНАЯ СТРАНИЦА
-   Файл: board/templates/home.html
-
-   ВАЖНО:
-   - Используем общий base.html
-   - На главной скрываем поиск в шапке (header_search пустой),
-     потому что поиск есть в hero-блоке
-   ========================= -->
+{# =========================
+   home.html — ГЛАВНАЯ
+   - header_search отключён
+   ========================= #}
 
 {% extends "base.html" %}
 {% load static %}
 
-{# Заголовок вкладки #}
 {% block title %}52prime.ru — Доска объявлений{% endblock %}
-
-{# Чтобы CSS знал, что это главная (home) #}
 {% block body_class %}home{% endblock %}
 
-{# На главной убираем поиск в шапке (чтобы не было двух поисков) #}
 {% block header_search %}{% endblock %}
 
 {% block content %}
 
-<!-- =========================
-   HERO-БЛОК С КАРТИНКОЙ
-   ========================= -->
-
 <section class="home-hero">
   <div class="home-hero-overlay">
-    <div class="home-hero-box">
+    <div class="container">
+      <div class="home-hero-box">
 
-      <h1 class="home-hero-title">Доска объявлений</h1>
-      <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
+        <h1 class="home-hero-title">Доска объявлений</h1>
+        <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
 
-      {# Поиск ведёт в ленту с параметром ?q=... #}
-      <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
-        <input
-          type="text"
-          name="q"
-          placeholder="Поиск по объявлениям..."
-          class="home-hero-input"
-        >
-        <button type="submit" class="home-hero-btn">Найти</button>
-      </form>
+        <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
+          <input
+            type="text"
+            name="q"
+            placeholder="Поиск по объявлениям..."
+            class="home-hero-input"
+          />
+          <button type="submit" class="home-hero-btn">Найти</button>
+        </form>
 
-      <div class="home-hero-actions">
-        <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+        <div class="home-hero-actions">
+          <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+        </div>
+
       </div>
-
     </div>
   </div>
 </section>
+
+{# Каталог рубрик оставляй как у тебя сейчас (ты писал “оставляй всё так”) #}
+
 <!-- =========================
    КАТАЛОГ РУБРИК (из БД)
    ========================= -->

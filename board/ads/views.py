@@ -79,15 +79,12 @@ def create_ad(request):
     """
     Создание объявления.
     URL: /ads/create/
-
-    ВАЖНО:
-    - теперь сохраняем рубрику (category)
-    - используем одну и ту же форму, что и в edit_ad
     """
+
+    from .forms import AdForm
 
     if request.method == "POST":
         form = AdForm(request.POST)
-
         if form.is_valid():
             ad = form.save(commit=False)
             ad.author = request.user
@@ -96,11 +93,7 @@ def create_ad(request):
     else:
         form = AdForm()
 
-    return render(
-        request,
-        "ads/create_ad.html",
-        {"form": form}
-    )
+    return render(request, "ads/create_ad.html", {"form": form})
 
 
 # =========================
@@ -151,11 +144,13 @@ def edit_ad(request, ad_id):
     Редактирование объявления.
     URL: /ads/<id>/edit/
     """
+
     ad = get_object_or_404(Ad, id=ad_id)
 
-    # Проверка прав
     if ad.author != request.user:
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
+
+    from .forms import AdForm
 
     if request.method == "POST":
         form = AdForm(request.POST, instance=ad)
@@ -165,8 +160,4 @@ def edit_ad(request, ad_id):
     else:
         form = AdForm(instance=ad)
 
-    return render(
-        request,
-        "ads/edit_ad.html",
-        {"form": form, "ad": ad}
-    )
+    return render(request, "ads/edit_ad.html", {"form": form, "ad": ad})

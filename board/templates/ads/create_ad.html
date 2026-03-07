@@ -8,74 +8,59 @@
 # ========================= 
 
 {% extends "base.html" %}
-{% load static %}
-
 {% block title %}Добавить объявление — 52prime.ru{% endblock %}
 
 {% block content %}
+<div class="container">
 
-<main class="hero">
-  <div class="page-card">
+  <h1 style="text-align:center; margin: 10px 0 6px;">Разместить объявление</h1>
+  <div style="text-align:center; margin-bottom: 16px;">
+    <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none; font-weight:700;">
+      ← Вернуться к ленте
+    </a>
+  </div>
 
-    <h1 class="page-title">Разместить объявление</h1>
-
-    <div class="page-subtitle">
-      <a href="{% url 'ads_list' %}" class="back-link">← Вернуться к ленте</a>
-    </div>
-
-    <form method="post" class="ad-form">
+  <div style="max-width: 780px; margin: 0 auto; background:#fff; border-radius:14px; padding:22px; border:1px solid #ffe2e2;">
+    <form method="post" novalidate>
       {% csrf_token %}
 
-      {# Ошибки формы (если есть) #}
-      {% if form.non_field_errors %}
-        <div class="form-errors">
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
+      {{ form.non_field_errors }}
 
-      <div class="form-grid">
+      <div style="display:grid; gap:14px;">
 
-        <div class="form-row">
-          <label class="form-label">{{ form.title.label }}</label>
+        <div>
+          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.title.label }}</label>
           {{ form.title }}
-          {% if form.title.errors %}
-            <div class="field-error">{{ form.title.errors }}</div>
-          {% endif %}
+          {{ form.title.errors }}
         </div>
 
-        <div class="form-row">
-          <label class="form-label">{{ form.category.label }}</label>
+        <div>
+          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.category.label }}</label>
           {{ form.category }}
-          {% if form.category.errors %}
-            <div class="field-error">{{ form.category.errors }}</div>
-          {% endif %}
+          {{ form.category.errors }}
         </div>
 
-        <div class="form-row">
-          <label class="form-label">{{ form.description.label }}</label>
+        <div>
+          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.description.label }}</label>
           {{ form.description }}
-          {% if form.description.errors %}
-            <div class="field-error">{{ form.description.errors }}</div>
-          {% endif %}
+          {{ form.description.errors }}
         </div>
 
-        <div class="form-row">
-          <label class="form-label">{{ form.price.label }}</label>
+        <div>
+          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.price.label }}</label>
           {{ form.price }}
-          {% if form.price.errors %}
-            <div class="field-error">{{ form.price.errors }}</div>
-          {% endif %}
+          {{ form.price.errors }}
+        </div>
+
+        <div style="text-align:center; margin-top:6px;">
+          <button type="submit" class="main-btn" style="border:0;">
+            Опубликовать
+          </button>
         </div>
 
       </div>
-
-      <div class="form-actions">
-        <button type="submit" class="main-btn">Опубликовать</button>
-      </div>
-
     </form>
-
   </div>
-</main>
 
+</div>
 {% endblock %}
