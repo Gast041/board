@@ -1,52 +1,102 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Редактировать: {{ ad.title }}</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
+{% extends "base.html" %}
 
-<header class="header">
-    <div class="logo">
-        <a href="/" style="text-decoration:none;color:#000;">Доска объявлений</a>
+{% block title %}Редактировать: {{ ad.title }} — 52prime.ru{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="page-card">
+        <h1 class="page-title">Редактировать объявление</h1>
+
+        <div class="page-subtitle">
+            <a href="{% url 'ad_detail' ad.id %}" class="back-link">← Вернуться к объявлению</a>
+        </div>
+
+        <div style="display:grid; gap:18px;">
+
+            <!-- ШАГ 1: ВЫБОР РУБРИКИ -->
+            <form method="get" novalidate>
+                <div>
+                    <label class="form-label">{{ form.parent_category.label }}</label>
+                    {{ form.parent_category }}
+                    {% if form.parent_category.errors %}
+                        <div class="field-error">{{ form.parent_category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="main-btn" style="border:0;">
+                        Показать подрубрики
+                    </button>
+                </div>
+            </form>
+
+            <!-- ШАГ 2: ОСНОВНАЯ ФОРМА -->
+            <form method="post" class="ad-form" novalidate>
+                {% csrf_token %}
+
+                {# Сохраняем выбранную рубрику между запросами #}
+                <input
+                    type="hidden"
+                    name="parent_category"
+                    value="{% if form.parent_category.value %}{{ form.parent_category.value }}{% else %}{{ selected_parent_id|default:'' }}{% endif %}"
+                >
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-grid">
+
+                    <div class="form-row">
+                        <label class="form-label">{{ form.category.label }}</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="field-error">{{ form.category.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">{{ form.title.label }}</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="field-error">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">{{ form.description.label }}</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="field-error">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">{{ form.price.label }}</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="field-error">{{ form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:18px; justify-content:center; flex-wrap:wrap;">
+                    <button type="submit" class="main-btn" style="border:0;">
+                        Сохранить
+                    </button>
+
+                    <a href="{% url 'ad_detail' ad.id %}" class="main-btn" style="background:#777;">
+                        Отмена
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
 
-    <nav>
-        {% if user.is_authenticated %}
-            <span>{{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button class="link-btn">Выйти</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Вход</a>
-            <a href="{% url 'signup' %}">Регистрация</a>
-        {% endif %}
-    </nav>
-</header>
-
-<main class="hero" style="text-align:left; max-width:720px;">
-    <h1 style="text-align:center;">Редактировать объявление</h1>
-
-    <form method="post">
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-            <button type="submit" class="main-btn" style="border:none; cursor:pointer;">
-                Сохранить
-            </button>
-
-            <a class="link-btn" href="{% url 'ad_detail' ad.id %}" style="text-decoration:none;">
-                Отмена
-            </a>
-        </div>
-    </form>
-</main>
-
-</body>
-</html>
+</div>
+{% endblock %}
