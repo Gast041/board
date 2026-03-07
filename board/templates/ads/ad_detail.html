@@ -4,52 +4,71 @@
 {% block title %}{{ ad.title }}{% endblock %}
 
 {% block content %}
-<main class="hero">
+<div class="container">
+    <div class="page-card">
 
-    <h1>{{ ad.title }}</h1>
+        <h1 style="text-align:center; margin: 0 0 20px;">{{ ad.title }}</h1>
 
-    {% if ad.price %}
-        <div style="margin-bottom:15px; font-size:18px;">
-            <b>Цена:</b> {{ ad.price }}
+        <!-- Рубрика -->
+        {% if ad.category %}
+            <div style="margin-bottom:15px; font-size:15px; color:#555; text-align:center;">
+                <b>Рубрика:</b>
+                {% if ad.category.parent %}
+                    {{ ad.category.parent.name }} → {{ ad.category.name }}
+                {% else %}
+                    {{ ad.category.name }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <!-- Цена -->
+        {% if ad.price %}
+            <div style="margin-bottom:15px; font-size:18px; text-align:center;">
+                <b>Цена:</b> {{ ad.price }}
+            </div>
+        {% endif %}
+
+        <!-- Описание -->
+        {% if ad.description %}
+            <div style="margin-bottom:20px;">
+                {{ ad.description|linebreaksbr }}
+            </div>
+        {% else %}
+            <div style="margin-bottom:20px; color:#444;">
+                Описание не указано.
+            </div>
+        {% endif %}
+
+        <!-- Автор -->
+        <div style="font-size:14px; color:#444;">
+            Автор: {{ ad.author.username }}
         </div>
-    {% endif %}
 
-    {% if ad.description %}
-        <div style="margin-bottom:20px;">
-            {{ ad.description|linebreaksbr }}
-        </div>
-    {% else %}
-        <div style="margin-bottom:20px; color:#444;">
-            Описание не указано.
-        </div>
-    {% endif %}
+        <!-- Кнопки автора -->
+        {% if user.is_authenticated and user == ad.author %}
+            <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+                <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
+                    Редактировать
+                </a>
 
-    <div style="font-size:14px; color:#444;">
-        Автор: {{ ad.author.username }}
-    </div>
+                <form method="post"
+                      action="{% url 'delete_ad' ad.id %}"
+                      onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
+                    {% csrf_token %}
+                    <button type="submit" class="danger-btn">
+                        Удалить объявление
+                    </button>
+                </form>
+            </div>
+        {% endif %}
 
-    {% if user.is_authenticated and user == ad.author %}
-        <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
-                Редактировать
+        <!-- Назад -->
+        <div style="margin-top:30px; text-align:center;">
+            <a href="{% url 'ads_list' %}" class="main-btn">
+                Назад к ленте
             </a>
-
-            <form method="post"
-                  action="{% url 'delete_ad' ad.id %}"
-                  onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
-                {% csrf_token %}
-                <button type="submit" class="danger-btn">
-                    Удалить объявление
-                </button>
-            </form>
         </div>
-    {% endif %}
 
-    <div style="margin-top:30px;">
-        <a href="{% url 'ads_list' %}" class="main-btn">
-            Назад к ленте
-        </a>
     </div>
-
-</main>
+</div>
 {% endblock %}

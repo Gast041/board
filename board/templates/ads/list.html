@@ -1,3 +1,4 @@
+C:\Users\Gast0\projects\board\board\templates\ads\list.html
 {% extends "base.html" %}
 {% load static %}
 
@@ -44,5 +45,62 @@
     {% else %}
         <p>Пока объявлений нет. Будь первым 🙂</p>
     {% endif %}
+</main>
+{% endblock %}
+
+C:\Users\Gast0\projects\board\board\templates\ads\ad_detail.html
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block content %}
+<main class="hero">
+
+    <h1>{{ ad.title }}</h1>
+
+    {% if ad.price %}
+        <div style="margin-bottom:15px; font-size:18px;">
+            <b>Цена:</b> {{ ad.price }}
+        </div>
+    {% endif %}
+
+    {% if ad.description %}
+        <div style="margin-bottom:20px;">
+            {{ ad.description|linebreaksbr }}
+        </div>
+    {% else %}
+        <div style="margin-bottom:20px; color:#444;">
+            Описание не указано.
+        </div>
+    {% endif %}
+
+    <div style="font-size:14px; color:#444;">
+        Автор: {{ ad.author.username }}
+    </div>
+
+    {% if user.is_authenticated and user == ad.author %}
+        <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
+                Редактировать
+            </a>
+
+            <form method="post"
+                  action="{% url 'delete_ad' ad.id %}"
+                  onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
+                {% csrf_token %}
+                <button type="submit" class="danger-btn">
+                    Удалить объявление
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div style="margin-top:30px;">
+        <a href="{% url 'ads_list' %}" class="main-btn">
+            Назад к ленте
+        </a>
+    </div>
+
 </main>
 {% endblock %}
