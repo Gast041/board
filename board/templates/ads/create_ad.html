@@ -14,45 +14,95 @@
   </div>
 
   <div style="max-width: 780px; margin: 0 auto; background:#fff; border-radius:14px; padding:22px; border:1px solid #ffe2e2;">
-    <form method="post" novalidate>
-      {% csrf_token %}
 
-      {{ form.non_field_errors }}
+    <div style="display:grid; gap:18px;">
 
-      <div style="display:grid; gap:14px;">
-
+      <!-- =========================
+           ШАГ 1: ВЫБОР РУБРИКИ
+           ========================= -->
+      <form method="get" novalidate>
         <div>
-          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.title.label }}</label>
-          {{ form.title }}
-          {{ form.title.errors }}
+          <label style="display:block; font-weight:800; margin-bottom:6px;">
+            {{ form.parent_category.label }}
+          </label>
+          {{ form.parent_category }}
+          {% if form.parent_category.errors %}
+            <div style="color:#a31616; margin-top:6px;">
+              {{ form.parent_category.errors }}
+            </div>
+          {% endif %}
         </div>
 
-        <div>
-          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.category.label }}</label>
-          {{ form.category }}
-          {{ form.category.errors }}
-        </div>
-
-        <div>
-          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.description.label }}</label>
-          {{ form.description }}
-          {{ form.description.errors }}
-        </div>
-
-        <div>
-          <label style="display:block; font-weight:800; margin-bottom:6px;">{{ form.price.label }}</label>
-          {{ form.price }}
-          {{ form.price.errors }}
-        </div>
-
-        <div style="text-align:center; margin-top:6px;">
+        <div style="text-align:center; margin-top:12px;">
           <button type="submit" class="main-btn" style="border:0;">
-            Опубликовать
+            Показать подрубрики
           </button>
         </div>
+      </form>
 
-      </div>
-    </form>
+      <!-- =========================
+           ШАГ 2: ОСНОВНАЯ ФОРМА
+           Показываем только после выбора рубрики
+           ========================= -->
+      {% if selected_parent_id %}
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Сохраняем выбранную рубрику -->
+          <input type="hidden" name="parent_category" value="{{ selected_parent_id }}">
+
+          {{ form.non_field_errors }}
+
+          <div style="display:grid; gap:14px;">
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.category.label }}
+              </label>
+              {{ form.category }}
+              {{ form.category.errors }}
+            </div>
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.title.label }}
+              </label>
+              {{ form.title }}
+              {{ form.title.errors }}
+            </div>
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.description.label }}
+              </label>
+              {{ form.description }}
+              {{ form.description.errors }}
+            </div>
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.price.label }}
+              </label>
+              {{ form.price }}
+              {{ form.price.errors }}
+            </div>
+
+            <div style="text-align:center; margin-top:6px;">
+              <button type="submit" class="main-btn" style="border:0;">
+                Опубликовать
+              </button>
+            </div>
+
+          </div>
+        </form>
+      {% else %}
+        <div style="text-align:center; color:#666; padding:8px 0 2px;">
+          Сначала выбери рубрику, потом появятся подрубрики и форма объявления.
+        </div>
+      {% endif %}
+
+    </div>
+
   </div>
 
 </div>

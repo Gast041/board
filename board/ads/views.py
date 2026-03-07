@@ -6,16 +6,15 @@
 # =========================
 # ИМПОРТЫ
 # =========================
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Q
 
 # Модели
-from .models import Ad, Category
+from .models import Ad
 
-# Форма объявлений (теперь и create, и edit через неё)
+# Формы
 from .forms import AdForm
 
 
@@ -32,24 +31,24 @@ def ads_list(request):
     """
 
     # -------------------------
-    # 1) Параметры из URL
+    # Параметры из URL
     # -------------------------
     q = request.GET.get("q", "").strip()
-    cat = request.GET.get("cat", "").strip()   # slug подрубрики
+    cat = request.GET.get("cat", "").strip()
 
     # -------------------------
-    # 2) Базовый queryset
+    # Базовый queryset
     # -------------------------
     ads = Ad.objects.select_related("author", "category").order_by("-id")
 
     # -------------------------
-    # 3) Фильтр по категории (если передали ?cat=...)
+    # Фильтр по подрубрике
     # -------------------------
     if cat:
         ads = ads.filter(category__slug=cat)
 
     # -------------------------
-    # 4) Поиск (если ввели текст)
+    # Поиск
     # -------------------------
     if q:
         ads = ads.filter(
@@ -57,43 +56,63 @@ def ads_list(request):
             Q(description__icontains=q)
         )
 
-    # -------------------------
-    # 5) Рендер
-    # -------------------------
     return render(
         request,
         "ads/list.html",
         {
             "ads": ads,
             "q": q,
-            "cat": cat,   # пригодится подсветить выбранную рубрику/сброс
+            "cat": cat,
         }
     )
 
 
 # =========================
-# СОЗДАНИЕ ОБЪЯВЛЕНИЯ (через AdForm)
+# СОЗДАНИЕ ОБЪЯВЛЕНИЯ
 # =========================
 @login_required
 def create_ad(request):
     """
     Создание объявления.
     URL: /ads/create/
+
+    БЕЗ JS:
+    - рубрика выбирается первой
+    - после выбора рубрики страница перерисовывается
+    - подрубрики подгружаются через GET-параметр parent_category
     """
 
-    from .forms import AdForm
+    # -------------------------
+    # Если пользователь выбрал рубрику через GET
+    # -------------------------
+    selected_parent_id = request.GET.get("parent_category")
 
+    # -------------------------
+    # POST = сохранить объявление
+    # -------------------------
     if request.method == "POST":
         form = AdForm(request.POST)
+
         if form.is_valid():
             ad = form.save(commit=False)
             ad.author = request.user
             ad.save()
             return redirect("ad_detail", ad_id=ad.id)
-    else:
-        form = AdForm()
 
-    return render(request, "ads/create_ad.html", {"form": form})
+    # -------------------------
+    # GET = просто показать форму
+    # -------------------------
+    else:
+        form = AdForm(parent_id=selected_parent_id)
+
+    return render(
+        request,
+        "ads/create_ad.html",
+        {
+            "form": form,
+            "selected_parent_id": selected_parent_id,
+        }
+    )
 
 
 # =========================
@@ -104,7 +123,10 @@ def ad_detail(request, ad_id):
     Детальная страница объявления.
     URL: /ads/<id>/
     """
-    ad = get_object_or_404(Ad.objects.select_related("author", "category"), id=ad_id)
+    ad = get_object_or_404(
+        Ad.objects.select_related("author", "category"),
+        id=ad_id
+    )
 
     return render(
         request,
@@ -124,7 +146,6 @@ def delete_ad(request, ad_id):
     """
     ad = get_object_or_404(Ad, id=ad_id)
 
-    # Проверка прав
     if ad.author != request.user:
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
 
@@ -143,6 +164,10 @@ def edit_ad(request, ad_id):
     """
     Редактирование объявления.
     URL: /ads/<id>/edit/
+
+    Для редактирования логика та же:
+    - сначала рубрика
+    - потом подрубрика
     """
 
     ad = get_object_or_404(Ad, id=ad_id)
@@ -150,14 +175,23 @@ def edit_ad(request, ad_id):
     if ad.author != request.user:
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
 
-    from .forms import AdForm
+    selected_parent_id = request.GET.get("parent_category")
 
     if request.method == "POST":
         form = AdForm(request.POST, instance=ad)
+
         if form.is_valid():
             form.save()
             return redirect("ad_detail", ad_id=ad.id)
     else:
-        form = AdForm(instance=ad)
+        form = AdForm(instance=ad, parent_id=selected_parent_id)
 
-    return render(request, "ads/edit_ad.html", {"form": form, "ad": ad})
+    return render(
+        request,
+        "ads/edit_ad.html",
+        {
+            "form": form,
+            "ad": ad,
+            "selected_parent_id": selected_parent_id,
+        }
+    )
