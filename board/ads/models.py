@@ -22,26 +22,18 @@ class Category(models.Model):
       └ Квартиры (parent=Недвижимость)
     """
 
-    # Название (что видит пользователь)
     name = models.CharField(max_length=80)
-
-    # ЧПУ/ссылка-ключ (для будущих красивых URL: /c/nedvizhimost/kvartiry/)
-    # unique=True — чтобы не было дублей
     slug = models.SlugField(max_length=120, unique=True)
 
-    # Родитель: если NULL -> это рубрика, если не NULL -> подрубрика
     parent = models.ForeignKey(
         "self",
-        on_delete=models.CASCADE,       # если удалят рубрику — удалятся её подрубрики
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="children"
     )
 
-    # Порядок вывода (для главной страницы и меню)
     sort_order = models.PositiveIntegerField(default=0)
-
-    # Можно выключать рубрики без удаления
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -54,14 +46,12 @@ class Category(models.Model):
         verbose_name_plural = "Рубрики"
 
     def __str__(self):
-        # Для админки: "Недвижимость / Квартиры"
         if self.parent:
             return f"{self.parent.name} / {self.name}"
         return self.name
 
     @property
     def is_root(self) -> bool:
-        """True если это рубрика верхнего уровня (без родителя)"""
         return self.parent_id is None
 
 
@@ -78,21 +68,28 @@ class Ad(models.Model):
     # Цена (не обязательно)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    # Автор объявления (правильно: через AUTH_USER_MODEL)
+    # Автор объявления
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="ads"
     )
 
-    # Категория (мы сохраняем именно подрубрику; можно оставлять пустой)
-    # PROTECT — нельзя удалить категорию, если на неё уже есть объявления
+    # Категория (сохраняем именно подрубрику)
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name="ads"
+    )
+
+    # Главное фото объявления
+    image = models.ImageField(
+        upload_to="ads/",
+        null=True,
+        blank=True,
+        verbose_name="Фото"
     )
 
     # Дата создания

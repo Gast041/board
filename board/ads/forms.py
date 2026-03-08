@@ -20,9 +20,7 @@ class AdForm(forms.ModelForm):
     3) Всё без JavaScript
     """
 
-    # -------------------------
-    # ПОЛЕ: РУБРИКА
-    # -------------------------
+    # Рубрика
     parent_category = forms.ModelChoiceField(
         queryset=Category.objects.filter(is_active=True, parent__isnull=True).order_by("sort_order", "name"),
         required=False,
@@ -33,9 +31,7 @@ class AdForm(forms.ModelForm):
         }),
     )
 
-    # -------------------------
-    # ПОЛЕ: ПОДРУБРИКА
-    # -------------------------
+    # Подрубрика
     category = forms.ModelChoiceField(
         queryset=Category.objects.none(),
         required=False,
@@ -48,55 +44,37 @@ class AdForm(forms.ModelForm):
 
     class Meta:
         model = Ad
-        fields = ["title", "category", "description", "price"]
+        fields = ["title", "category", "description", "price", "image"]
 
         widgets = {
-            # -------------------------
-            # Заголовок
-            # -------------------------
             "title": forms.TextInput(attrs={
                 "class": "form-input",
                 "placeholder": "Например: Продам iPhone 13",
             }),
-
-            # -------------------------
-            # Описание
-            # -------------------------
             "description": forms.Textarea(attrs={
                 "class": "form-input",
                 "placeholder": "Опиши состояние, комплект, район, телефон и т.д.",
                 "rows": 6,
             }),
-
-            # -------------------------
-            # Цена
-            # -------------------------
             "price": forms.NumberInput(attrs={
                 "class": "form-input",
                 "placeholder": "Цена (не обязательно)",
             }),
+            "image": forms.ClearableFileInput(attrs={
+                "class": "form-input",
+                "accept": "image/*",
+            }),
         }
 
     def __init__(self, *args, **kwargs):
-        # -------------------------
-        # parent_id можем передать из views.py
-        # чтобы при GET показать нужные подрубрики
-        # -------------------------
         parent_id = kwargs.pop("parent_id", None)
-
         super().__init__(*args, **kwargs)
 
-        # -------------------------
-        # Дружелюбные подписи
-        # -------------------------
         self.fields["title"].label = "Заголовок"
         self.fields["description"].label = "Описание"
         self.fields["price"].label = "Цена"
+        self.fields["image"].label = "Фото"
 
-        # -------------------------
-        # Если редактируем существующее объявление
-        # и у него уже есть подрубрика — подставим её рубрику
-        # -------------------------
         if self.instance and self.instance.pk and self.instance.category:
             self.fields["parent_category"].initial = self.instance.category.parent_id
             self.fields["category"].queryset = (
@@ -106,10 +84,6 @@ class AdForm(forms.ModelForm):
                 ).order_by("sort_order", "name")
             )
 
-        # -------------------------
-        # Если рубрика пришла из POST
-        # (пользователь выбрал рубрику и форма перерисовывается)
-        # -------------------------
         if "parent_category" in self.data:
             try:
                 selected_parent_id = int(self.data.get("parent_category"))
@@ -122,9 +96,6 @@ class AdForm(forms.ModelForm):
             except (TypeError, ValueError):
                 self.fields["category"].queryset = Category.objects.none()
 
-        # -------------------------
-        # Если рубрика пришла из views.py через GET
-        # -------------------------
         elif parent_id:
             try:
                 parent_id = int(parent_id)
@@ -139,18 +110,13 @@ class AdForm(forms.ModelForm):
                 self.fields["category"].queryset = Category.objects.none()
 
     def clean(self):
-        """
-        Проверяем, что подрубрика соответствует выбранной рубрике.
-        """
         cleaned_data = super().clean()
         parent_category = cleaned_data.get("parent_category")
         category = cleaned_data.get("category")
 
-        # Если выбрали рубрику, но не выбрали подрубрику
         if parent_category and not category:
             self.add_error("category", "Выбери подрубрику.")
 
-        # Если выбрана подрубрика, проверяем что она относится к этой рубрике
         if parent_category and category and category.parent_id != parent_category.id:
             self.add_error("category", "Подрубрика не относится к выбранной рубрике.")
 

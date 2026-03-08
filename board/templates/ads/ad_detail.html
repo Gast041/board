@@ -9,7 +9,6 @@
 
         <h1 style="text-align:center; margin: 0 0 20px;">{{ ad.title }}</h1>
 
-        <!-- Рубрика -->
         {% if ad.category %}
             <div style="margin-bottom:15px; font-size:15px; color:#555; text-align:center;">
                 <b>Рубрика:</b>
@@ -21,14 +20,18 @@
             </div>
         {% endif %}
 
-        <!-- Цена -->
+        {% if ad.image %}
+            <div style="margin-bottom:20px; text-align:center;">
+                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width:100%; max-height:500px; border-radius:12px;">
+            </div>
+        {% endif %}
+
         {% if ad.price %}
             <div style="margin-bottom:15px; font-size:18px; text-align:center;">
                 <b>Цена:</b> {{ ad.price }}
             </div>
         {% endif %}
 
-        <!-- Описание -->
         {% if ad.description %}
             <div style="margin-bottom:20px;">
                 {{ ad.description|linebreaksbr }}
@@ -39,12 +42,10 @@
             </div>
         {% endif %}
 
-        <!-- Автор -->
         <div style="font-size:14px; color:#444;">
             Автор: {{ ad.author.username }}
         </div>
 
-        <!-- Кнопки автора -->
         {% if user.is_authenticated and user == ad.author %}
             <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
                 <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
@@ -62,7 +63,6 @@
             </div>
         {% endif %}
 
-        <!-- Назад -->
         <div style="margin-top:30px; text-align:center;">
             <a href="{% url 'ads_list' %}" class="main-btn">
                 Назад к ленте

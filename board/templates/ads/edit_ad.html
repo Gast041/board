@@ -14,7 +14,6 @@
 
         <div style="display:grid; gap:18px;">
 
-            <!-- ШАГ 1: ВЫБОР РУБРИКИ -->
             <form method="get" novalidate>
                 <div>
                     <label class="form-label">{{ form.parent_category.label }}</label>
@@ -31,11 +30,9 @@
                 </div>
             </form>
 
-            <!-- ШАГ 2: ОСНОВНАЯ ФОРМА -->
-            <form method="post" class="ad-form" novalidate>
+            <form method="post" enctype="multipart/form-data" class="ad-form" novalidate>
                 {% csrf_token %}
 
-                {# Сохраняем выбранную рубрику между запросами #}
                 <input
                     type="hidden"
                     name="parent_category"
@@ -79,6 +76,20 @@
                         {{ form.price }}
                         {% if form.price.errors %}
                             <div class="field-error">{{ form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">{{ form.image.label }}</label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <div class="field-error">{{ form.image.errors }}</div>
+                        {% endif %}
+
+                        {% if ad.image %}
+                            <div style="margin-top:10px;">
+                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width:220px; border-radius:10px; border:1px solid #eee;">
+                            </div>
                         {% endif %}
                     </div>
 

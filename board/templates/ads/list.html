@@ -42,16 +42,22 @@
         {% if ads %}
             <div style="text-align:left; display:grid; gap:14px;">
                 {% for ad in ads %}
-                    <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
+                    <div style="border:1px solid #ffeded; padding:14px; border-radius:8px; display:grid; gap:10px;">
 
-                        <!-- Заголовок -->
+                        {% if ad.image %}
+                            <div>
+                                <a href="{% url 'ad_detail' ad.id %}">
+                                    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="width:100%; max-height:260px; object-fit:cover; border-radius:10px;">
+                                </a>
+                            </div>
+                        {% endif %}
+
                         <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
                             <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
                                 {{ ad.title }}
                             </a>
                         </div>
 
-                        <!-- Рубрика -->
                         {% if ad.category %}
                             <div style="margin-bottom:6px; font-size:14px; color:#555;">
                                 <b>Рубрика:</b>
@@ -63,25 +69,21 @@
                             </div>
                         {% endif %}
 
-                        <!-- Цена -->
                         {% if ad.price %}
                             <div style="margin-bottom:6px;">
                                 <b>Цена:</b> {{ ad.price }}
                             </div>
                         {% endif %}
 
-                        <!-- Описание -->
                         {% if ad.description %}
                             <div style="color:#000; margin-bottom:8px;">
                                 {{ ad.description|truncatechars:150 }}
                             </div>
                         {% endif %}
 
-                        <!-- Автор -->
                         <div style="margin-top:10px; font-size:13px; color:#444;">
                             Автор: {{ ad.author.username }}
                         </div>
-
                     </div>
                 {% endfor %}
             </div>
