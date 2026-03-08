@@ -86,7 +86,7 @@ class Ad(models.Model):
 
     # Главное фото объявления
     image = models.ImageField(
-        upload_to="ads/",
+        upload_to="listing_photos/",
         null=True,
         blank=True,
         verbose_name="Фото"
