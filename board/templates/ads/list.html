@@ -1,51 +1,94 @@
-
 {% extends "base.html" %}
 {% load static %}
 
 {% block title %}Лента объявлений{% endblock %}
 
 {% block content %}
-<main class="hero">
-    <h1>Лента объявлений</h1>
-    <p>Новые объявления сверху</p>
+<div class="container">
+    <div class="page-card">
 
-    {% if q %}
-        <div style="margin: 10px 0 20px; font-size: 14px;">
-            <b>Поиск:</b> {{ q }} •
-            <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">сбросить</a>
-        </div>
-    {% endif %}
+        <h1 style="text-align:center; margin: 0 0 8px;">Лента объявлений</h1>
+        <p style="text-align:center; margin: 0 0 20px;">Новые объявления сверху</p>
 
-    {% if ads %}
-        <div style="text-align:left; display:grid; gap:14px;">
-            {% for ad in ads %}
-                <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
-                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
-                            {{ ad.title }}
-                        </a>
-                    </div>
+        {% if q or selected_category %}
+            <div style="margin: 10px 0 20px; font-size: 14px; text-align:center; color:#444;">
 
-                    {% if ad.price %}
-                        <div style="margin-bottom:6px;"><b>Цена:</b> {{ ad.price }}</div>
-                    {% endif %}
+                {% if q %}
+                    <span><b>Поиск:</b> {{ q }}</span>
+                {% endif %}
 
-                    {% if ad.description %}
-                        <div style="color:#000; margin-bottom:8px;">
-                            {{ ad.description|truncatechars:150 }}
+                {% if q and selected_category %}
+                    <span> • </span>
+                {% endif %}
+
+                {% if selected_category %}
+                    <span>
+                        <b>Рубрика:</b>
+                        {% if selected_category.parent %}
+                            {{ selected_category.parent.name }} → {{ selected_category.name }}
+                        {% else %}
+                            {{ selected_category.name }}
+                        {% endif %}
+                    </span>
+                {% endif %}
+
+                <span> • </span>
+                <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
+                    сбросить
+                </a>
+            </div>
+        {% endif %}
+
+        {% if ads %}
+            <div style="text-align:left; display:grid; gap:14px;">
+                {% for ad in ads %}
+                    <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
+
+                        <!-- Заголовок -->
+                        <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
+                            <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                                {{ ad.title }}
+                            </a>
                         </div>
-                    {% endif %}
 
-                    <div style="margin-top:10px; font-size:13px; color:#444;">
-                        Автор: {{ ad.author.username }}
+                        <!-- Рубрика -->
+                        {% if ad.category %}
+                            <div style="margin-bottom:6px; font-size:14px; color:#555;">
+                                <b>Рубрика:</b>
+                                {% if ad.category.parent %}
+                                    {{ ad.category.parent.name }} → {{ ad.category.name }}
+                                {% else %}
+                                    {{ ad.category.name }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Цена -->
+                        {% if ad.price %}
+                            <div style="margin-bottom:6px;">
+                                <b>Цена:</b> {{ ad.price }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Описание -->
+                        {% if ad.description %}
+                            <div style="color:#000; margin-bottom:8px;">
+                                {{ ad.description|truncatechars:150 }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Автор -->
+                        <div style="margin-top:10px; font-size:13px; color:#444;">
+                            Автор: {{ ad.author.username }}
+                        </div>
+
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>Пока объявлений нет. Будь первым 🙂</p>
-    {% endif %}
-</main>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="text-align:center;">Пока объявлений нет. Будь первым 🙂</p>
+        {% endif %}
+
+    </div>
+</div>
 {% endblock %}
-
-

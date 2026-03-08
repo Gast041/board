@@ -12,7 +12,7 @@ from django.http import HttpResponseForbidden
 from django.db.models import Q
 
 # Модели
-from .models import Ad
+from .models import Ad, Category
 
 # Формы
 from .forms import AdForm
@@ -24,6 +24,7 @@ from .forms import AdForm
 def ads_list(request):
     """
     Лента объявлений + поиск + фильтр по рубрике.
+
     URL:
       /ads/
       /ads/?q=текст
@@ -39,16 +40,40 @@ def ads_list(request):
     # -------------------------
     # Базовый queryset
     # -------------------------
-    ads = Ad.objects.select_related("author", "category").order_by("-id")
+    # select_related:
+    # - author
+    # - category
+    # - category__parent
+    # чтобы не делать лишние запросы в шаблоне
+    # -------------------------
+    ads = (
+        Ad.objects
+        .select_related("author", "category", "category__parent")
+        .order_by("-id")
+    )
 
     # -------------------------
-    # Фильтр по подрубрике
+    # Выбранная подрубрика
     # -------------------------
+    selected_category = None
+
     if cat:
-        ads = ads.filter(category__slug=cat)
+        selected_category = (
+            Category.objects
+            .select_related("parent")
+            .filter(slug=cat, is_active=True)
+            .first()
+        )
+
+        # Если подрубрика найдена — фильтруем по ней
+        if selected_category:
+            ads = ads.filter(category=selected_category)
+        else:
+            # Если slug битый/не найден — показываем пустой результат
+            ads = ads.none()
 
     # -------------------------
-    # Поиск
+    # Поиск по заголовку/описанию
     # -------------------------
     if q:
         ads = ads.filter(
@@ -56,6 +81,9 @@ def ads_list(request):
             Q(description__icontains=q)
         )
 
+    # -------------------------
+    # Рендер
+    # -------------------------
     return render(
         request,
         "ads/list.html",
@@ -63,6 +91,7 @@ def ads_list(request):
             "ads": ads,
             "q": q,
             "cat": cat,
+            "selected_category": selected_category,
         }
     )
 
@@ -82,14 +111,8 @@ def create_ad(request):
     - подрубрики подгружаются через GET-параметр parent_category
     """
 
-    # -------------------------
-    # Если пользователь выбрал рубрику через GET
-    # -------------------------
     selected_parent_id = request.GET.get("parent_category")
 
-    # -------------------------
-    # POST = сохранить объявление
-    # -------------------------
     if request.method == "POST":
         form = AdForm(request.POST)
 
@@ -98,10 +121,6 @@ def create_ad(request):
             ad.author = request.user
             ad.save()
             return redirect("ad_detail", ad_id=ad.id)
-
-    # -------------------------
-    # GET = просто показать форму
-    # -------------------------
     else:
         form = AdForm(parent_id=selected_parent_id)
 
@@ -124,7 +143,7 @@ def ad_detail(request, ad_id):
     URL: /ads/<id>/
     """
     ad = get_object_or_404(
-        Ad.objects.select_related("author", "category"),
+        Ad.objects.select_related("author", "category", "category__parent"),
         id=ad_id
     )
 
@@ -165,7 +184,7 @@ def edit_ad(request, ad_id):
     Редактирование объявления.
     URL: /ads/<id>/edit/
 
-    Для редактирования логика та же:
+    Логика:
     - сначала рубрика
     - потом подрубрика
     """
