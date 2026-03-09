@@ -44,7 +44,7 @@ class AdForm(forms.ModelForm):
 
     class Meta:
         model = Ad
-        fields = ["title", "category", "description", "price", "phone", "image"]
+        fields = ["title", "category", "description", "price", "city", "address", "phone", "image"]
 
         widgets = {
             "title": forms.TextInput(attrs={
@@ -59,6 +59,14 @@ class AdForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={
                 "class": "form-input",
                 "placeholder": "Цена (не обязательно)",
+            }),
+            "city": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "Например: Нижний Новгород",
+            }),
+            "address": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "Улица, дом, ориентир",
             }),
             "phone": forms.TextInput(attrs={
                 "class": "form-input",
@@ -78,6 +86,8 @@ class AdForm(forms.ModelForm):
         self.fields["title"].label = "Заголовок"
         self.fields["description"].label = "Описание"
         self.fields["price"].label = "Цена"
+        self.fields["city"].label = "Населённый пункт"
+        self.fields["address"].label = "Адрес"
         self.fields["phone"].label = "Телефон"
         self.fields["image"].label = "Фото"
 

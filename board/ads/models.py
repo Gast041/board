@@ -84,6 +84,20 @@ class Ad(models.Model):
         related_name="ads"
     )
 
+    # Населённый пункт
+    city = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="Населённый пункт"
+    )
+
+    # Адрес
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Адрес"
+    )
+
     # Телефон для связи
     phone = models.CharField(
         max_length=30,

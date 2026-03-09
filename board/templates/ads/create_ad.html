@@ -81,6 +81,22 @@
 
             <div>
               <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.city.label }}
+              </label>
+              {{ form.city }}
+              {{ form.city.errors }}
+            </div>
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
+                {{ form.address.label }}
+              </label>
+              {{ form.address }}
+              {{ form.address.errors }}
+            </div>
+
+            <div>
+              <label style="display:block; font-weight:800; margin-bottom:6px;">
                 {{ form.phone.label }}
               </label>
               {{ form.phone }}

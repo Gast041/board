@@ -32,6 +32,24 @@
             </div>
         {% endif %}
 
+        {% if ad.city or ad.address %}
+            <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8;">
+                <div style="font-weight:700; margin-bottom:6px;">Адрес</div>
+
+                {% if ad.city %}
+                    <div style="margin-bottom:4px;">
+                        <b>Населённый пункт:</b> {{ ad.city }}
+                    </div>
+                {% endif %}
+
+                {% if ad.address %}
+                    <div>
+                        <b>Адрес:</b> {{ ad.address }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% if ad.description %}
             <div style="margin-bottom:20px;">
                 {{ ad.description|linebreaksbr }}
