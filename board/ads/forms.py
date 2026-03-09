@@ -44,7 +44,7 @@ class AdForm(forms.ModelForm):
 
     class Meta:
         model = Ad
-        fields = ["title", "category", "description", "price", "image"]
+        fields = ["title", "category", "description", "price", "phone", "image"]
 
         widgets = {
             "title": forms.TextInput(attrs={
@@ -60,6 +60,11 @@ class AdForm(forms.ModelForm):
                 "class": "form-input",
                 "placeholder": "Цена (не обязательно)",
             }),
+            "phone": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "+7 900 123-45-67",
+                "inputmode": "tel",
+            }),
             "image": forms.ClearableFileInput(attrs={
                 "class": "form-input",
                 "accept": "image/*",
@@ -73,6 +78,7 @@ class AdForm(forms.ModelForm):
         self.fields["title"].label = "Заголовок"
         self.fields["description"].label = "Описание"
         self.fields["price"].label = "Цена"
+        self.fields["phone"].label = "Телефон"
         self.fields["image"].label = "Фото"
 
         if self.instance and self.instance.pk and self.instance.category:

@@ -84,6 +84,13 @@ class Ad(models.Model):
         related_name="ads"
     )
 
+    # Телефон для связи
+    phone = models.CharField(
+        max_length=30,
+        blank=True,
+        verbose_name="Телефон"
+    )
+
     # Главное фото объявления
     image = models.ImageField(
         upload_to="listing_photos/",

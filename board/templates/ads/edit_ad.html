@@ -80,6 +80,14 @@
                     </div>
 
                     <div class="form-row">
+                        <label class="form-label">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="field-error">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
                         <label class="form-label">{{ form.image.label }}</label>
                         {{ form.image }}
                         {% if form.image.errors %}
