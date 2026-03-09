@@ -7,24 +7,44 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .models import Ad, Category
 from .forms import AdForm
 
 
 # =========================
-# ЛЕНТА ОБЪЯВЛЕНИЙ (СПИСОК) + ПОИСК + ФИЛЬТР ПО РУБРИКЕ
+# ЛЕНТА ОБЪЯВЛЕНИЙ (СПИСОК) + ПОИСК + ФИЛЬТР ПО РУБРИКЕ + ПАГИНАЦИЯ
 # =========================
 def ads_list(request):
+    """
+    Лента объявлений.
+
+    Поддерживает:
+    - поиск: /ads/?q=текст
+    - фильтр по подрубрике: /ads/?cat=slug
+    - пагинацию: /ads/?page=2
+    """
+
+    # -------------------------
+    # Параметры из URL
+    # -------------------------
     q = request.GET.get("q", "").strip()
     cat = request.GET.get("cat", "").strip()
+    page_number = request.GET.get("page")
 
-    ads = (
+    # -------------------------
+    # Базовый queryset
+    # -------------------------
+    ads_queryset = (
         Ad.objects
         .select_related("author", "category", "category__parent")
         .order_by("-id")
     )
 
+    # -------------------------
+    # Выбранная подрубрика
+    # -------------------------
     selected_category = None
 
     if cat:
@@ -36,15 +56,25 @@ def ads_list(request):
         )
 
         if selected_category:
-            ads = ads.filter(category=selected_category)
+            ads_queryset = ads_queryset.filter(category=selected_category)
         else:
-            ads = ads.none()
+            ads_queryset = ads_queryset.none()
 
+    # -------------------------
+    # Поиск
+    # -------------------------
     if q:
-        ads = ads.filter(
+        ads_queryset = ads_queryset.filter(
             Q(title__icontains=q) |
             Q(description__icontains=q)
         )
+
+    # -------------------------
+    # ПАГИНАЦИЯ
+    # 10 объявлений на страницу
+    # -------------------------
+    paginator = Paginator(ads_queryset, 10)
+    ads = paginator.get_page(page_number)
 
     return render(
         request,
@@ -54,6 +84,8 @@ def ads_list(request):
             "q": q,
             "cat": cat,
             "selected_category": selected_category,
+            "page_obj": ads,
+            "is_paginated": ads.has_other_pages(),
         }
     )
 
