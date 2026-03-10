@@ -395,10 +395,12 @@
 .home-hero-box {
   width: 100%;
   max-width: 980px;
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.92);
   border-radius: 14px;
   padding: 26px 22px;
   border: 1px solid #ffe1e1;
+  box-sizing: border-box;
 }
 
 .home-hero-title {
@@ -447,7 +449,7 @@
 .home-hero-actions {
   width: min(760px, 100%);
   margin: 14px auto 0;
-  }
+}
 
 .home-hero-link {
   color: #c62828;
