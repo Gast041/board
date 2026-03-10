@@ -417,15 +417,20 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 .home-hero-input {
-  flex: 1;
+  flex: 1 1 780px;
   min-width: 220px;
+  max-width: 980px;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d6d6d6;
   outline: none;
+  box-sizing: border-box;
 }
 
 .home-hero-btn {
