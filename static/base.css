@@ -416,16 +416,17 @@
 .home-hero-search {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
-  max-width: 1100px;
+  flex-wrap: nowrap;
+  width: min(920px, 100%);
   margin: 0 auto;
-  justify-content: center;
+  align-items: center;
 }
 
 .home-hero-input {
-  flex: 1 1 780px;
-  min-width: 220px;
-  max-width: 980px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+  width: auto;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d6d6d6;
@@ -444,7 +445,8 @@
 }
 
 .home-hero-actions {
-  margin-top: 14px;
+  width: min(920px, 100%);
+  margin: 14px auto 0;
 }
 
 .home-hero-link {
