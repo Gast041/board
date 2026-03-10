@@ -1,11 +1,18 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- =========================
+         БАЗОВЫЙ ШАБЛОН САЙТА
+         - общая шапка
+         - общий левый блок для внутренних страниц
+         - главная страница скрывает левый блок через body_class = home
+         ========================= -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}52P{% endblock %}</title>
+
+    <!-- Общие стили -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
@@ -14,12 +21,14 @@
 <header class="site-header">
     <div class="container header-row">
 
+        <!-- ЛОГО -->
         <div class="header-logo">
             <a href="/" class="logo-link">
                 52<span class="logo-p">P</span>
             </a>
         </div>
 
+        <!-- ПОИСК В ШАПКЕ -->
         <div class="header-search">
             {% block header_search %}
             <form method="get" action="{% url 'ads_list' %}" class="search-form">
@@ -35,6 +44,7 @@
             {% endblock %}
         </div>
 
+        <!-- МЕНЮ -->
         <nav class="header-nav">
             {% if user.is_authenticated %}
                 <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
@@ -56,7 +66,56 @@
 </header>
 
 <main class="page">
-    {% block content %}{% endblock %}
+    <!-- =========================
+         ОБЩИЙ ВНУТРЕННИЙ МАКЕТ
+         - слева sidebar
+         - справа контент
+         - на главной sidebar скрывается через CSS
+         ========================= -->
+    <div class="container page-shell">
+
+        <aside class="page-sidebar">
+            {% block sidebar %}
+            <!-- БОКОВОЙ БЛОК ПО УМОЛЧАНИЮ -->
+            <div class="sidebar-card">
+                <div class="sidebar-title">Быстрые действия</div>
+
+                <div class="sidebar-links">
+                    <a href="{% url 'ads_list' %}" class="sidebar-link">Все объявления</a>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
+                        <a href="{% url 'profile' %}" class="sidebar-link">Мой профиль</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="sidebar-link">Войти</a>
+                        <a href="{% url 'signup' %}" class="sidebar-link">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">Информация</div>
+                <div class="sidebar-text">
+                    Здесь можно разместить рекламу, спецпредложения,
+                    важные объявления или полезную информацию для пользователей.
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">Безопасность</div>
+                <div class="sidebar-text">
+                    Не переводите деньги заранее незнакомым людям
+                    и проверяйте товар перед покупкой.
+                </div>
+            </div>
+            {% endblock %}
+        </aside>
+
+        <section class="page-main">
+            {% block content %}{% endblock %}
+        </section>
+
+    </div>
 </main>
 
 </body>

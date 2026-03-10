@@ -3,111 +3,153 @@
 
 {% block title %}{{ ad.title }}{% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="page-card">
+{% block sidebar %}
+<div class="sidebar-card">
+    <div class="sidebar-title">Действия</div>
+    <div class="sidebar-links">
+        <a href="{% url 'ads_list' %}" class="sidebar-link">Назад к ленте</a>
+        <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
+    </div>
+</div>
 
-        <h1 style="text-align:center; margin: 0 0 20px;">{{ ad.title }}</h1>
+{% if ad.city or ad.address %}
+<div class="sidebar-card">
+    <div class="sidebar-title">Местоположение</div>
 
-        {% if ad.category %}
-            <div style="margin-bottom:15px; font-size:15px; color:#555; text-align:center;">
-                <b>Рубрика:</b>
-                {% if ad.category.parent %}
-                    {{ ad.category.parent.name }} → {{ ad.category.name }}
-                {% else %}
-                    {{ ad.category.name }}
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {% if ad.image %}
-            <div style="margin-bottom:20px; text-align:center;">
-                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width:100%; max-height:500px; border-radius:12px;">
-            </div>
-        {% endif %}
-
-        {% if ad.price %}
-            <div style="margin-bottom:15px; font-size:18px; text-align:center;">
-                <b>Цена:</b> {{ ad.price }}
-            </div>
-        {% endif %}
-
-        {% if ad.city or ad.address %}
-            <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8;">
-                <div style="font-weight:700; margin-bottom:6px;">Адрес</div>
-
-                {% if ad.city %}
-                    <div style="margin-bottom:4px;">
-                        <b>Населённый пункт:</b> {{ ad.city }}
-                    </div>
-                {% endif %}
-
-                {% if ad.address %}
-                    <div>
-                        <b>Адрес:</b> {{ ad.address }}
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {% if ad.description %}
-            <div style="margin-bottom:20px;">
-                {{ ad.description|linebreaksbr }}
-            </div>
-        {% else %}
-            <div style="margin-bottom:20px; color:#444;">
-                Описание не указано.
-            </div>
-        {% endif %}
-
-        <div style="font-size:14px; color:#444; margin-bottom:12px;">
-            Автор: {{ ad.author.username }}
+    {% if ad.city %}
+        <div class="sidebar-text" style="margin-bottom:8px;">
+            <b>Населённый пункт:</b><br>{{ ad.city }}
         </div>
+    {% endif %}
 
-        {% if user.is_authenticated %}
-            {% if ad.phone %}
-                <details style="margin: 18px 0; padding: 12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8;">
-                    <summary style="cursor:pointer; font-weight:700; color:#c62828;">
-                        Показать телефон
-                    </summary>
-                    <div style="margin-top:10px; font-size:18px; font-weight:700;">
-                        <a href="tel:{{ ad.phone }}" style="color:#000; text-decoration:none;">
-                            {{ ad.phone }}
-                        </a>
-                    </div>
-                </details>
+    {% if ad.address %}
+        <div class="sidebar-text">
+            <b>Адрес:</b><br>{{ ad.address }}
+        </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="sidebar-card">
+    <div class="sidebar-title">Безопасность сделки</div>
+    <div class="sidebar-text">
+        Проверяй товар лично, не переводи деньги заранее и
+        договаривайся о встрече в безопасном месте.
+    </div>
+</div>
+
+<div class="sidebar-card">
+    <div class="sidebar-title">Реклама</div>
+    <div class="sidebar-text">
+        Здесь можно разместить рекламный блок, спецпредложение
+        или похожие объявления.
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-card">
+
+    <h1 style="text-align:center; margin: 0 0 20px;">{{ ad.title }}</h1>
+
+    {% if ad.category %}
+        <div style="margin-bottom:15px; font-size:15px; color:#555; text-align:center;">
+            <b>Рубрика:</b>
+            {% if ad.category.parent %}
+                {{ ad.category.parent.name }} → {{ ad.category.name }}
+            {% else %}
+                {{ ad.category.name }}
             {% endif %}
-        {% else %}
-            <div style="margin: 18px 0; padding: 12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8; text-align:center;">
-                <a href="{% url 'login' %}" style="color:#c62828; text-decoration:none; font-weight:700;">
-                    Войди, чтобы увидеть телефон
-                </a>
-            </div>
+        </div>
+    {% endif %}
+
+    {% if ad.image %}
+        <div style="margin-bottom:20px; text-align:center;">
+            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width:100%; max-height:500px; border-radius:12px;">
+        </div>
+    {% endif %}
+
+    {% if ad.price %}
+        <div style="margin-bottom:15px; font-size:18px; text-align:center;">
+            <b>Цена:</b> {{ ad.price }}
+        </div>
+    {% endif %}
+
+    {% if ad.city or ad.address %}
+        <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8;">
+            <div style="font-weight:700; margin-bottom:6px;">Адрес</div>
+
+            {% if ad.city %}
+                <div style="margin-bottom:4px;">
+                    <b>Населённый пункт:</b> {{ ad.city }}
+                </div>
+            {% endif %}
+
+            {% if ad.address %}
+                <div>
+                    <b>Адрес:</b> {{ ad.address }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if ad.description %}
+        <div style="margin-bottom:20px;">
+            {{ ad.description|linebreaksbr }}
+        </div>
+    {% else %}
+        <div style="margin-bottom:20px; color:#444;">
+            Описание не указано.
+        </div>
+    {% endif %}
+
+    <div style="font-size:14px; color:#444; margin-bottom:12px;">
+        Автор: {{ ad.author.username }}
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if ad.phone %}
+            <details style="margin: 18px 0; padding: 12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8;">
+                <summary style="cursor:pointer; font-weight:700; color:#c62828;">
+                    Показать телефон
+                </summary>
+                <div style="margin-top:10px; font-size:18px; font-weight:700;">
+                    <a href="tel:{{ ad.phone }}" style="color:#000; text-decoration:none;">
+                        {{ ad.phone }}
+                    </a>
+                </div>
+            </details>
         {% endif %}
-
-        {% if user.is_authenticated and user == ad.author %}
-            <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-                <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
-                    Редактировать
-                </a>
-
-                <form method="post"
-                      action="{% url 'delete_ad' ad.id %}"
-                      onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
-                    {% csrf_token %}
-                    <button type="submit" class="danger-btn">
-                        Удалить объявление
-                    </button>
-                </form>
-            </div>
-        {% endif %}
-
-        <div style="margin-top:30px; text-align:center;">
-            <a href="{% url 'ads_list' %}" class="main-btn">
-                Назад к ленте
+    {% else %}
+        <div style="margin: 18px 0; padding: 12px 14px; border:1px solid #ffe2e2; border-radius:10px; background:#fff8f8; text-align:center;">
+            <a href="{% url 'login' %}" style="color:#c62828; text-decoration:none; font-weight:700;">
+                Войди, чтобы увидеть телефон
             </a>
         </div>
+    {% endif %}
 
+    {% if user.is_authenticated and user == ad.author %}
+        <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="{% url 'edit_ad' ad.id %}" class="main-btn">
+                Редактировать
+            </a>
+
+            <form method="post"
+                  action="{% url 'delete_ad' ad.id %}"
+                  onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
+                {% csrf_token %}
+                <button type="submit" class="danger-btn">
+                    Удалить объявление
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div style="margin-top:30px; text-align:center;">
+        <a href="{% url 'ads_list' %}" class="main-btn">
+            Назад к ленте
+        </a>
     </div>
+
 </div>
 {% endblock %}

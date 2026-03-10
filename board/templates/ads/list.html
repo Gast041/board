@@ -3,121 +3,169 @@
 
 {% block title %}Лента объявлений{% endblock %}
 
+{% block sidebar %}
+<div class="sidebar-card">
+    <div class="sidebar-title">Фильтры</div>
+
+    {% if q %}
+        <div class="sidebar-text" style="margin-bottom:10px;">
+            <b>Поиск:</b> {{ q }}
+        </div>
+    {% endif %}
+
+    {% if selected_category %}
+        <div class="sidebar-text" style="margin-bottom:10px;">
+            <b>Рубрика:</b><br>
+            {% if selected_category.parent %}
+                {{ selected_category.parent.name }} → {{ selected_category.name }}
+            {% else %}
+                {{ selected_category.name }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="sidebar-links">
+        <a href="{% url 'ads_list' %}" class="sidebar-link">Сбросить фильтры</a>
+        <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
+    </div>
+</div>
+
+<div class="sidebar-card">
+    <div class="sidebar-title">Подсказка</div>
+    <div class="sidebar-text">
+        Здесь позже можно сделать фильтры по цене, городу,
+        адресу, продавцу и другим параметрам.
+    </div>
+</div>
+
+<div class="sidebar-card">
+    <div class="sidebar-title">Реклама</div>
+    <div class="sidebar-text">
+        Место под рекламный блок, спецпредложения или платные объявления.
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="page-card">
+<div class="page-card">
 
-        <h1 style="text-align:center; margin: 0 0 8px;">Лента объявлений</h1>
-        <p style="text-align:center; margin: 0 0 20px;">Новые объявления сверху</p>
+    <h1 style="text-align:center; margin: 0 0 8px;">Лента объявлений</h1>
+    <p style="text-align:center; margin: 0 0 20px;">Новые объявления сверху</p>
 
-        {% if q or selected_category %}
-            <div style="margin: 10px 0 20px; font-size: 14px; text-align:center; color:#444;">
+    {% if q or selected_category %}
+        <div style="margin: 10px 0 20px; font-size: 14px; text-align:center; color:#444;">
 
-                {% if q %}
-                    <span><b>Поиск:</b> {{ q }}</span>
-                {% endif %}
-
-                {% if q and selected_category %}
-                    <span> • </span>
-                {% endif %}
-
-                {% if selected_category %}
-                    <span>
-                        <b>Рубрика:</b>
-                        {% if selected_category.parent %}
-                            {{ selected_category.parent.name }} → {{ selected_category.name }}
-                        {% else %}
-                            {{ selected_category.name }}
-                        {% endif %}
-                    </span>
-                {% endif %}
-
-                <span> • </span>
-                <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
-                    сбросить
-                </a>
-            </div>
-        {% endif %}
-
-        {% if ads %}
-            <div style="text-align:left; display:grid; gap:14px;">
-                {% for ad in ads %}
-                    <div style="border:1px solid #ffeded; padding:14px; border-radius:8px; display:grid; gap:10px;">
-
-                        {% if ad.image %}
-                            <div>
-                                <a href="{% url 'ad_detail' ad.id %}">
-                                    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="width:100%; max-height:260px; object-fit:cover; border-radius:10px;">
-                                </a>
-                            </div>
-                        {% endif %}
-
-                        <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                            <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
-                                {{ ad.title }}
-                            </a>
-                        </div>
-
-                        {% if ad.category %}
-                            <div style="margin-bottom:6px; font-size:14px; color:#555;">
-                                <b>Рубрика:</b>
-                                {% if ad.category.parent %}
-                                    {{ ad.category.parent.name }} → {{ ad.category.name }}
-                                {% else %}
-                                    {{ ad.category.name }}
-                                {% endif %}
-                            </div>
-                        {% endif %}
-
-                        {% if ad.price %}
-                            <div style="margin-bottom:6px;">
-                                <b>Цена:</b> {{ ad.price }}
-                            </div>
-                        {% endif %}
-
-                        {% if ad.description %}
-                            <div style="color:#000; margin-bottom:8px;">
-                                {{ ad.description|truncatechars:150 }}
-                            </div>
-                        {% endif %}
-
-                        <div style="margin-top:10px; font-size:13px; color:#444;">
-                            Автор: {{ ad.author.username }}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            {% if is_paginated %}
-                <div style="margin-top:24px; display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap;">
-
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if cat %}&cat={{ cat|urlencode }}{% endif %}"
-                           class="main-btn"
-                           style="padding:8px 12px;">
-                            ← Назад
-                        </a>
-                    {% endif %}
-
-                    <span style="font-size:14px; color:#444;">
-                        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if cat %}&cat={{ cat|urlencode }}{% endif %}"
-                           class="main-btn"
-                           style="padding:8px 12px;">
-                            Вперёд →
-                        </a>
-                    {% endif %}
-
-                </div>
+            {% if q %}
+                <span><b>Поиск:</b> {{ q }}</span>
             {% endif %}
 
-        {% else %}
-            <p style="text-align:center;">Пока объявлений нет. Будь первым 🙂</p>
+            {% if q and selected_category %}
+                <span> • </span>
+            {% endif %}
+
+            {% if selected_category %}
+                <span>
+                    <b>Рубрика:</b>
+                    {% if selected_category.parent %}
+                        {{ selected_category.parent.name }} → {{ selected_category.name }}
+                    {% else %}
+                        {{ selected_category.name }}
+                    {% endif %}
+                </span>
+            {% endif %}
+
+            <span> • </span>
+            <a href="{% url 'ads_list' %}" style="color:#c62828; text-decoration:none;">
+                сбросить
+            </a>
+        </div>
+    {% endif %}
+
+    {% if ads %}
+        <div style="text-align:left; display:grid; gap:14px;">
+            {% for ad in ads %}
+                <div style="border:1px solid #ffeded; padding:14px; border-radius:8px; display:grid; gap:10px;">
+
+                    {% if ad.image %}
+                        <div>
+                            <a href="{% url 'ad_detail' ad.id %}">
+                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="width:100%; max-height:260px; object-fit:cover; border-radius:10px;">
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
+                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                            {{ ad.title }}
+                        </a>
+                    </div>
+
+                    {% if ad.category %}
+                        <div style="margin-bottom:6px; font-size:14px; color:#555;">
+                            <b>Рубрика:</b>
+                            {% if ad.category.parent %}
+                                {{ ad.category.parent.name }} → {{ ad.category.name }}
+                            {% else %}
+                                {{ ad.category.name }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if ad.price %}
+                        <div style="margin-bottom:6px;">
+                            <b>Цена:</b> {{ ad.price }}
+                        </div>
+                    {% endif %}
+
+                    {% if ad.city or ad.address %}
+                        <div style="margin-bottom:6px; font-size:14px; color:#555;">
+                            <b>Адрес:</b>
+                            {% if ad.city %}{{ ad.city }}{% endif %}{% if ad.city and ad.address %}, {% endif %}{% if ad.address %}{{ ad.address }}{% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if ad.description %}
+                        <div style="color:#000; margin-bottom:8px;">
+                            {{ ad.description|truncatechars:150 }}
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-top:10px; font-size:13px; color:#444;">
+                        Автор: {{ ad.author.username }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div style="margin-top:24px; display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap;">
+
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if cat %}&cat={{ cat|urlencode }}{% endif %}"
+                       class="main-btn"
+                       style="padding:8px 12px;">
+                        ← Назад
+                    </a>
+                {% endif %}
+
+                <span style="font-size:14px; color:#444;">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if cat %}&cat={{ cat|urlencode }}{% endif %}"
+                       class="main-btn"
+                       style="padding:8px 12px;">
+                        Вперёд →
+                    </a>
+                {% endif %}
+
+            </div>
         {% endif %}
 
-    </div>
+    {% else %}
+        <p style="text-align:center;">Пока объявлений нет. Будь первым 🙂</p>
+    {% endif %}
+
 </div>
 {% endblock %}
