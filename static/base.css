@@ -410,7 +410,8 @@
 }
 
 .home-hero-subtitle {
-  margin: 0 0 18px 0;
+  width: min(920px, 100%);
+  margin: 0 auto 18px;
   color: #333;
   font-size: 18px;
 }
@@ -418,7 +419,7 @@
 .home-hero-search {
   display: flex;
   gap: 10px;
-  width: min(760px, 100%);
+  width: min(920px, 100%);
   margin: 0 auto;
   align-items: center;
 }
@@ -447,9 +448,9 @@
 }
 
 .home-hero-actions {
-  width: min(760px, 100%);
+  width: min(920px, 100%);
   margin: 14px auto 0;
-}
+
 
 .home-hero-link {
   color: #c62828;
@@ -589,9 +590,12 @@
     padding-top: 0;
   }
 
-  .home-hero-title {
-    font-size: 30px;
-  }
+.home-hero-title {
+  width: min(920px, 100%);
+  margin: 0 auto 8px;
+  font-size: 40px;
+  color: #000;
+}
 
   .home-cats-grid {
     grid-template-columns: 1fr;
