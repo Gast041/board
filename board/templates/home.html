@@ -1,66 +1,48 @@
-<!-- =========================
-   HOME.HTML — ГЛАВНАЯ СТРАНИЦА
-   Файл: board/templates/home.html
-
-   ВАЖНО:
-   - Используем общий base.html
-   - Поиск в шапке на главной скрывается через CSS
-   ========================= -->
-
 {% extends "base.html" %}
 {% load static %}
 
-{# Заголовок вкладки #}
-{% block title %}52prime.ru — Доска объявлений{% endblock %}
-
-{# Чтобы CSS знал, что это главная (home) #}
+{% block title %}52P — Доска объявлений{% endblock %}
 {% block body_class %}home{% endblock %}
+
+{# УБИРАЕМ ПОИСК ИЗ ШАПКИ ТОЛЬКО НА ГЛАВНОЙ #}
+{% block header_search %}{% endblock %}
 
 {% block content %}
 
-<!-- =========================
-   HERO-БЛОК С КАРТИНКОЙ
-   ========================= -->
-
 <section class="home-hero">
   <div class="home-hero-overlay">
-    <div class="home-hero-box">
+    <div class="container">
+      <div class="home-hero-box">
 
-      <h1 class="home-hero-title">Доска объявлений</h1>
-      <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
+        <h1 class="home-hero-title">Доска объявлений</h1>
+        <p class="home-hero-subtitle">Быстро. Просто. Бесплатно.</p>
 
-      {# Поиск ведёт в ленту с параметром ?q=... #}
-      <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
-        <input
-          type="text"
-          name="q"
-          placeholder="Поиск по объявлениям..."
-          class="home-hero-input"
-        >
-        <button type="submit" class="home-hero-btn">Найти</button>
-      </form>
+        <form method="get" action="{% url 'ads_list' %}" class="home-hero-search">
+          <input
+            type="text"
+            name="q"
+            placeholder="Поиск по объявлениям..."
+            class="home-hero-input"
+          >
+          <button type="submit" class="home-hero-btn">Найти</button>
+        </form>
 
-      <div class="home-hero-actions">
-        <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+        <div class="home-hero-actions">
+          <a href="{% url 'ads_list' %}" class="home-hero-link">Перейти к ленте →</a>
+        </div>
+
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- =========================
-   КАТАЛОГ РУБРИК (из БД)
-   ========================= -->
 <section class="home-cats">
   <div class="home-cats-inner">
     <h2 class="home-cats-title">Каталог рубрик</h2>
 
     <div class="home-cats-grid">
-
-      {# categories приходит из home_view #}
       {% for c in categories %}
         <div class="cat-card">
-
           <div class="cat-card-title">
             <span class="cat-dot" aria-hidden="true"></span>
             {{ c.name }}
@@ -75,10 +57,8 @@
               <li style="color:#777;">Подрубрик пока нет</li>
             {% endfor %}
           </ul>
-
         </div>
       {% endfor %}
-
     </div>
   </div>
 </section>
