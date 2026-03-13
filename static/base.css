@@ -404,7 +404,8 @@
 }
 
 .home-hero-title {
-  margin: 0 0 8px 0;
+  width: min(920px, 100%);
+  margin: 0 auto 8px;
   font-size: 40px;
   color: #000;
 }
@@ -435,7 +436,6 @@
   outline: none;
   box-sizing: border-box;
 }
-
 
 .home-hero-btn {
   padding: 10px 16px;
@@ -590,12 +590,12 @@
     padding-top: 0;
   }
 
-.home-hero-title {
-  width: min(920px, 100%);
-  margin: 0 auto 8px;
-  font-size: 40px;
-  color: #000;
-}
+  .home-hero-title {
+    width: 100%;
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #000;
+  }
 
   .home-cats-grid {
     grid-template-columns: 1fr;
