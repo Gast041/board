@@ -1,447 +1,607 @@
 /* =========================
-   ОБЩИЕ НАСТРОЙКИ САЙТА
+   BASE.CSS
+   Общие стили сайта:
+   - шапка
+   - главная
+   - формы
+   - внутренний макет с левым блоком
+   Цвета: белый / красный / чёрный
    ========================= */
 
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
 
-body {
-    margin: 0;
-    color: #000;                 /* ВЕСЬ ТЕКСТ ЧЁРНЫЙ */
-    background: #ffeded;         /* БЛЕДНО-РОЗОВЫЙ ФОН САЙТА */
+/* =========================
+   ОБЩИЙ КОНТЕЙНЕР
+   ========================= */
+.container {
+  width: min(1280px, calc(100% - 32px));
+  margin: 0 auto;
 }
 
 
 /* =========================
-   ШАПКА САЙТА (HEADER)
+   ШАПКА САЙТА
    ========================= */
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-
-    background: #ffffff;         /* БЕЛАЯ ШАПКА */
-    border-bottom: 2px solid #ffeded; /* ТОНКАЯ ЛИНИЯ СВЕРХУ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #fff;
+  border-bottom: 1px solid #ffe2e2;
 }
 
-/* Ссылки в шапке */
-.header a {
-    margin-left: 12px;
-    text-decoration: none;
-    color: #c62828;              /* КРАСНЫЕ ССЫЛКИ */
-    font-weight: 500;
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
 }
 
-.header a:hover {
-    text-decoration: underline;
+.header-logo {
+  flex: 0 0 auto;
+  min-width: 140px;
 }
-
-/* Логотип */
-.logo {
-    font-weight: bold;
-    font-size: 18px;
-    color: #000;                 /* ЛОГОТИП ЧЁРНЫЙ */
-}
-
-
-/* =========================
-   ГЛАВНАЯ СТРАНИЦА (HERO)
-   ========================= */
-
-.hero {
-    max-width: 1024px;
-    margin: 40px auto;
-    padding: 40px 30px;
-
-    background: #ffffff;         /* БЕЛЫЙ ЦЕНТРАЛЬНЫЙ БЛОК */
-    border-radius: 6px;
-
-    /* Белая "рамка", как на рисунке */
-    box-shadow: 0 0 0 6px #ffffff;
-
-    text-align: center;
-}
-
-/* Заголовок */
-.hero h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-    color: #000;                 /* ЧЁРНЫЙ ЗАГОЛОВОК */
-}
-
-/* Описание под заголовком */
-.hero p {
-    font-size: 18px;
-    margin-bottom: 30px;
-    color: #000;                 /* ЧЁРНЫЙ ТЕКСТ */
-}
-
-
-/* =========================
-   ОСНОВНАЯ КНОПКА
-   ========================= */
-
-.main-btn {
-    display: inline-block;
-    padding: 14px 24px;
-
-    background: #c62828;         /* КРАСНАЯ КНОПКА */
-    color: #ffffff;              /* БЕЛЫЙ ТЕКСТ */
-
-    text-decoration: none;
-    border-radius: 6px;
-}
-
-.main-btn:hover {
-    background: #b71c1c;         /* ТЕМНЕЕ ПРИ НАВЕДЕНИИ */
-}
-
-
-/* =========================
-   КНОПКА "ВЫЙТИ" (КАК ССЫЛКА)
-   ========================= */
-
-.link-btn {
-    background: none;
-    border: none;
-
-    color: #c62828;              /* КРАСНАЯ */
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.link-btn:hover {
-    text-decoration: underline;
-}
-
-
-/* ===========================
-   АВТОРИЗАЦИЯ / ВХОД / РЕГИСТРАЦИЯ
-   =========================== */
-
-/* Обёртка — центрирование формы */
-.auth-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-
-    margin-top: 20px;
-    padding: 20px;
-}
-
-/* Белый блок формы */
-.auth-card {
-    background: #ffffff;
-    max-width: 420px;
-    width: 100%;
-
-    padding: 30px;
-    border-radius: 8px;
-}
-
-/* Заголовок формы */
-.auth-card h1 {
-    margin-bottom: 20px;
-    text-align: center;
-    color: #000;
-}
-
-/* Отступы между полями Django */
-.auth-card form p {
-    margin-bottom: 14px;
-}
-
-/* Поля ввода */
-.auth-card input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 4px;
-
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Блок ссылок под формой */
-.auth-links {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-}
-
-/* Ссылки в формах */
-.auth-links a {
-    color: #c62828;              /* КРАСНЫЕ ССЫЛКИ */
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.auth-links a:hover {
-    text-decoration: underline;
-}
-
-/* ===========================
-   СТРАНИЦА ВХОДА (LOGIN)
-   =========================== */
-
-/* Чтобы страница входа выглядела как главная */
-.login-page {
-    min-height: calc(100vh - 70px); /* высота экрана минус шапка */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-/* Немного приподнимаем белый блок */
-.login-page .auth-wrapper {
-    margin-top: 40px;
-}
-
-/* Кнопка входа — как основная */
-.auth-card button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-
-    background: #c62828;     /* красная */
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.auth-card button:hover {
-    background: #b71c1c;
-}
-
-/* Ошибка логина */
-.auth-error {
-    background: #ffebee;
-    color: #c62828;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    font-size: 14px;
-    text-align: center;
-}
-/* =========================
-   ОСНОВНАЯ КНОПКА (главная кнопка сайта)
-   ========================= */
-.main-btn {
-    background: #c62828;      /* красный фон */
-    color: #ffffff !important; /* БЕЛЫЙ текст */
-    padding: 6px 6px;
-    border-radius: 6px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: 500;
-    transition: 0.2s;
-}
-
-/* Эффект наведения */
-.main-btn:hover {
-    background: #a61e1e;
-}
-
-/* =========================
-   ШАПКА: СЕТКА (ЛОГО / ПОИСК / МЕНЮ)
-   ========================= */
-.header-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 10px 20px;
-}
-
-/* Логотип-ссылка (чёрный текст как ты хотел) */
-.logo-link {
-    text-decoration: none;
-    color: #000;
-}
-
-/* Центр шапки */
-.header-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-/* Правая часть меню */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-/* Чтобы form в меню не ломал строку */
-.inline-form {
-    display: inline;
-    margin: 0;
-}
-
-/* =========================
-   ПОИСК
-   ========================= */
-.search-form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: min(700px, 100%);
-}
-
-.search-input {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.search-btn {
-    padding: 8px 14px;
-    border: none;
-    background: #c62828;
-    color: #fff; /* ✅ белый текст на кнопке */
-    border-radius: 6px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.search-btn:hover {
-    background: #b71c1c;
-}
-
-/* Подсказка поиска */
-.search-hint {
-    margin-top: 10px;
-    color: #444;
-}
-
-.search-reset {
-    margin-left: 10px;
-    color: #c62828;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.search-reset:hover {
-    text-decoration: underline;
-}
-
-/* =========================
-   ЛЕНТА ОБЪЯВЛЕНИЙ
-   ========================= */
-.ads-grid {
-    text-align: left;
-    display: grid;
-    gap: 14px;
-}
-
-.ad-card {
-    border: 1px solid #ffeded;
-    padding: 14px;
-    border-radius: 8px;
-    background: #fff;
-}
-
-.ad-title {
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 6px;
-}
-
-.ad-title-link {
-    color: #c62828;
-    text-decoration: none;
-}
-
-.ad-title-link:hover {
-    text-decoration: underline;
-}
-
-.ad-price {
-    margin-bottom: 6px;
-}
-
-.ad-desc {
-    color: #000;
-    margin-bottom: 8px;
-}
-
-.ad-author {
-    margin-top: 10px;
-    font-size: 13px;
-    color: #444;
-}
-/* =========================
-   ШАПКА: ПОИСК + МЕНЮ (ЛЕНТА)
-   ========================= */
 
 .logo-link {
-    text-decoration: none;
-    color: #c62828; /* как фирменный красный */
+  font-weight: 800;
+  color: #000;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.logo-p {
+  color: #c62828;
+  font-weight: 900;
 }
 
 .header-search {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+  flex: 1 1 auto;
+  min-width: 220px;
 }
 
 .search-form {
-    width: min(640px, 100%);
-    display: flex;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .search-input {
-    flex: 1;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 16px;
+}
+
+.search-input:focus {
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
 }
 
 .search-btn {
-    padding: 10px 16px;
-    border: none;
-    background: #c62828;
-    color: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.search-btn:hover {
-    background: #b71c1c;
+  border: 0;
+  background: #c62828;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .header-nav {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
 }
 
-.header-user {
-    color: #000;
-    font-weight: 500;
+.nav-link {
+  color: #c62828;
+  text-decoration: none;
+  font-weight: 700;
 }
 
-/* Заголовок объявления как ссылка */
-.ad-title-link {
-    color: #c62828;
-    text-decoration: none;
+.nav-link:hover {
+  text-decoration: underline;
 }
 
-.ad-title-link:hover {
-    text-decoration: underline;
+.nav-user {
+  color: #000;
+  text-decoration: none;
+  font-weight: 800;
 }
 
-/* ВАЖНО: чтобы текст на кнопке main-btn был белый (если вдруг где-то перекрасился) */
+.nav-user:hover {
+  text-decoration: underline;
+}
+
+.nav-logout {
+  display: inline;
+}
+
+
+/* =========================
+   КНОПКИ
+   ========================= */
 .main-btn {
-    color: #fff;
+  display: inline-block;
+  background: #c62828;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  border: 0;
+  cursor: pointer;
+}
+
+.main-btn:hover {
+  filter: brightness(0.95);
+}
+
+.link-btn {
+  border: 0;
+  background: transparent;
+  color: #c62828;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+
+.danger-btn {
+  background: #c62828;
+  color: #fff;
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.danger-btn:hover {
+  filter: brightness(0.95);
+}
+
+
+/* =========================
+   ОСНОВНОЙ КОНТЕНТ
+   Чтобы страница не прилипала к fixed-header
+   ========================= */
+.page {
+  padding: 86px 0 24px;
+}
+
+
+/* =========================
+   ВНУТРЕННИЙ МАКЕТ С ЛЕВЫМ БЛОКОМ
+   ========================= */
+.page-shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.page-sidebar {
+  position: sticky;
+  top: 104px;
+}
+
+.page-main {
+  min-width: 0;
+}
+
+
+/* =========================
+   БОКОВОЙ БЛОК
+   ========================= */
+.sidebar-card {
+  background: #fff;
+  border: 1px solid #ffe2e2;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.sidebar-text {
+  color: #444;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sidebar-links {
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-link {
+  color: #c62828;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.sidebar-link:hover {
+  text-decoration: underline;
+}
+
+.sidebar-note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.sidebar-badge {
+  display: inline-block;
+  background: #fff3f3;
+  color: #c62828;
+  border: 1px solid #ffd7d7;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 3px 6px 3px 0;
+}
+
+
+/* =========================
+   КАРТОЧКИ СТРАНИЦ
+   ========================= */
+.page-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #ffeded;
+  padding: 26px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.page-title {
+  margin: 0 0 6px;
+  font-size: 34px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.page-subtitle {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.back-link {
+  color: #c62828;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   ФОРМЫ
+   ========================= */
+.ad-form {
+  margin-top: 10px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  gap: 6px;
+}
+
+.form-label {
+  font-weight: 700;
+  color: #111;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.form-errors,
+.field-error {
+  background: #fff5f5;
+  border: 1px solid #ffd6d6;
+  color: #a31616;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+
+/* =========================
+   ГЛАВНАЯ СТРАНИЦА
+   На главной шапка НЕ липкая
+   И нет левого блока
+   ========================= */
+.home .site-header {
+  position: static;
+}
+
+.home .page {
+  padding: 0;
+}
+
+.home .page-shell {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.home .page-sidebar {
+  display: none;
+}
+
+.home .page-main {
+  width: 100%;
+}
+
+
+/* =========================
+   HERO-БЛОК ГЛАВНОЙ
+   ========================= */
+.home-hero {
+  min-height: 420px;
+  background: #111;
+  background-image: url("/static/hero.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.home-hero-overlay {
+  min-height: 420px;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.home-hero-box {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
+  padding: 26px 22px;
+  border: 1px solid #ffe1e1;
+  box-sizing: border-box;
+}
+
+.home-hero-title {
+  width: min(920px, 100%);
+  margin: 0 auto 8px;
+  font-size: 40px;
+  color: #000;
+}
+
+.home-hero-subtitle {
+  width: min(920px, 100%);
+  margin: 0 auto 18px;
+  color: #333;
+  font-size: 18px;
+}
+
+.home-hero-search {
+  display: flex;
+  gap: 10px;
+  width: min(920px, 100%);
+  margin: 0 auto;
+  align-items: center;
+}
+
+.home-hero-input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d6d6d6;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.home-hero-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #c62828;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.home-hero-actions {
+  width: min(920px, 100%);
+  margin: 14px auto 0;
+}
+
+.home-hero-link {
+  color: #c62828;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.home-hero-link:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   КАТАЛОГ РУБРИК НА ГЛАВНОЙ
+   ========================= */
+.home-cats {
+  padding: 28px 16px 46px;
+  background: #ffecec;
+}
+
+.home-cats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.home-cats-title {
+  margin: 0 0 18px 0;
+  font-size: 28px;
+  color: #000;
+  text-align: center;
+}
+
+.home-cats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cat-card {
+  background: #fff;
+  border: 1px solid #ffe1e1;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.cat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 900;
+  color: #c62828;
+  margin-bottom: 10px;
+}
+
+.cat-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c62828;
+  flex: 0 0 10px;
+}
+
+.cat-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.cat-list a {
+  color: #000;
+  text-decoration: none;
+}
+
+.cat-list a:hover {
+  color: #c62828;
+  text-decoration: underline;
+}
+
+
+/* =========================
+   АДАПТИВ
+   ========================= */
+@media (max-width: 1024px) {
+  .page-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .page-sidebar {
+    position: static;
+    order: 2;
+  }
+
+  .page-main {
+    order: 1;
+  }
+
+  .home-cats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .header-row {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .header-logo {
+    min-width: auto;
+  }
+
+  .header-search {
+    order: 3;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .search-form {
+    width: 100%;
+  }
+
+  .header-nav {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .page {
+    padding-top: 110px;
+  }
+
+  .home .page {
+    padding-top: 0;
+  }
+
+  .home-hero-title {
+    width: 100%;
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #000;
+  }
+
+  .home-cats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-card {
+    padding: 18px;
+  }
 }
