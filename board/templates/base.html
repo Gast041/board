@@ -3,8 +3,8 @@
      БАЗОВЫЙ ШАБЛОН САЙТА
 
      ВАЖНО:
-     - block header_search объявлен РОВНО ОДИН РАЗ (иначе TemplateSyntaxError)
-     - На главной home.html делает: {% block header_search %}{% endblock %}
+     - Без блока header_search, чтобы исключить TemplateSyntaxError
+     - На главной поиск скрывается через CSS (.home .header-search { display:none; })
    ========================= -->
 
 {% load static %}
@@ -29,23 +29,17 @@
             <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
         </div>
 
-        <!-- =========================
-             ПОИСК В ШАПКЕ (ОДИН БЛОК!)
-             На главной его выключаем в home.html
-           ========================= -->
         <div class="header-search">
-            {% block header_search %}
-                <form method="get" action="{% url 'ads_list' %}" class="search-form">
-                    <input
-                        type="text"
-                        name="q"
-                        value="{{ q|default:'' }}"
-                        placeholder="Поиск объявлений..."
-                        class="search-input"
-                    >
-                    <button type="submit" class="search-btn">Найти</button>
-                </form>
-            {% endblock %}
+            <form method="get" action="{% url 'ads_list' %}" class="search-form">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ q|default:'' }}"
+                    placeholder="Поиск объявлений..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-btn">Найти</button>
+            </form>
         </div>
 
         <nav class="header-nav">
@@ -70,11 +64,13 @@
 
 <div class="header-spacer"></div>
 
-{% block content %}{% endblock %}
+<main class="site-main">
+    {% block content %}{% endblock %}
+</main>
 
 <footer class="site-footer">
     <div class="site-footer-inner">
-        <a href="https://52p.ru" class="site-footer-link">© www.52p.ru</a>
+        <a href="https://52p.ru" class="footer-link">© www.52p.ru</a>
     </div>
 </footer>
 
