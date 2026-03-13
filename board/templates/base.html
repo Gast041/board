@@ -1,12 +1,3 @@
-<!-- =========================
-     Файл: board/templates/base.html
-     БАЗОВЫЙ ШАБЛОН САЙТА
-
-     ВАЖНО:
-     - Без блока header_search, чтобы исключить TemplateSyntaxError
-     - На главной поиск скрывается через CSS (.home .header-search { display:none; })
-   ========================= -->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -19,17 +10,16 @@
     <link rel="stylesheet" href="{% static 'base.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-
 <body class="{% block body_class %}{% endblock %}">
 
 <header class="site-header">
     <div class="header-inner">
-
         <div class="header-logo">
             <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
         </div>
 
         <div class="header-search">
+            {% block header_search %}
             <form method="get" action="{% url 'ads_list' %}" class="search-form">
                 <input
                     type="text"
@@ -40,15 +30,14 @@
                 >
                 <button type="submit" class="search-btn">Найти</button>
             </form>
+            {% endblock %}
         </div>
 
         <nav class="header-nav">
             <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
-
             {% if user.is_authenticated %}
                 <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
                 <a class="nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
-
                 <form method="post" action="{% url 'logout' %}" class="nav-form">
                     {% csrf_token %}
                     <button class="link-btn" type="submit">Выйти</button>
@@ -58,19 +47,19 @@
                 <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
             {% endif %}
         </nav>
-
     </div>
 </header>
 
 <div class="header-spacer"></div>
 
-<main class="site-main">
-    {% block content %}{% endblock %}
-</main>
+{% block content %}{% endblock %}
 
 <footer class="site-footer">
     <div class="site-footer-inner">
-        <a href="https://52p.ru" class="footer-link">© www.52p.ru</a>
+        <div class="site-footer-left"></div>
+        <div class="site-footer-right">
+            <a href="https://52p.ru/" class="site-footer-link">© www.52p.ru</a>
+        </div>
     </div>
 </footer>
 
