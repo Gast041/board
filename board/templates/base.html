@@ -3,21 +3,20 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}52prime.ru{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}52P{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="{% static 'base.css' %}">
-    <link rel="stylesheet" href="{% static 'footer_fix.css' %}">
-    {% block extra_css %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
 
 <header class="site-header">
-    <div class="header-inner">
+    <div class="container header-row">
+
         <div class="header-logo">
-            <a href="{% url 'home' %}" class="logo-link" aria-label="52P">
-                <span class="logo-black">52</span><span class="logo-red">P</span>
+            <a href="/" class="logo-link">
+                52<span class="logo-p">P</span>
             </a>
         </div>
 
@@ -37,29 +36,83 @@
         </div>
 
         <nav class="header-nav">
-            <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
             {% if user.is_authenticated %}
-                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
-                <a class="nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
-                <form method="post" action="{% url 'logout' %}" class="nav-form">
+                <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+                <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
+                <a href="{% url 'profile' %}" class="nav-user">{{ user.username }}</a>
+
+                <form method="post" action="{% url 'logout' %}" class="nav-logout">
                     {% csrf_token %}
-                    <button class="link-btn" type="submit">Выйти</button>
+                    <button type="submit" class="link-btn">Выйти</button>
                 </form>
             {% else %}
-                <a class="nav-link" href="{% url 'login' %}">Вход</a>
-                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+                <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
+                <a href="{% url 'login' %}" class="nav-link">Вход</a>
+                <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
             {% endif %}
         </nav>
+
     </div>
 </header>
 
-<div class="header-spacer"></div>
+<main class="page">
+    <div class="container page-shell">
 
-{% block content %}{% endblock %}
+        <aside class="page-sidebar">
+            {% block sidebar %}
+            <div class="sidebar-card">
+                <div class="sidebar-title">Быстрые действия</div>
+
+                <div class="sidebar-links">
+                    <a href="{% url 'ads_list' %}" class="sidebar-link">Все объявления</a>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
+                        <a href="{% url 'profile' %}" class="sidebar-link">Мой профиль</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="sidebar-link">Войти</a>
+                        <a href="{% url 'signup' %}" class="sidebar-link">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">Информация</div>
+                <div class="sidebar-text">
+                    Здесь можно разместить полезную информацию, рекламу или спецпредложения.
+                </div>
+            </div>
+            {% endblock %}
+        </aside>
+
+        <section class="page-main">
+            {% block content %}{% endblock %}
+        </section>
+
+    </div>
+</main>
 
 <footer class="site-footer">
-    <div class="site-footer-inner">
-        <a href="https://52p.ru" class="site-footer-link">© www.52p.ru</a>
+    <div class="container footer-grid">
+
+        <div class="footer-col">
+            <div class="footer-title">52P</div>
+            <div class="footer-text">
+                Доска объявлений Нижегородской области.
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <div class="footer-title">Информация</div>
+            <div class="footer-text">
+                Частные объявления, товары, услуги и предложения по Нижегородской области.
+            </div>
+        </div>
+
+        <div class="footer-col footer-col-right">
+            <a href="https://www.52p.ru" class="footer-link">© www.52p.ru</a>
+        </div>
+
     </div>
 </footer>
 
