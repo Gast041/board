@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link rel="stylesheet" href="{% static 'footer_fix.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -15,7 +16,9 @@
 <header class="site-header">
     <div class="header-inner">
         <div class="header-logo">
-            <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
+            <a href="{% url 'home' %}" class="logo-link" aria-label="52P">
+                <span class="logo-black">52</span><span class="logo-red">P</span>
+            </a>
         </div>
 
         <div class="header-search">
@@ -56,10 +59,7 @@
 
 <footer class="site-footer">
     <div class="site-footer-inner">
-        <div class="site-footer-left"></div>
-        <div class="site-footer-right">
-            <a href="https://52p.ru/" class="site-footer-link">© www.52p.ru</a>
-        </div>
+        <a href="https://52p.ru" class="site-footer-link">© www.52p.ru</a>
     </div>
 </footer>
 

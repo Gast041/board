@@ -1,0 +1,115 @@
+/* Точечные правки без замены текущих больших стилей */
+
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    line-height: 1;
+}
+
+.logo-black,
+.logo-red {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+.logo-black {
+    color: #000;
+}
+
+.logo-red {
+    color: #c62828;
+}
+
+.header-nav {
+    margin-left: auto;
+}
+
+.site-footer {
+    width: 100%;
+    margin-top: 28px;
+    background: #000;
+}
+
+.site-footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.site-footer-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.site-footer-link:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Чуть аккуратнее на главной */
+.home .header-logo {
+    min-width: 90px;
+}
+
+/* Приводим кнопки редактирования/удаления к одному виду */
+a[href*="/edit/"]:not(.nav-link):not(.logo-link):not(.site-footer-link),
+.edit-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid #c62828;
+    background: #c62828;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+form[action*="/delete/"] {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 8px 12px;
+}
+
+form[action*="/delete/"] button,
+.delete-btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid #c62828;
+    background: #fff;
+    color: #c62828;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+form[action*="/delete/"] button:hover,
+.delete-btn:hover,
+a[href*="/edit/"]:not(.nav-link):not(.logo-link):not(.site-footer-link):hover,
+.edit-btn:hover {
+    opacity: 0.92;
+}
+
+@media (max-width: 700px) {
+    .logo-black,
+    .logo-red {
+        font-size: 18px;
+    }
+
+    .site-footer-inner {
+        padding: 16px 12px;
+    }
+
+    .site-footer-link {
+        font-size: 16px;
+    }
+}
