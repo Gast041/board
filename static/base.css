@@ -1,3 +1,12 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 /* =========================
    BASE.CSS
    Общие стили сайта
@@ -164,6 +173,7 @@
    ОСНОВНОЙ КОНТЕНТ
    ========================= */
 .page {
+  flex: 1 0 auto;
   padding: 74px 0 24px;
 }
 
@@ -507,7 +517,7 @@
    ФУТЕР
    ========================= */
 .site-footer {
-  margin-top: 32px;
+  margin-top: auto;
   background: #111;
   color: #fff;
 }
