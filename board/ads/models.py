@@ -4,8 +4,18 @@
 # (объявления + рубрики)
 # =========================
 
+from datetime import timedelta
+
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
+
+
+def default_expires_at():
+    """
+    По умолчанию объявление активно 30 дней.
+    """
+    return timezone.now() + timedelta(days=30)
 
 
 # =========================
@@ -59,6 +69,14 @@ class Category(models.Model):
 # ОБЪЯВЛЕНИЯ
 # =========================
 class Ad(models.Model):
+    STATUS_ACTIVE = "active"
+    STATUS_ARCHIVED = "archived"
+
+    STATUS_CHOICES = [
+        (STATUS_ACTIVE, "Активно"),
+        (STATUS_ARCHIVED, "В архиве"),
+    ]
+
     # Заголовок объявления
     title = models.CharField(max_length=200)
 
@@ -113,15 +131,65 @@ class Ad(models.Model):
         verbose_name="Фото"
     )
 
-    # Дата создания
+    # Статус объявления
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_ACTIVE,
+        db_index=True,
+        verbose_name="Статус"
+    )
+
+    # Дата публикации
+    published_at = models.DateTimeField(
+        default=timezone.now,
+        db_index=True,
+        verbose_name="Дата публикации"
+    )
+
+    # Дата окончания публикации
+    expires_at = models.DateTimeField(
+        default=default_expires_at,
+        db_index=True,
+        verbose_name="Активно до"
+    )
+
+    # Дата создания записи
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["-published_at", "-id"]
         indexes = [
-            models.Index(fields=["created_at"]),
+            models.Index(fields=["status", "expires_at"]),
+            models.Index(fields=["published_at"]),
             models.Index(fields=["category"]),
         ]
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        """
+        Если срок публикации не задан — ставим 30 дней от даты публикации.
+        """
+        if not self.published_at:
+            self.published_at = timezone.now()
+
+        if not self.expires_at:
+            self.expires_at = self.published_at + timedelta(days=30)
+
+        super().save(*args, **kwargs)
+
+    @property
+    def is_expired(self):
+        return self.expires_at <= timezone.now()
+
+    @property
+    def is_public_active(self):
+        return self.status == self.STATUS_ACTIVE and not self.is_expired
+
+    @property
+    def display_status(self):
+        if self.status == self.STATUS_ARCHIVED or self.is_expired:
+            return "В архиве"
+        return "Активно"

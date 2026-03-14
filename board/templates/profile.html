@@ -16,12 +16,10 @@
 </div>
 
 <div class="sidebar-card">
-    <div class="sidebar-title">Мои действия</div>
+    <div class="sidebar-title">Статусы</div>
     <div class="sidebar-text">
-        Здесь позже можно добавить:
-        <br>— черновики
-        <br>— избранное
-        <br>— статистику просмотров
+        Активные объявления показываются в ленте 30 дней.
+        После окончания срока они считаются архивными.
     </div>
 </div>
 
@@ -47,10 +45,22 @@
             {% for ad in my_ads %}
                 <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
 
-                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
-                            {{ ad.title }}
-                        </a>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+                        <div style="font-weight:bold; font-size:18px;">
+                            <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                                {{ ad.title }}
+                            </a>
+                        </div>
+
+                        {% if ad.is_public_active %}
+                            <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
+                                Активно
+                            </span>
+                        {% else %}
+                            <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
+                                Архив
+                            </span>
+                        {% endif %}
                     </div>
 
                     {% if ad.price %}
@@ -76,6 +86,12 @@
                             {% if ad.city %}{{ ad.city }}{% endif %}{% if ad.city and ad.address %}, {% endif %}{% if ad.address %}{{ ad.address }}{% endif %}
                         </div>
                     {% endif %}
+
+                    <div style="margin-bottom:8px; font-size:13px; color:#555;">
+                        <b>Размещено:</b> {{ ad.published_at|date:"d.m.Y H:i" }}
+                        &nbsp;•&nbsp;
+                        <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
+                    </div>
 
                     <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
 

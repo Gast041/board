@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 from .models import Ad, Category
 from .forms import AdForm
@@ -20,31 +21,24 @@ def ads_list(request):
     """
     Лента объявлений.
 
-    Поддерживает:
-    - поиск: /ads/?q=текст
-    - фильтр по подрубрике: /ads/?cat=slug
-    - пагинацию: /ads/?page=2
+    Показываем только:
+    - активные объявления
+    - срок которых ещё не истёк
     """
 
-    # -------------------------
-    # Параметры из URL
-    # -------------------------
     q = request.GET.get("q", "").strip()
     cat = request.GET.get("cat", "").strip()
     page_number = request.GET.get("page")
+    now = timezone.now()
 
-    # -------------------------
-    # Базовый queryset
-    # -------------------------
     ads_queryset = (
         Ad.objects
         .select_related("author", "category", "category__parent")
-        .order_by("-id")
+        .filter(status=Ad.STATUS_ACTIVE)
+        .filter(expires_at__gt=now)
+        .order_by("-published_at", "-id")
     )
 
-    # -------------------------
-    # Выбранная подрубрика
-    # -------------------------
     selected_category = None
 
     if cat:
@@ -60,19 +54,12 @@ def ads_list(request):
         else:
             ads_queryset = ads_queryset.none()
 
-    # -------------------------
-    # Поиск
-    # -------------------------
     if q:
         ads_queryset = ads_queryset.filter(
             Q(title__icontains=q) |
             Q(description__icontains=q)
         )
 
-    # -------------------------
-    # ПАГИНАЦИЯ
-    # 10 объявлений на страницу
-    # -------------------------
     paginator = Paginator(ads_queryset, 10)
     ads = paginator.get_page(page_number)
 
@@ -103,6 +90,7 @@ def create_ad(request):
         if form.is_valid():
             ad = form.save(commit=False)
             ad.author = request.user
+            ad.status = Ad.STATUS_ACTIVE
             ad.save()
             return redirect("ad_detail", ad_id=ad.id)
     else:

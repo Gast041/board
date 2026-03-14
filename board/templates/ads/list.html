@@ -24,6 +24,10 @@
         </div>
     {% endif %}
 
+    <div class="sidebar-text" style="margin-bottom:12px;">
+        <b>Срок размещения:</b> 30 дней
+    </div>
+
     <div class="sidebar-links">
         <a href="{% url 'ads_list' %}" class="sidebar-link">Сбросить фильтры</a>
         <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
@@ -33,8 +37,8 @@
 <div class="sidebar-card">
     <div class="sidebar-title">Подсказка</div>
     <div class="sidebar-text">
-        Здесь позже можно сделать фильтры по цене, городу,
-        адресу, продавцу и другим параметрам.
+        В ленте показываются только активные объявления,
+        срок публикации которых ещё не истёк.
     </div>
 </div>
 
@@ -94,10 +98,16 @@
                         </div>
                     {% endif %}
 
-                    <div style="font-weight:bold; font-size:18px; margin-bottom:6px;">
-                        <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
-                            {{ ad.title }}
-                        </a>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <div style="font-weight:bold; font-size:18px;">
+                            <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                                {{ ad.title }}
+                            </a>
+                        </div>
+
+                        <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
+                            Активно
+                        </span>
                     </div>
 
                     {% if ad.category %}
@@ -123,6 +133,12 @@
                             {% if ad.city %}{{ ad.city }}{% endif %}{% if ad.city and ad.address %}, {% endif %}{% if ad.address %}{{ ad.address }}{% endif %}
                         </div>
                     {% endif %}
+
+                    <div style="font-size:13px; color:#555;">
+                        <b>Размещено:</b> {{ ad.published_at|date:"d.m.Y H:i" }}
+                        &nbsp;•&nbsp;
+                        <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
+                    </div>
 
                     {% if ad.description %}
                         <div style="color:#000; margin-bottom:8px;">
@@ -164,7 +180,7 @@
         {% endif %}
 
     {% else %}
-        <p style="text-align:center;">Пока объявлений нет. Будь первым 🙂</p>
+        <p style="text-align:center;">Пока активных объявлений нет.</p>
     {% endif %}
 
 </div>
