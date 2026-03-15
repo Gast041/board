@@ -19,7 +19,7 @@
     <div class="sidebar-title">Статусы</div>
     <div class="sidebar-text">
         Активные объявления показываются в ленте 30 дней.
-        После окончания срока они считаются архивными.
+        После окончания срока или снятия пользователем они считаются архивными.
     </div>
 </div>
 
@@ -98,6 +98,28 @@
                         <a href="{% url 'edit_ad' ad.id %}" class="main-btn" style="padding:6px 10px; font-size:14px;">
                             Редактировать
                         </a>
+
+                        {% if ad.is_public_active %}
+                            <form method="post"
+                                  action="{% url 'archive_ad' ad.id %}"
+                                  onsubmit="return confirm('Снять объявление в архив?');"
+                                  style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px; background:#666;">
+                                    Снять в архив
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post"
+                                  action="{% url 'restore_ad' ad.id %}"
+                                  onsubmit="return confirm('Вернуть объявление из архива и продлить ещё на 30 дней?');"
+                                  style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px;">
+                                    Вернуть из архива
+                                </button>
+                            </form>
+                        {% endif %}
 
                         <form method="post"
                               action="{% url 'delete_ad' ad.id %}"

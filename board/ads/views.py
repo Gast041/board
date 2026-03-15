@@ -3,6 +3,8 @@
 # ВЬЮХИ ПРИЛОЖЕНИЯ "ads"
 # =========================
 
+from datetime import timedelta
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -91,6 +93,8 @@ def create_ad(request):
             ad = form.save(commit=False)
             ad.author = request.user
             ad.status = Ad.STATUS_ACTIVE
+            ad.published_at = timezone.now()
+            ad.expires_at = ad.published_at + timedelta(days=30)
             ad.save()
             return redirect("ad_detail", ad_id=ad.id)
     else:
@@ -120,6 +124,45 @@ def ad_detail(request, ad_id):
         "ads/ad_detail.html",
         {"ad": ad}
     )
+
+
+# =========================
+# СНЯТЬ ОБЪЯВЛЕНИЕ В АРХИВ (ТОЛЬКО АВТОР)
+# =========================
+@login_required
+def archive_ad(request, ad_id):
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    if ad.author != request.user:
+        return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
+
+    if request.method == "POST":
+        ad.status = Ad.STATUS_ARCHIVED
+        ad.save(update_fields=["status"])
+        return redirect("profile")
+
+    return redirect("ad_detail", ad_id=ad.id)
+
+
+# =========================
+# ВЕРНУТЬ ОБЪЯВЛЕНИЕ ИЗ АРХИВА (ТОЛЬКО АВТОР)
+# =========================
+@login_required
+def restore_ad(request, ad_id):
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    if ad.author != request.user:
+        return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
+
+    if request.method == "POST":
+        now = timezone.now()
+        ad.status = Ad.STATUS_ACTIVE
+        ad.published_at = now
+        ad.expires_at = now + timedelta(days=30)
+        ad.save(update_fields=["status", "published_at", "expires_at"])
+        return redirect("profile")
+
+    return redirect("ad_detail", ad_id=ad.id)
 
 
 # =========================

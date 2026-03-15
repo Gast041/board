@@ -159,6 +159,26 @@
                 Редактировать
             </a>
 
+            {% if ad.is_public_active %}
+                <form method="post"
+                      action="{% url 'archive_ad' ad.id %}"
+                      onsubmit="return confirm('Снять объявление в архив?');">
+                    {% csrf_token %}
+                    <button type="submit" class="main-btn" style="background:#666;">
+                        Снять в архив
+                    </button>
+                </form>
+            {% else %}
+                <form method="post"
+                      action="{% url 'restore_ad' ad.id %}"
+                      onsubmit="return confirm('Вернуть объявление из архива и продлить ещё на 30 дней?');">
+                    {% csrf_token %}
+                    <button type="submit" class="main-btn">
+                        Вернуть из архива
+                    </button>
+                </form>
+            {% endif %}
+
             <form method="post"
                   action="{% url 'delete_ad' ad.id %}"
                   onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">

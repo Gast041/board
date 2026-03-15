@@ -6,6 +6,8 @@
 # связанные с объявлениями.
 # =========================
 
+path("<int:ad_id>/archive/", views.archive_ad, name="archive_ad"),
+path("<int:ad_id>/restore/", views.restore_ad, name="restore_ad"),
 
 # path() — связывает URL и функцию-вьюху
 from django.urls import path
