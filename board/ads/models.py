@@ -154,6 +154,14 @@ class Ad(models.Model):
         verbose_name="Активно до"
     )
 
+    # Когда пользователь снял объявление с публикации
+    deleted_by_user_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name="Снято пользователем"
+    )
+
     # Дата создания записи
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -163,6 +171,7 @@ class Ad(models.Model):
             models.Index(fields=["status", "expires_at"]),
             models.Index(fields=["published_at"]),
             models.Index(fields=["category"]),
+            models.Index(fields=["deleted_by_user_at"]),
         ]
 
     def __str__(self):
@@ -185,11 +194,21 @@ class Ad(models.Model):
         return self.expires_at <= timezone.now()
 
     @property
+    def is_hidden_by_user(self):
+        return self.deleted_by_user_at is not None
+
+    @property
     def is_public_active(self):
-        return self.status == self.STATUS_ACTIVE and not self.is_expired
+        return (
+            self.status == self.STATUS_ACTIVE
+            and not self.is_expired
+            and not self.is_hidden_by_user
+        )
 
     @property
     def display_status(self):
+        if self.is_hidden_by_user:
+            return "Снято пользователем"
         if self.status == self.STATUS_ARCHIVED or self.is_expired:
             return "В архиве"
         return "Активно"

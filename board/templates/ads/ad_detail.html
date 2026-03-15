@@ -36,6 +36,9 @@
         <b>{{ ad.display_status }}</b><br>
         Размещено: {{ ad.published_at|date:"d.m.Y H:i" }}<br>
         Активно до: {{ ad.expires_at|date:"d.m.Y H:i" }}
+        {% if ad.deleted_by_user_at %}
+            <br>Снято с публикации: {{ ad.deleted_by_user_at|date:"d.m.Y H:i" }}
+        {% endif %}
     </div>
 </div>
 
@@ -57,6 +60,10 @@
         {% if ad.is_public_active %}
             <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
                 Активно
+            </span>
+        {% elif ad.is_hidden_by_user %}
+            <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
+                Снято с публикации
             </span>
         {% else %}
             <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
@@ -82,7 +89,11 @@
         <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
     </div>
 
-    {% if not ad.is_public_active %}
+    {% if ad.is_hidden_by_user %}
+        <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #e5e5e5; border-radius:10px; background:#f8f8f8; text-align:center; color:#555;">
+            Объявление снято пользователем с публикации, но сохранено в системе.
+        </div>
+    {% elif not ad.is_public_active %}
         <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #e5e5e5; border-radius:10px; background:#f8f8f8; text-align:center; color:#555;">
             Объявление находится в архиве и не показывается в общей ленте.
         </div>
@@ -162,10 +173,10 @@
             {% if ad.is_public_active %}
                 <form method="post"
                       action="{% url 'archive_ad' ad.id %}"
-                      onsubmit="return confirm('Снять объявление в архив?');">
+                      onsubmit="return confirm('Снять объявление с публикации?');">
                     {% csrf_token %}
                     <button type="submit" class="main-btn" style="background:#666;">
-                        Снять в архив
+                        Снять с публикации
                     </button>
                 </form>
             {% else %}
@@ -178,15 +189,6 @@
                     </button>
                 </form>
             {% endif %}
-
-            <form method="post"
-                  action="{% url 'delete_ad' ad.id %}"
-                  onsubmit="return confirm('Точно удалить объявление? Это действие нельзя отменить.');">
-                {% csrf_token %}
-                <button type="submit" class="danger-btn">
-                    Удалить объявление
-                </button>
-            </form>
         </div>
     {% endif %}
 

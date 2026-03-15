@@ -26,6 +26,7 @@ def ads_list(request):
     Показываем только:
     - активные объявления
     - срок которых ещё не истёк
+    - которые пользователь не снял с публикации
     """
 
     q = request.GET.get("q", "").strip()
@@ -38,6 +39,7 @@ def ads_list(request):
         .select_related("author", "category", "category__parent")
         .filter(status=Ad.STATUS_ACTIVE)
         .filter(expires_at__gt=now)
+        .filter(deleted_by_user_at__isnull=True)
         .order_by("-published_at", "-id")
     )
 
@@ -95,6 +97,7 @@ def create_ad(request):
             ad.status = Ad.STATUS_ACTIVE
             ad.published_at = timezone.now()
             ad.expires_at = ad.published_at + timedelta(days=30)
+            ad.deleted_by_user_at = None
             ad.save()
             return redirect("ad_detail", ad_id=ad.id)
     else:
@@ -138,7 +141,8 @@ def archive_ad(request, ad_id):
 
     if request.method == "POST":
         ad.status = Ad.STATUS_ARCHIVED
-        ad.save(update_fields=["status"])
+        ad.deleted_by_user_at = timezone.now()
+        ad.save(update_fields=["status", "deleted_by_user_at"])
         return redirect("profile")
 
     return redirect("ad_detail", ad_id=ad.id)
@@ -159,14 +163,15 @@ def restore_ad(request, ad_id):
         ad.status = Ad.STATUS_ACTIVE
         ad.published_at = now
         ad.expires_at = now + timedelta(days=30)
-        ad.save(update_fields=["status", "published_at", "expires_at"])
+        ad.deleted_by_user_at = None
+        ad.save(update_fields=["status", "published_at", "expires_at", "deleted_by_user_at"])
         return redirect("profile")
 
     return redirect("ad_detail", ad_id=ad.id)
 
 
 # =========================
-# УДАЛЕНИЕ ОБЪЯВЛЕНИЯ (ТОЛЬКО АВТОР)
+# СНЯТИЕ С ПУБЛИКАЦИИ ВМЕСТО ФИЗИЧЕСКОГО УДАЛЕНИЯ (ТОЛЬКО АВТОР)
 # =========================
 @login_required
 def delete_ad(request, ad_id):
@@ -176,8 +181,10 @@ def delete_ad(request, ad_id):
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
 
     if request.method == "POST":
-        ad.delete()
-        return redirect("ads_list")
+        ad.status = Ad.STATUS_ARCHIVED
+        ad.deleted_by_user_at = timezone.now()
+        ad.save(update_fields=["status", "deleted_by_user_at"])
+        return redirect("profile")
 
     return redirect("ad_detail", ad_id=ad.id)
 

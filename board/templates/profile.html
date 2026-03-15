@@ -19,7 +19,7 @@
     <div class="sidebar-title">Статусы</div>
     <div class="sidebar-text">
         Активные объявления показываются в ленте 30 дней.
-        После окончания срока или снятия пользователем они считаются архивными.
+        Снятые пользователем объявления остаются в системе и сохраняются в архиве.
     </div>
 </div>
 
@@ -55,6 +55,10 @@
                         {% if ad.is_public_active %}
                             <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
                                 Активно
+                            </span>
+                        {% elif ad.is_hidden_by_user %}
+                            <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
+                                Снято с публикации
                             </span>
                         {% else %}
                             <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
@@ -93,6 +97,12 @@
                         <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
                     </div>
 
+                    {% if ad.deleted_by_user_at %}
+                        <div style="margin-bottom:8px; font-size:13px; color:#555;">
+                            <b>Снято с публикации:</b> {{ ad.deleted_by_user_at|date:"d.m.Y H:i" }}
+                        </div>
+                    {% endif %}
+
                     <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
 
                         <a href="{% url 'edit_ad' ad.id %}" class="main-btn" style="padding:6px 10px; font-size:14px;">
@@ -102,11 +112,11 @@
                         {% if ad.is_public_active %}
                             <form method="post"
                                   action="{% url 'archive_ad' ad.id %}"
-                                  onsubmit="return confirm('Снять объявление в архив?');"
+                                  onsubmit="return confirm('Снять объявление с публикации?');"
                                   style="margin:0;">
                                 {% csrf_token %}
                                 <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px; background:#666;">
-                                    Снять в архив
+                                    Снять с публикации
                                 </button>
                             </form>
                         {% else %}
@@ -120,16 +130,6 @@
                                 </button>
                             </form>
                         {% endif %}
-
-                        <form method="post"
-                              action="{% url 'delete_ad' ad.id %}"
-                              onsubmit="return confirm('Удалить объявление?');"
-                              style="margin:0;">
-                            {% csrf_token %}
-                            <button type="submit" class="danger-btn" style="padding:6px 10px; font-size:14px;">
-                                Удалить
-                            </button>
-                        </form>
 
                     </div>
 
