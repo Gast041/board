@@ -3,48 +3,79 @@
 # АДМИНКА (управление рубриками и объявлениями)
 # =========================
 
+from datetime import timedelta
+
 from django.contrib import admin
 from django.utils import timezone
+from django.utils.html import format_html
 
 from .models import Ad, Category
 
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    # Что видно в списке рубрик
-    list_display = ("id", "name", "parent", "sort_order", "is_active")
+# =========================
+# ФИЛЬТР: срок истёк / не истёк
+# =========================
+class ExpiredFilter(admin.SimpleListFilter):
+    title = "Срок публикации"
+    parameter_name = "expired"
 
-    # Фильтры справа
-    list_filter = ("is_active", "parent")
+    def lookups(self, request, model_admin):
+        return (
+            ("no", "Активен по сроку"),
+            ("yes", "Срок истёк"),
+        )
 
-    # Поиск сверху
-    search_fields = ("name", "slug")
+    def queryset(self, request, queryset):
+        now = timezone.now()
 
-    # Сортировка
-    ordering = ("parent__id", "sort_order", "name")
+        if self.value() == "yes":
+            return queryset.filter(expires_at__lte=now)
 
-    # Автозаполнение slug
-    prepopulated_fields = {"slug": ("name",)}
+        if self.value() == "no":
+            return queryset.filter(expires_at__gt=now)
+
+        return queryset
 
 
+# =========================
+# МАССОВОЕ ДЕЙСТВИЕ: В АРХИВ
+# =========================
 @admin.action(description="Перевести выбранные объявления в архив")
 def make_archived(modeladmin, request, queryset):
     queryset.update(status=Ad.STATUS_ARCHIVED)
 
 
+# =========================
+# МАССОВОЕ ДЕЙСТВИЕ: АКТИВИРОВАТЬ НА 30 ДНЕЙ
+# =========================
 @admin.action(description="Вернуть выбранные объявления в активные на 30 дней")
 def make_active_for_30_days(modeladmin, request, queryset):
     now = timezone.now()
     queryset.update(
         status=Ad.STATUS_ACTIVE,
         published_at=now,
-        expires_at=now + timezone.timedelta(days=30),
+        expires_at=now + timedelta(days=30),
     )
 
 
+# =========================
+# АДМИНКА РУБРИК
+# =========================
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "parent", "sort_order", "is_active")
+    list_filter = ("is_active", "parent")
+    search_fields = ("name", "slug")
+    ordering = ("parent__id", "sort_order", "name")
+    prepopulated_fields = {"slug": ("name",)}
+
+
+# =========================
+# АДМИНКА ОБЪЯВЛЕНИЙ
+# =========================
 @admin.register(Ad)
 class AdAdmin(admin.ModelAdmin):
-    # Что видно в списке объявлений
+    # Что видно в списке
     list_display = (
         "id",
         "title",
@@ -65,6 +96,7 @@ class AdAdmin(admin.ModelAdmin):
         "city",
         "published_at",
         "expires_at",
+        ExpiredFilter,
         "created_at",
     )
 
@@ -81,7 +113,7 @@ class AdAdmin(admin.ModelAdmin):
     # Сортировка
     ordering = ("-published_at", "-id")
 
-    # Только для чтения в форме админки
+    # Только чтение в форме
     readonly_fields = (
         "created_at",
         "published_at",
@@ -89,7 +121,7 @@ class AdAdmin(admin.ModelAdmin):
         "image_preview",
     )
 
-    # Поля в форме редактирования
+    # Поля в карточке объявления
     fieldsets = (
         ("Основное", {
             "fields": (
@@ -124,7 +156,10 @@ class AdAdmin(admin.ModelAdmin):
     )
 
     # Массовые действия
-    actions = (make_archived, make_active_for_30_days)
+    actions = (
+        make_archived,
+        make_active_for_30_days,
+    )
 
     def is_expired_admin(self, obj):
         return obj.is_expired
@@ -133,8 +168,8 @@ class AdAdmin(admin.ModelAdmin):
 
     def image_preview(self, obj):
         if obj.image:
-            return admin.helpers.format_html(
-                '<img src="{}" style="max-width:220px; border-radius:10px;" />',
+            return format_html(
+                '<img src="{}" style="max-width:220px; border-radius:10px; border:1px solid #eee;" />',
                 obj.image.url
             )
         return "Нет фото"
