@@ -1,4 +1,3 @@
-
 # board/views.py
 # =========================
 # ВЬЮХИ "верхнего уровня"
@@ -9,7 +8,6 @@
 # ИМПОРТЫ
 # =========================
 
-
 # render — рендерит HTML-шаблон
 # redirect — делает перенаправление
 from django.shortcuts import render, redirect
@@ -17,11 +15,15 @@ from django.shortcuts import render, redirect
 # login_required — запрещает доступ неавторизованным
 from django.contrib.auth.decorators import login_required
 
+# timezone — нужен для определения активных / архивных объявлений
+from django.utils import timezone
+
 # Кастомная форма регистрации
 from .forms import SignupForm
 
-# ВАЖНО: берём Category из приложения ads
+# ВАЖНО: берём Category и Ad из приложения ads
 from board.ads.models import Category, Ad
+
 
 # =========================
 # ГЛАВНАЯ СТРАНИЦА
@@ -38,11 +40,10 @@ def home_view(request):
     - для каждой — до 5 подрубрик
     """
 
-    # Верхние рубрики (родителя нет)
     categories = (
         Category.objects
         .filter(is_active=True, parent__isnull=True)
-        .prefetch_related("children")  # подрубрики будут доступны как category.children.all()
+        .prefetch_related("children")
         .order_by("sort_order", "name")[:9]
     )
 
@@ -51,7 +52,6 @@ def home_view(request):
         "home.html",
         {"categories": categories}
     )
-
 
 
 # =========================
@@ -64,18 +64,13 @@ def signup_view(request):
     Шаблон: registration/signup.html
     """
 
-    # Если форма отправлена
     if request.method == "POST":
-
         form = SignupForm(request.POST)
 
-        # Проверяем корректность данных
         if form.is_valid():
-            form.save()          # создаём пользователя
+            form.save()
             return redirect("login")
-
     else:
-        # Если просто открыли страницу
         form = SignupForm()
 
     return render(
@@ -93,19 +88,47 @@ def profile_view(request):
     """
     Профиль пользователя
     URL: /profile/
-    Показывает список его объявлений
+
+    Показывает:
+    - активные объявления
+    - архивные / снятые с публикации
     """
 
-    # Берём только объявления текущего пользователя
-    my_ads = Ad.objects.filter(
-        author=request.user
-    ).order_by("-id")
+    now = timezone.now()
+
+    # -------------------------
+    # АКТИВНЫЕ ОБЪЯВЛЕНИЯ
+    # -------------------------
+    active_ads = (
+        Ad.objects
+        .filter(author=request.user)
+        .filter(status=Ad.STATUS_ACTIVE)
+        .filter(expires_at__gt=now)
+        .filter(deleted_by_user_at__isnull=True)
+        .select_related("category", "category__parent")
+        .order_by("-published_at", "-id")
+    )
+
+    # -------------------------
+    # АРХИВНЫЕ / СНЯТЫЕ С ПУБЛИКАЦИИ
+    # -------------------------
+    archived_ads = (
+        Ad.objects
+        .filter(author=request.user)
+        .exclude(
+            status=Ad.STATUS_ACTIVE,
+            expires_at__gt=now,
+            deleted_by_user_at__isnull=True,
+        )
+        .select_related("category", "category__parent")
+        .order_by("-published_at", "-id")
+    )
 
     return render(
         request,
         "profile.html",
         {
-            "my_ads": my_ads
+            "active_ads": active_ads,
+            "archived_ads": archived_ads,
         }
     )
-

@@ -19,14 +19,15 @@
     <div class="sidebar-title">Статусы</div>
     <div class="sidebar-text">
         Активные объявления показываются в ленте 30 дней.
-        Снятые пользователем объявления остаются в системе и сохраняются в архиве.
+        Снятые пользователем объявления и завершённые по сроку остаются в архиве.
     </div>
 </div>
 
 <div class="sidebar-card">
-    <div class="sidebar-title">Реклама</div>
+    <div class="sidebar-title">Статистика</div>
     <div class="sidebar-text">
-        Место под рекламный блок, предложения или полезную информацию.
+        Активных: <b>{{ active_ads|length }}</b><br>
+        В архиве: <b>{{ archived_ads|length }}</b>
     </div>
 </div>
 {% endblock %}
@@ -37,12 +38,15 @@
 
     <p><b>Пользователь:</b> {{ user.username }}</p>
 
-    <h2 style="margin-top:30px;">Мои объявления</h2>
+    <!-- =========================
+         АКТИВНЫЕ ОБЪЯВЛЕНИЯ
+         ========================= -->
+    <h2 style="margin-top:30px;">Активные объявления</h2>
 
-    {% if my_ads %}
+    {% if active_ads %}
         <div style="display:grid; gap:14px; margin-top:14px;">
 
-            {% for ad in my_ads %}
+            {% for ad in active_ads %}
                 <div style="border:1px solid #ffeded; padding:14px; border-radius:8px;">
 
                     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
@@ -52,11 +56,86 @@
                             </a>
                         </div>
 
-                        {% if ad.is_public_active %}
-                            <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
-                                Активно
-                            </span>
-                        {% elif ad.is_hidden_by_user %}
+                        <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
+                            Активно
+                        </span>
+                    </div>
+
+                    {% if ad.price %}
+                        <div style="margin-bottom:6px;">
+                            <b>Цена:</b> {{ ad.price }}
+                        </div>
+                    {% endif %}
+
+                    {% if ad.category %}
+                        <div style="margin-bottom:6px; color:#444;">
+                            <b>Рубрика:</b>
+                            {% if ad.category.parent %}
+                                {{ ad.category.parent.name }} → {{ ad.category.name }}
+                            {% else %}
+                                {{ ad.category.name }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if ad.city or ad.address %}
+                        <div style="margin-bottom:6px; color:#444;">
+                            <b>Адрес:</b>
+                            {% if ad.city %}{{ ad.city }}{% endif %}{% if ad.city and ad.address %}, {% endif %}{% if ad.address %}{{ ad.address }}{% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-bottom:8px; font-size:13px; color:#555;">
+                        <b>Размещено:</b> {{ ad.published_at|date:"d.m.Y H:i" }}
+                        &nbsp;•&nbsp;
+                        <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
+                    </div>
+
+                    <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+
+                        <a href="{% url 'edit_ad' ad.id %}" class="main-btn" style="padding:6px 10px; font-size:14px;">
+                            Редактировать
+                        </a>
+
+                        <form method="post"
+                              action="{% url 'archive_ad' ad.id %}"
+                              onsubmit="return confirm('Снять объявление с публикации?');"
+                              style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px; background:#666;">
+                                Снять с публикации
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <p style="margin-top:14px;">У тебя пока нет активных объявлений.</p>
+    {% endif %}
+
+    <!-- =========================
+         АРХИВНЫЕ ОБЪЯВЛЕНИЯ
+         ========================= -->
+    <h2 style="margin-top:36px;">Архивные объявления</h2>
+
+    {% if archived_ads %}
+        <div style="display:grid; gap:14px; margin-top:14px;">
+
+            {% for ad in archived_ads %}
+                <div style="border:1px solid #e5e5e5; padding:14px; border-radius:8px; background:#fafafa;">
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+                        <div style="font-weight:bold; font-size:18px;">
+                            <a href="{% url 'ad_detail' ad.id %}" style="color:#c62828; text-decoration:none;">
+                                {{ ad.title }}
+                            </a>
+                        </div>
+
+                        {% if ad.is_hidden_by_user %}
                             <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:700;">
                                 Снято с публикации
                             </span>
@@ -109,27 +188,15 @@
                             Редактировать
                         </a>
 
-                        {% if ad.is_public_active %}
-                            <form method="post"
-                                  action="{% url 'archive_ad' ad.id %}"
-                                  onsubmit="return confirm('Снять объявление с публикации?');"
-                                  style="margin:0;">
-                                {% csrf_token %}
-                                <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px; background:#666;">
-                                    Снять с публикации
-                                </button>
-                            </form>
-                        {% else %}
-                            <form method="post"
-                                  action="{% url 'restore_ad' ad.id %}"
-                                  onsubmit="return confirm('Вернуть объявление из архива и продлить ещё на 30 дней?');"
-                                  style="margin:0;">
-                                {% csrf_token %}
-                                <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px;">
-                                    Вернуть из архива
-                                </button>
-                            </form>
-                        {% endif %}
+                        <form method="post"
+                              action="{% url 'restore_ad' ad.id %}"
+                              onsubmit="return confirm('Вернуть объявление из архива и продлить ещё на 30 дней?');"
+                              style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="main-btn" style="padding:6px 10px; font-size:14px;">
+                                Вернуть из архива
+                            </button>
+                        </form>
 
                     </div>
 
@@ -138,7 +205,7 @@
 
         </div>
     {% else %}
-        <p>У тебя пока нет объявлений.</p>
+        <p style="margin-top:14px;">Архивных объявлений пока нет.</p>
     {% endif %}
 </div>
 {% endblock %}
