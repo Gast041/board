@@ -94,12 +94,15 @@ def create_ad(request):
         if form.is_valid():
             ad = form.save(commit=False)
             ad.author = request.user
-            ad.status = Ad.STATUS_ACTIVE
+            ad.status = Ad.STATUS_PENDING
             ad.published_at = timezone.now()
             ad.expires_at = ad.published_at + timedelta(days=30)
             ad.deleted_by_user_at = None
+            ad.moderation_note = ""
+            ad.reviewed_at = None
+            ad.reviewed_by = None
             ad.save()
-            return redirect("ad_detail", ad_id=ad.id)
+            return redirect("profile")
     else:
         form = AdForm(parent_id=selected_parent_id)
 
@@ -118,9 +121,18 @@ def create_ad(request):
 # =========================
 def ad_detail(request, ad_id):
     ad = get_object_or_404(
-        Ad.objects.select_related("author", "category", "category__parent"),
+        Ad.objects.select_related("author", "category", "category__parent", "reviewed_by"),
         id=ad_id
     )
+
+    can_view_hidden = (
+        request.user.is_authenticated and (
+            request.user == ad.author or request.user.is_staff
+        )
+    )
+
+    if not ad.is_public_active and not can_view_hidden:
+        return HttpResponseForbidden("Это объявление сейчас недоступно.")
 
     return render(
         request,
@@ -159,12 +171,12 @@ def restore_ad(request, ad_id):
         return HttpResponseForbidden("Нет прав: вы не автор этого объявления.")
 
     if request.method == "POST":
-        now = timezone.now()
-        ad.status = Ad.STATUS_ACTIVE
-        ad.published_at = now
-        ad.expires_at = now + timedelta(days=30)
+        ad.status = Ad.STATUS_PENDING
         ad.deleted_by_user_at = None
-        ad.save(update_fields=["status", "published_at", "expires_at", "deleted_by_user_at"])
+        ad.moderation_note = ""
+        ad.reviewed_at = None
+        ad.reviewed_by = None
+        ad.save(update_fields=["status", "deleted_by_user_at", "moderation_note", "reviewed_at", "reviewed_by"])
         return redirect("profile")
 
     return redirect("ad_detail", ad_id=ad.id)
@@ -205,8 +217,14 @@ def edit_ad(request, ad_id):
         form = AdForm(request.POST, request.FILES, instance=ad)
 
         if form.is_valid():
-            form.save()
-            return redirect("ad_detail", ad_id=ad.id)
+            ad = form.save(commit=False)
+            ad.status = Ad.STATUS_PENDING
+            ad.deleted_by_user_at = None
+            ad.moderation_note = ""
+            ad.reviewed_at = None
+            ad.reviewed_by = None
+            ad.save()
+            return redirect("profile")
     else:
         form = AdForm(instance=ad, parent_id=selected_parent_id)
 

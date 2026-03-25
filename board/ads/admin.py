@@ -38,29 +38,74 @@ class ExpiredFilter(admin.SimpleListFilter):
 
 
 # =========================
-# МАССОВОЕ ДЕЙСТВИЕ: В АРХИВ
+# ФИЛЬТР: снято пользователем / нет
 # =========================
-@admin.action(description="Перевести выбранные объявления в архив")
-def make_archived(modeladmin, request, queryset):
-    queryset.update(status=Ad.STATUS_ARCHIVED)
+class HiddenByUserFilter(admin.SimpleListFilter):
+    title = "Снято пользователем"
+    parameter_name = "hidden_by_user"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("yes", "Да"),
+            ("no", "Нет"),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(deleted_by_user_at__isnull=False)
+
+        if self.value() == "no":
+            return queryset.filter(deleted_by_user_at__isnull=True)
+
+        return queryset
 
 
-# =========================
-# МАССОВОЕ ДЕЙСТВИЕ: АКТИВИРОВАТЬ НА 30 ДНЕЙ
-# =========================
-@admin.action(description="Вернуть выбранные объявления в активные на 30 дней")
-def make_active_for_30_days(modeladmin, request, queryset):
+@admin.action(description="Одобрить выбранные объявления")
+def approve_ads(modeladmin, request, queryset):
     now = timezone.now()
     queryset.update(
         status=Ad.STATUS_ACTIVE,
+        moderation_note="",
+        reviewed_at=now,
+        reviewed_by=request.user,
         published_at=now,
         expires_at=now + timedelta(days=30),
+        deleted_by_user_at=None,
     )
 
 
-# =========================
-# АДМИНКА РУБРИК
-# =========================
+@admin.action(description="Отклонить выбранные объявления")
+def reject_ads(modeladmin, request, queryset):
+    now = timezone.now()
+    queryset.update(
+        status=Ad.STATUS_REJECTED,
+        reviewed_at=now,
+        reviewed_by=request.user,
+        deleted_by_user_at=None,
+    )
+
+
+@admin.action(description="Перевести выбранные объявления в архив")
+def make_archived(modeladmin, request, queryset):
+    now = timezone.now()
+    queryset.update(
+        status=Ad.STATUS_ARCHIVED,
+        reviewed_at=now,
+        reviewed_by=request.user,
+    )
+
+
+@admin.action(description="Вернуть выбранные объявления на модерацию")
+def send_to_pending(modeladmin, request, queryset):
+    queryset.update(
+        status=Ad.STATUS_PENDING,
+        moderation_note="",
+        reviewed_at=None,
+        reviewed_by=None,
+        deleted_by_user_at=None,
+    )
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "parent", "sort_order", "is_active")
@@ -70,12 +115,8 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
-# =========================
-# АДМИНКА ОБЪЯВЛЕНИЙ
-# =========================
 @admin.register(Ad)
 class AdAdmin(admin.ModelAdmin):
-    # Что видно в списке
     list_display = (
         "id",
         "title",
@@ -86,10 +127,12 @@ class AdAdmin(admin.ModelAdmin):
         "phone",
         "published_at",
         "expires_at",
+        "deleted_by_user_at",
+        "reviewed_at",
+        "reviewed_by",
         "is_expired_admin",
     )
 
-    # Фильтры справа
     list_filter = (
         "status",
         "category",
@@ -97,10 +140,11 @@ class AdAdmin(admin.ModelAdmin):
         "published_at",
         "expires_at",
         ExpiredFilter,
+        HiddenByUserFilter,
+        "reviewed_at",
         "created_at",
     )
 
-    # Поиск сверху
     search_fields = (
         "title",
         "description",
@@ -108,20 +152,21 @@ class AdAdmin(admin.ModelAdmin):
         "phone",
         "city",
         "address",
+        "moderation_note",
     )
 
-    # Сортировка
-    ordering = ("-published_at", "-id")
+    ordering = ("-created_at", "-id")
 
-    # Только чтение в форме
     readonly_fields = (
         "created_at",
         "published_at",
         "expires_at",
+        "deleted_by_user_at",
+        "reviewed_at",
+        "reviewed_by",
         "image_preview",
     )
 
-    # Поля в карточке объявления
     fieldsets = (
         ("Основное", {
             "fields": (
@@ -145,21 +190,56 @@ class AdAdmin(admin.ModelAdmin):
                 "image_preview",
             )
         }),
-        ("Статус и сроки", {
+        ("Модерация", {
             "fields": (
                 "status",
+                "moderation_note",
+                "reviewed_at",
+                "reviewed_by",
+            )
+        }),
+        ("Сроки и история", {
+            "fields": (
                 "published_at",
                 "expires_at",
+                "deleted_by_user_at",
                 "created_at",
             )
         }),
     )
 
-    # Массовые действия
     actions = (
+        approve_ads,
+        reject_ads,
         make_archived,
-        make_active_for_30_days,
+        send_to_pending,
     )
+
+    def save_model(self, request, obj, form, change):
+        now = timezone.now()
+
+        if change:
+            old_obj = Ad.objects.get(pk=obj.pk)
+            status_changed = old_obj.status != obj.status
+            note_changed = old_obj.moderation_note != obj.moderation_note
+        else:
+            status_changed = True
+            note_changed = bool(obj.moderation_note)
+
+        if status_changed or note_changed:
+            obj.reviewed_at = now
+            obj.reviewed_by = request.user
+
+        if status_changed and obj.status == Ad.STATUS_ACTIVE:
+            obj.published_at = now
+            obj.expires_at = now + timedelta(days=30)
+            obj.deleted_by_user_at = None
+            obj.moderation_note = ""
+
+        if obj.status in (Ad.STATUS_PENDING, Ad.STATUS_REJECTED):
+            obj.deleted_by_user_at = None
+
+        super().save_model(request, obj, form, change)
 
     def is_expired_admin(self, obj):
         return obj.is_expired

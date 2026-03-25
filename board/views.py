@@ -8,20 +8,12 @@
 # ИМПОРТЫ
 # =========================
 
-# render — рендерит HTML-шаблон
-# redirect — делает перенаправление
 from django.shortcuts import render, redirect
-
-# login_required — запрещает доступ неавторизованным
 from django.contrib.auth.decorators import login_required
-
-# timezone — нужен для определения активных / архивных объявлений
+from django.db.models import Q
 from django.utils import timezone
 
-# Кастомная форма регистрации
 from .forms import SignupForm
-
-# ВАЖНО: берём Category и Ad из приложения ads
 from board.ads.models import Category, Ad
 
 
@@ -33,11 +25,6 @@ def home_view(request):
     Главная страница сайта
     URL: /
     Шаблон: home.html
-
-    ВАЖНО:
-    - подтягиваем рубрики из БД
-    - берём только 9 верхних рубрик (parent=None)
-    - для каждой — до 5 подрубрик
     """
 
     categories = (
@@ -91,44 +78,49 @@ def profile_view(request):
 
     Показывает:
     - активные объявления
-    - архивные / снятые с публикации
+    - на модерации
+    - отклонённые
+    - архив
     """
 
     now = timezone.now()
 
-    # -------------------------
-    # АКТИВНЫЕ ОБЪЯВЛЕНИЯ
-    # -------------------------
-    active_ads = (
+    base_qs = (
         Ad.objects
         .filter(author=request.user)
-        .filter(status=Ad.STATUS_ACTIVE)
-        .filter(expires_at__gt=now)
-        .filter(deleted_by_user_at__isnull=True)
-        .select_related("category", "category__parent")
-        .order_by("-published_at", "-id")
+        .select_related("category", "category__parent", "reviewed_by")
+        .order_by("-created_at", "-id")
     )
 
-    # -------------------------
-    # АРХИВНЫЕ / СНЯТЫЕ С ПУБЛИКАЦИИ
-    # -------------------------
-    archived_ads = (
-        Ad.objects
-        .filter(author=request.user)
-        .exclude(
-            status=Ad.STATUS_ACTIVE,
-            expires_at__gt=now,
-            deleted_by_user_at__isnull=True,
-        )
-        .select_related("category", "category__parent")
-        .order_by("-published_at", "-id")
+    active_ads = base_qs.filter(
+        status=Ad.STATUS_ACTIVE,
+        expires_at__gt=now,
+        deleted_by_user_at__isnull=True,
     )
+
+    pending_ads = base_qs.filter(
+        status=Ad.STATUS_PENDING,
+        deleted_by_user_at__isnull=True,
+    )
+
+    rejected_ads = base_qs.filter(
+        status=Ad.STATUS_REJECTED,
+        deleted_by_user_at__isnull=True,
+    )
+
+    archived_ads = base_qs.filter(
+        Q(status=Ad.STATUS_ARCHIVED) |
+        Q(expires_at__lte=now) |
+        Q(deleted_by_user_at__isnull=False)
+    ).exclude(status=Ad.STATUS_PENDING).exclude(status=Ad.STATUS_REJECTED)
 
     return render(
         request,
         "profile.html",
         {
             "active_ads": active_ads,
+            "pending_ads": pending_ads,
+            "rejected_ads": rejected_ads,
             "archived_ads": archived_ads,
         }
     )

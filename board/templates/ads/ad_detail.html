@@ -34,13 +34,28 @@
     <div class="sidebar-title">Статус</div>
     <div class="sidebar-text">
         <b>{{ ad.display_status }}</b><br>
-        Размещено: {{ ad.published_at|date:"d.m.Y H:i" }}<br>
-        Активно до: {{ ad.expires_at|date:"d.m.Y H:i" }}
+        Создано: {{ ad.created_at|date:"d.m.Y H:i" }}
+        {% if ad.status == "active" %}
+            <br>Размещено: {{ ad.published_at|date:"d.m.Y H:i" }}
+            <br>Активно до: {{ ad.expires_at|date:"d.m.Y H:i" }}
+        {% endif %}
+        {% if ad.reviewed_at %}
+            <br>Проверено: {{ ad.reviewed_at|date:"d.m.Y H:i" }}
+        {% endif %}
         {% if ad.deleted_by_user_at %}
             <br>Снято с публикации: {{ ad.deleted_by_user_at|date:"d.m.Y H:i" }}
         {% endif %}
     </div>
 </div>
+
+{% if ad.status == "rejected" and ad.moderation_note %}
+<div class="sidebar-card">
+    <div class="sidebar-title">Комментарий модератора</div>
+    <div class="sidebar-text">
+        {{ ad.moderation_note|linebreaksbr }}
+    </div>
+</div>
+{% endif %}
 
 <div class="sidebar-card">
     <div class="sidebar-title">Безопасность сделки</div>
@@ -60,6 +75,14 @@
         {% if ad.is_public_active %}
             <span style="display:inline-block; background:#eef8ee; color:#207520; border:1px solid #cce8cc; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
                 Активно
+            </span>
+        {% elif ad.status == "pending" %}
+            <span style="display:inline-block; background:#fff3d9; color:#8a5a00; border:1px solid #f2d39a; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
+                На модерации
+            </span>
+        {% elif ad.status == "rejected" %}
+            <span style="display:inline-block; background:#fff0f0; color:#9c1c1c; border:1px solid #f1c0c0; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
+                Отклонено
             </span>
         {% elif ad.is_hidden_by_user %}
             <span style="display:inline-block; background:#f3f3f3; color:#666; border:1px solid #ddd; border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700;">
@@ -84,12 +107,31 @@
     {% endif %}
 
     <div style="margin-bottom:15px; font-size:14px; color:#555; text-align:center;">
-        <b>Размещено:</b> {{ ad.published_at|date:"d.m.Y H:i" }}
-        &nbsp;•&nbsp;
-        <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
+        <b>Создано:</b> {{ ad.created_at|date:"d.m.Y H:i" }}
+        {% if ad.status == "active" %}
+            &nbsp;•&nbsp;
+            <b>Размещено:</b> {{ ad.published_at|date:"d.m.Y H:i" }}
+            &nbsp;•&nbsp;
+            <b>Активно до:</b> {{ ad.expires_at|date:"d.m.Y H:i" }}
+        {% endif %}
     </div>
 
-    {% if ad.is_hidden_by_user %}
+    {% if ad.status == "pending" %}
+        <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffe7bf; border-radius:10px; background:#fffaf0; text-align:center; color:#7a5600;">
+            Объявление отправлено на модерацию и станет видимым после одобрения.
+        </div>
+    {% elif ad.status == "rejected" %}
+        <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffd6d6; border-radius:10px; background:#fff5f5; text-align:center; color:#7a1b1b;">
+            Объявление отклонено модератором. Исправь его и отправь заново.
+        </div>
+
+        {% if ad.moderation_note %}
+            <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #ffd6d6; border-radius:10px; background:#fff5f5; color:#7a1b1b;">
+                <b>Комментарий модератора:</b><br>
+                {{ ad.moderation_note|linebreaksbr }}
+            </div>
+        {% endif %}
+    {% elif ad.is_hidden_by_user %}
         <div style="margin-bottom:18px; padding:12px 14px; border:1px solid #e5e5e5; border-radius:10px; background:#f8f8f8; text-align:center; color:#555;">
             Объявление снято пользователем с публикации, но сохранено в системе.
         </div>
@@ -179,10 +221,10 @@
                         Снять с публикации
                     </button>
                 </form>
-            {% else %}
+            {% elif ad.status == "archived" or ad.is_hidden_by_user %}
                 <form method="post"
                       action="{% url 'restore_ad' ad.id %}"
-                      onsubmit="return confirm('Вернуть объявление из архива и продлить ещё на 30 дней?');">
+                      onsubmit="return confirm('Вернуть объявление из архива и отправить на модерацию?');">
                     {% csrf_token %}
                     <button type="submit" class="main-btn">
                         Вернуть из архива

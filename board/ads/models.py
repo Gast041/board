@@ -69,11 +69,15 @@ class Category(models.Model):
 # ОБЪЯВЛЕНИЯ
 # =========================
 class Ad(models.Model):
+    STATUS_PENDING = "pending"
     STATUS_ACTIVE = "active"
+    STATUS_REJECTED = "rejected"
     STATUS_ARCHIVED = "archived"
 
     STATUS_CHOICES = [
+        (STATUS_PENDING, "На модерации"),
         (STATUS_ACTIVE, "Активно"),
+        (STATUS_REJECTED, "Отклонено"),
         (STATUS_ARCHIVED, "В архиве"),
     ]
 
@@ -135,9 +139,33 @@ class Ad(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default=STATUS_ACTIVE,
+        default=STATUS_PENDING,
         db_index=True,
         verbose_name="Статус"
+    )
+
+    # Комментарий модератора
+    moderation_note = models.TextField(
+        blank=True,
+        verbose_name="Комментарий модератора"
+    )
+
+    # Когда модератор проверил объявление
+    reviewed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name="Проверено"
+    )
+
+    # Кто проверил объявление
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_ads",
+        verbose_name="Проверил"
     )
 
     # Дата публикации
@@ -166,12 +194,13 @@ class Ad(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-published_at", "-id"]
+        ordering = ["-created_at", "-id"]
         indexes = [
             models.Index(fields=["status", "expires_at"]),
             models.Index(fields=["published_at"]),
             models.Index(fields=["category"]),
             models.Index(fields=["deleted_by_user_at"]),
+            models.Index(fields=["reviewed_at"]),
         ]
 
     def __str__(self):
@@ -208,7 +237,11 @@ class Ad(models.Model):
     @property
     def display_status(self):
         if self.is_hidden_by_user:
-            return "Снято пользователем"
+            return "Снято с публикации"
+        if self.status == self.STATUS_PENDING:
+            return "На модерации"
+        if self.status == self.STATUS_REJECTED:
+            return "Отклонено"
         if self.status == self.STATUS_ARCHIVED or self.is_expired:
             return "В архиве"
         return "Активно"
