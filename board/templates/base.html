@@ -1,120 +1,67 @@
 {% load static %}
+{# Файл: board/templates/base.html
+   Базовый шаблон сайта.
+   Важно: блок header_search объявлен только один раз в этом файле.
+#}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}52P{% endblock %}</title>
+    <title>{% block title %}52prime.ru{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="{% static 'base.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
+
 <body class="{% block body_class %}{% endblock %}">
 
 <header class="site-header">
-    <div class="container header-row">
+    <div class="header-inner">
 
         <div class="header-logo">
-            <a href="/" class="logo-link">
-                52<span class="logo-p">P</span>
-            </a>
+            <a href="{% url 'home' %}" class="logo-link">52prime.ru</a>
         </div>
 
         <div class="header-search">
             {% block header_search %}
-            <form method="get" action="{% url 'ads_list' %}" class="search-form">
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ q|default:'' }}"
-                    placeholder="Поиск объявлений..."
-                    class="search-input"
-                >
-                <button type="submit" class="search-btn">Найти</button>
-            </form>
+                <form method="get" action="{% url 'ads_list' %}" class="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ q|default:'' }}"
+                        placeholder="Поиск объявлений..."
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-btn">Найти</button>
+                </form>
             {% endblock %}
         </div>
 
         <nav class="header-nav">
-            {% if user.is_authenticated %}
-                <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
-                <a href="{% url 'create_ad' %}" class="main-btn">+ Объявление</a>
-                <a href="{% url 'profile' %}" class="nav-user">{{ user.username }}</a>
+            <a class="nav-link" href="{% url 'ads_list' %}">Лента</a>
 
-                <form method="post" action="{% url 'logout' %}" class="nav-logout">
+            {% if user.is_authenticated %}
+                <a class="main-btn" href="{% url 'create_ad' %}">+ Объявление</a>
+                <a class="nav-user" href="{% url 'profile' %}">{{ user.username }}</a>
+
+                <form method="post" action="{% url 'logout' %}" class="nav-form">
                     {% csrf_token %}
-                    <button type="submit" class="link-btn">Выйти</button>
+                    <button class="link-btn" type="submit">Выйти</button>
                 </form>
             {% else %}
-                <a href="{% url 'ads_list' %}" class="nav-link">Лента</a>
-                <a href="{% url 'login' %}" class="nav-link">Вход</a>
-                <a href="{% url 'signup' %}" class="nav-link">Регистрация</a>
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
             {% endif %}
         </nav>
 
     </div>
 </header>
 
-<main class="page">
-    <div class="container page-shell">
+<div class="header-spacer"></div>
 
-        <aside class="page-sidebar">
-            {% block sidebar %}
-            <div class="sidebar-card">
-                <div class="sidebar-title">Быстрые действия</div>
-
-                <div class="sidebar-links">
-                    <a href="{% url 'ads_list' %}" class="sidebar-link">Все объявления</a>
-
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'create_ad' %}" class="sidebar-link">Разместить объявление</a>
-                        <a href="{% url 'profile' %}" class="sidebar-link">Мой профиль</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="sidebar-link">Войти</a>
-                        <a href="{% url 'signup' %}" class="sidebar-link">Регистрация</a>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="sidebar-card">
-                <div class="sidebar-title">Информация</div>
-                <div class="sidebar-text">
-                    Здесь можно разместить полезную информацию, рекламу или спецпредложения.
-                </div>
-            </div>
-            {% endblock %}
-        </aside>
-
-        <section class="page-main">
-            {% block content %}{% endblock %}
-        </section>
-
-    </div>
-</main>
-
-<footer class="site-footer">
-    <div class="container footer-grid">
-
-        <div class="footer-col">
-            <div class="footer-title">52P</div>
-            <div class="footer-text">
-                Доска объявлений Нижегородской области.
-            </div>
-        </div>
-
-        <div class="footer-col">
-            <div class="footer-title">Информация</div>
-            <div class="footer-text">
-                Частные объявления, товары, услуги и предложения по Нижегородской области.
-            </div>
-        </div>
-
-        <div class="footer-col footer-col-right">
-            <a href="https://www.52p.ru" class="footer-link">© www.52p.ru</a>
-        </div>
-
-    </div>
-</footer>
+{% block content %}{% endblock %}
 
 </body>
 </html>
